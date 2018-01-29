@@ -5,13 +5,17 @@
 </template>
 
 <script>
+// import { mapGetters } from "vuex";
 export default {
-  name: 'app'
-}
+  name: "app"
+  // computed: {
+  //   ...mapGetters(["appContextPath"])
+  // }
+};
 </script>
 
 <style lang="less">
-@import '~vux/src/styles/reset.less';
+@import "~vux/src/styles/reset.less";
 
 body {
   background-color: #fbf9fe;

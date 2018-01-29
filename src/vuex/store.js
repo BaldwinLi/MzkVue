@@ -8,9 +8,7 @@ const proxyedHostNames = [
   '127.0.0.1',
 ]
 
-const store = new Vuex.Store({}); // 这里你可能已经有其他 module
-
-store.registerModule('vux', { // 名字自己定义
+export default new Vuex.Store({ // 名字自己定义
   state: {
     isLoading: false
   },
@@ -23,6 +21,19 @@ store.registerModule('vux', { // 名字自己定义
     isLocal: () => proxyedHostNames.includes(window.location.hostname),
     appContextPath: () => proxyedHostNames.includes(window.location.hostname) ? `${window.location.origin}/dev_api/` : (window.location.origin + '/'),
   }
-});
+}); // 这里你可能已经有其他 module
 
-export default store;
+// store.registerModule('vux', { // 名字自己定义
+//   state: {
+//     isLoading: false
+//   },
+//   mutations: {
+//     updateLoadingStatus(state, payload) {
+//       state.isLoading = payload.isLoading;
+//     }
+//   },
+//   getters: {
+//     isLocal: () => proxyedHostNames.includes(window.location.hostname),
+//     appContextPath: () => proxyedHostNames.includes(window.location.hostname) ? `${window.location.origin}/dev_api/` : (window.location.origin + '/'),
+//   }
+// });

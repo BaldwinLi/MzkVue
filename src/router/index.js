@@ -14,37 +14,43 @@ export default new Router({
     {
       path: '/announcement',
       component: function (resolve) {
-        require(['../components/Announcement'], resolve)
+        require(['../components/announcement/AnnouncementList'], resolve)
+      }
+    },
+    {
+      path: '/announcementDetail/:id',
+      component: function (resolve) {
+        require(['../components/announcement/announcementDetail'], resolve)
       }
     },
     {
       path: '/mall',
       component: function (resolve) {
-        require(['../components/Mall'], resolve)
+        require(['../components/mall/Mall'], resolve)
       }
     },
     {
       path: '/merchant',
       component: function (resolve) {
-        require(['../components/Merchant'], resolve)
+        require(['../components/merchant/Merchant'], resolve)
       }
     },
     {
       path: '/search',
       component: function (resolve) {
-        require(['../components/Search'], resolve)
+        require(['../components/search/Search'], resolve)
       }
     },
     {
       path: '/transaction',
       component: function (resolve) {
-        require(['../components/Transaction'], resolve)
+        require(['../components/transaction/Transaction'], resolve)
       }
     },
     {
       path: '/invoice',
       component: function (resolve) {
-        require(['../components/Invoice'], resolve)
+        require(['../components/invoice/Invoice'], resolve)
       }
     }
   ]

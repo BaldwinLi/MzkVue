@@ -27,6 +27,11 @@ module.exports = {
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
+    // watchOptions: {
+    //   aggregateTimeout: 3000,
+    //   poll: 1000
+    // },
+    aggregateTimeout: 3000,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
     // Use Eslint Loader?
