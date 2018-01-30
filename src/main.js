@@ -33,9 +33,8 @@ Vue.config.productionTip = false
 
 const auth_token = window.sessionStorage.getItem('token');
 
-// if (!auth_token) {
-if (true && store) {
-  Vue.http.defaults.headers.common['Authorization'] = auth_token;
+if (auth_token && auth_token !== 'undefined') {
+  Vue.http.defaults.headers.common['web-token'] = auth_token;
   new Vue({
     render: h => h(App),
     router,
@@ -43,11 +42,11 @@ if (true && store) {
   }).$mount('#app-box');
 } else {
   Vue.http.get(
-    `${store.getters.appContextPath}app-web/token/getTest?userId=huangmu`
+    `${store.getters.appContextPath}appweb/token/getTest?userId=huangmu`
   ).then(
     success => {
-      window.sessionStorage.setItem('token', success.token);
-      Vue.http.defaults.headers.common['Authorization'] = success.token;
+      window.sessionStorage.setItem('token', success.data.result.token);
+      Vue.http.defaults.headers.common['web-token'] = success.data.result.token;
       new Vue({
         router,
         store,

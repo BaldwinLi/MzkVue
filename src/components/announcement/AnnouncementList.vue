@@ -1,21 +1,22 @@
 <template>
   <div>
-    <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more>
-    <scroller lock-x scrollbar-y @on-scroll="onCellsListScroll" @on-scroll-bottom="onScrollBottom" ref="scrollerEvent" :scroll-bottom-offset="-100">
-      <div>
-        <cell v-for="item in list" :key="item.id" primary="content" @click.native="goAnnouncementDetail($event, item)" is-link>
-          <p slot="title" class="card-padding">{{ item.title }} <badge></badge></p>
-          <p slot>{{ item.content }}</p>
-        </cell>
-        <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more>
-      </div>
-    </scroller>
-    
+    <group title="公告列表">
+      <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more>
+      <scroller lock-x scrollbar-y @on-scroll="onCellsListScroll" @on-scroll-bottom="onScrollBottom" ref="scrollerEvent" :scroll-bottom-offset="-100">
+        <div>
+          <cell v-for="item in list" :key="item.id" primary="content" @click.native="goAnnouncementDetail($event, item)" is-link>
+            <p slot="title" v-if="item.title" class="card-padding">{{ item.title }} <badge></badge></p>
+            <div style="text-align: left;" v-html="item.content" slot></div>
+          </cell>
+          <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more>
+        </div>
+      </scroller>
+    </group>
   </div>
 </template>
 
 <script>
-import { Badge, Cell, Scroller, LoadMore } from "vux";
+import { Badge, Cell, Scroller, LoadMore, Group } from "vux";
 import { mapGetters } from "vuex";
 
 export default {
@@ -24,129 +25,73 @@ export default {
     Badge,
     Cell,
     Scroller,
-    LoadMore
+    LoadMore,
+    Group
   },
   data() {
     return {
+      pageNum: 1,
+      pageSize: 10,
       topLoading: false,
       bottomLoading: false,
-      list: [
-        {
-          id: "1",
-          title: `标题一`,
-          content:
-            "由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。"
-        },
-        {
-          id: "2",
-          title: "标题二",
-          content:
-            "由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。"
-        },
-        {
-          id: "3",
-          title: `标题一`,
-          content:
-            "由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。"
-        },
-        {
-          id: "4",
-          title: "标题二",
-          content:
-            "由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。"
-        },
-        {
-          id: "5",
-          title: `标题一`,
-          content:
-            "由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。"
-        },
-        {
-          id: "6",
-          title: "标题二",
-          content:
-            "由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。"
-        },
-        {
-          id: "7",
-          title: `标题一`,
-          content:
-            "由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。"
-        },
-        {
-          id: "8",
-          title: "标题二",
-          content:
-            "由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。"
-        },
-        {
-          id: "9",
-          title: `标题一`,
-          content:
-            "由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。"
-        },
-        {
-          id: "10",
-          title: "标题二",
-          content:
-            "由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。"
-        },
-        {
-          id: "11",
-          title: "标题二",
-          content:
-            "由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。"
-        },
-        {
-          id: "12",
-          title: `标题一`,
-          content:
-            "由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。"
-        },
-        {
-          id: "13",
-          title: "标题二",
-          content:
-            "由各种物质组成的巨型球状天体，叫做星球。星球有一定的形状，有自己的运行轨道。"
-        }
-      ]
+      list: []
     };
   },
   computed: {
-    ...mapGetters([
-            'appContextPath',
-            'isLocal'
-        ])
+    ...mapGetters(["appContextPath", "isLocal"])
   },
   methods: {
     onCellsListScroll(event) {
       const scope = this;
       if (event.top < this.$refs["scrollerEvent"].$el.clientTop - 100) {
-        this.topLoading = true;
-        setTimeout(() => {
-          scope.topLoading = false;
-        }, 1000);
+        this.refreshDataList();
       }
     },
     onScrollBottom() {
       const scope = this;
-      this.bottomLoading = true;
-      setTimeout(() => {
-        scope.bottomLoading = false;
-      }, 1000);
+      this.refreshMoreData();
     },
     goAnnouncementDetail(event, item) {
       this.$router.push({ path: `/announcementDetail/${item.id}` });
+    },
+    refreshDataList() {
+      this.topLoading = true;
+      const scope = this;
+      this.$http
+        .get(`${this.appContextPath}appweb/bulletin/list?pageSize=10&pageNum=1`)
+        .then(success => {
+          scope.list = (success &&
+            success.data &&
+            success.data.result &&
+            success.data.result.list) || {
+            content: "无数据"
+          };
+          this.topLoading = false;
+        });
+    },
+    refreshMoreData() {
+      this.bottomLoading = true;
+      const scope = this;
+      this.$http
+        .get(
+          `${
+            this.appContextPath
+          }appweb/bulletin/list?pageSize=10&pageNum=${++this.pageNum}`
+        )
+        .then(success => {
+          scope.list = scope.list.concat(
+            (success &&
+              success.data &&
+              success.data.result &&
+              success.data.result.list) ||
+              []
+          );
+          scope.bottomLoading = false;
+        });
     }
   },
   mounted() {
-    const scope = this;
-    this.$http.get(`${this.appContextPath}appweb/bulletin/list?pageSize=2&pageNum=2`)
-    .then(
-      success => {
-        scope.list = success.list;
-      }
-    );
+    this.refreshDataList();
   }
 };
 </script>

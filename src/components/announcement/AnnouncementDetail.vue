@@ -1,16 +1,22 @@
 <template>
   <div v-html="detail">
+      <loading v-model="isLoading"></loading>
   </div>
 </template>
 
 <script>
+import {Loading} from 'vux';
 import { mapGetters } from "vuex";
 
 export default {
   name: 'AnnouncementDetail',
+  components: {
+      Loading
+  },
   data () {
     return {
-      detail: `<h1>未找到数据</h1>`
+      detail: '',
+      isLoading: false
     }
   },
   computed: {
@@ -20,10 +26,18 @@ export default {
   },
   mounted() {
     const scope = this;
+    this.isLoading = true;
     this.$http.get(`${this.appContextPath}appweb/bulletin/detail?id=${this.$route.params.id}`)
     .then(
       success => {
-        scope.detail = success.detail.content;
+        scope.detail = (success &&
+          success.data &&
+          success.data.result &&
+          success.data.result.detail &&
+          success.data.result.detail.content) || {
+          content: "无数据"
+        };
+        this.isLoading = false;
       }
     );
   }
@@ -32,7 +46,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
+h1,
+h2 {
   font-weight: normal;
 }
 ul {
