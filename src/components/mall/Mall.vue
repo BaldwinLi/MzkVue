@@ -1,10 +1,17 @@
 <template>
   <div>
     <group title="商品列表">
-      <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more>
-      <scroller lock-x scrollbar-y @on-scroll="onCellsListScroll" @on-scroll-bottom="onScrollBottom" ref="scrollerEvent" :scroll-bottom-offset="-100">
+      <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
+     <scroller :lock-x=true 
+               :pulldown-config="{downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
+               :pullup-config="{upContent:'上拉加载更多', downContent: '释放后加载', loadingContent: '正在加载...',}" 
+               ref="scrollerEvent" 
+               :use-pulldown=true 
+               :use-pullup=true 
+               @on-pulldown-loading="refreshDataList" 
+               @on-pullup-loading="refreshMoreData">
         <div>
-          <flexbox :gutter="0">
+          <flexbox :gutter="0" wrap="wrap">
             <flexbox-item :span="1/3" v-for="item in list" :key="item.id">
               <card>
                 <img slot="header" :src="item.picUrl" style="width:100%;display:block;">
@@ -16,7 +23,7 @@
               </card>
             </flexbox-item>
           </flexbox>
-          <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more>
+          <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
         </div>
       </scroller>
     </group>
@@ -33,7 +40,7 @@ export default {
     Flexbox,
     FlexboxItem,
     Card,
-    LoadMore,
+    // LoadMore,
     Scroller,
     Group
   },
@@ -41,32 +48,24 @@ export default {
     return {
       pageNum: 1,
       pageSize: 15,
-      topLoading: false,
-      bottomLoading: false,
+      // topLoading: false,
+      // bottomLoading: false,
       list: []
     };
   },
   computed: {
-    ...mapGetters([
-      'appContextPath'
-    ])
+    ...mapGetters(["appContextPath"])
   },
   methods: {
-    onCellsListScroll(event) {
-      const scope = this;
-      if (event.top < this.$refs["scrollerEvent"].$el.clientTop - 100) {
-        this.refreshDataList();
-      }
-    },
-    onScrollBottom() {
-      const scope = this;
-      this.refreshMoreData();
-    },
     refreshDataList() {
-      this.topLoading = true;
+      // this.topLoading = true;
       const scope = this;
       this.$http
-        .get(`${this.appContextPath}appweb/pointExchange/listItem?pageSize=15&pageNum=1`)
+        .get(
+          `${
+            this.appContextPath
+          }appweb/pointExchange/listItem?pageSize=15&pageNum=1`
+        )
         .then(success => {
           scope.list = (success &&
             success.data &&
@@ -74,11 +73,12 @@ export default {
             success.data.result.list) || {
             content: "无数据"
           };
-          this.topLoading = false;
+          scope.$refs.scrollerEvent.donePulldown();
+          scope.$refs.scrollerEvent.reset({ top: 0 });
         });
     },
     refreshMoreData() {
-      this.bottomLoading = true;
+      // this.bottomLoading = true;
       const scope = this;
       this.$http
         .get(
@@ -94,7 +94,8 @@ export default {
               success.data.result.list) ||
               []
           );
-          scope.bottomLoading = false;
+          scope.$refs.scrollerEvent.donePullup();
+          scope.$refs.scrollerEvent.reset();
         });
     }
   },
