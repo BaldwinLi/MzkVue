@@ -1,10 +1,10 @@
 <template>
   <div class="home-content">
     <box gap="10px 10px">
-      <router-link to="/announcement">
+      <router-link to="/announcement_list">
         <x-button plain :gradients="['#1D62F0', '#19D5FD']" type="primary" class="x-button-style">公告管理</x-button>
       </router-link>
-      <router-link to="/mall">
+      <router-link to="/commodity_list">
         <x-button plain :gradients="['#A644FF', '#FC5BC4']" type="primary" class="x-button-style">积分商城</x-button>
       </router-link>
       <router-link to="/merchant">

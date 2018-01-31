@@ -1,14 +1,34 @@
 <template>
-  <div class="hello">
+  <div>
+    <group>
+      <cell-box @click.native="queryBalance" is-link>
+        明珠卡余额查询
+      </cell-box>
+      <cell-box @click.native="queryTransactionHistory" is-link>
+        交易明细查询
+      </cell-box>
+    </group>
   </div>
 </template>
 
 <script>
+import { Badge, CellBox, Group } from "vux";
 export default {
-  name: 'HelloWorld',
+  name: 'Transaction',
+  components: {
+    Group,
+    CellBox
+  },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  methods: {
+    queryBalance() {
+      this.$router.push({ path: `/card_balance` });
+    },
+    queryTransactionHistory() {
+      this.$router.push({ path: `/transaction_history` });
     }
   }
 }
@@ -16,18 +36,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 </style>

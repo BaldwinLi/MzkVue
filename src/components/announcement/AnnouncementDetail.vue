@@ -15,7 +15,7 @@ export default {
   },
   data () {
     return {
-      detail: '',
+      detail: {},
       isLoading: false
     }
   },

@@ -12,21 +12,27 @@ export default new Router({
       }
     },
     {
-      path: '/announcement',
+      path: '/announcement_list',
       component: function (resolve) {
         require(['../components/announcement/AnnouncementList'], resolve)
       }
     },
     {
-      path: '/announcementDetail/:id',
+      path: '/announcement_detail/:id',
       component: function (resolve) {
         require(['../components/announcement/announcementDetail'], resolve)
       }
     },
     {
-      path: '/mall',
+      path: '/commodity_list',
       component: function (resolve) {
-        require(['../components/mall/Mall'], resolve)
+        require(['../components/mall/CommodityList'], resolve)
+      }
+    },
+    {
+      path: '/commodity_detail/:id',
+      component: function (resolve) {
+        require(['../components/mall/CommodityDetail'], resolve)
       }
     },
     {
@@ -45,6 +51,18 @@ export default new Router({
       path: '/transaction',
       component: function (resolve) {
         require(['../components/transaction/Transaction'], resolve)
+      }
+    },
+    {
+      path: '/card_balance',
+      component: function (resolve) {
+        require(['../components/transaction/CardBalance'], resolve)
+      }
+    },
+    {
+      path: '/transaction_history',
+      component: function (resolve) {
+        require(['../components/transaction/TransactionHistory'], resolve)
       }
     },
     {

@@ -13,7 +13,7 @@
         <div>
           <flexbox :gutter="0" wrap="wrap">
             <flexbox-item :span="1/3" v-for="item in list" :key="item.id">
-              <card>
+              <card @click.native="goCommodityDetail(item.id)">
                 <img slot="header" :src="item.picUrl" style="width:100%;display:block;">
                 <div slot="content" class="card-padding">
                   <p style="font-size:14px;">{{item.name}}</p>
@@ -35,7 +35,7 @@ import { Flexbox, FlexboxItem, Card, LoadMore, Scroller, Group } from "vux";
 import { mapGetters } from "vuex";
 
 export default {
-  name: "Mall",
+  name: "CommodityList",
   components: {
     Flexbox,
     FlexboxItem,
@@ -97,6 +97,9 @@ export default {
           scope.$refs.scrollerEvent.donePullup();
           scope.$refs.scrollerEvent.reset();
         });
+    },
+    goCommodityDetail(id){
+      this.$router.push({ path: `/commodity_detail/${id}` });
     }
   },
   mounted() {
