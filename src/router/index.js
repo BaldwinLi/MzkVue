@@ -36,9 +36,15 @@ export default new Router({
       }
     },
     {
-      path: '/merchant',
+      path: '/merchant_list',
       component: function (resolve) {
-        require(['../components/merchant/Merchant'], resolve)
+        require(['../components/merchant/MerchantList'], resolve)
+      }
+    },
+    {
+      path: '/merchant_map/:id',
+      component: function (resolve) {
+        require(['../components/merchant/MerchantMap'], resolve)
       }
     },
     {

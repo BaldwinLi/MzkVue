@@ -7,7 +7,7 @@
       <router-link to="/commodity_list">
         <x-button plain :gradients="['#A644FF', '#FC5BC4']" type="primary" class="x-button-style">积分商城</x-button>
       </router-link>
-      <router-link to="/merchant">
+      <router-link to="/merchant_list">
         <x-button plain :gradients="['#FF2719', '#FF61AD']" type="primary" class="x-button-style">联盟商家信息展示</x-button>
       </router-link>
       <router-link to="/transaction">

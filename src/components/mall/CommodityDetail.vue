@@ -4,6 +4,10 @@
         <card>
             <img slot="header" :src="detail.picUrl" style="width:100%;display:block;">
             <div slot="content" class="card-padding">
+                <div>
+                    <i class="fa fa-map-marker" style="float: left;margin-top: 12px;"></i>
+                    <x-input title="邮寄地址" v-model="detail.address"></x-input>
+                </div>
                 <p class="card-padding" style="font-size:18px;">{{detail.name}}</p>
                 <p class="card-padding" style="font-size:14px;line-height:1 ;color:#999;">{{detail.description}}</p>
                 <p class="card-padding" style="font-size:16px;color:#FF0000;">¥ {{detail.price}}</p>
@@ -12,10 +16,6 @@
                         <span style="vertical-align:middle;"><i class="fa fa-map-marker"></i> 邮寄地址</span>
                     </template>
                 </x-address> -->
-                <div>
-                    <i class="fa fa-map-marker" style="float: left;margin-top: 12px;"></i>
-                    <x-input title="邮寄地址" v-model="detail.address"></x-input>
-                </div>
             </div>
             <div slot="footer">
                 <x-button @click.native="submit" style="background: #FF6347; color: #fff">确认下单</x-button>

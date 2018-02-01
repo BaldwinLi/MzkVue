@@ -59,7 +59,7 @@ export default {
     //   this.refreshMoreData();
     // },
     goAnnouncementDetail(event, item) {
-      this.$router.push({ path: `/announcementDetail/${item.id}` });
+      this.$router.push({ path: `/announcement_detail/${item.id}` });
     },
     refreshDataList() {
       // this.topLoading = true;
