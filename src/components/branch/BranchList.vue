@@ -1,7 +1,7 @@
 <template>
   <div>
     <loading v-model="isLoading"></loading>
-    <group title="附近联盟商家">
+    <group title="附近网点">
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
       <scroller :lock-x=true 
                 :pulldown-config="{downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
@@ -12,7 +12,7 @@
                 @on-pulldown-loading="invokenavigator(refreshDataList)" 
                 @on-pullup-loading="invokenavigator(refreshMoreData)">
         <div>
-          <cell v-for="item in list" :key="item.id" primary="content" @click.native="goMerchantMap($event, item)" is-link>
+          <cell v-for="item in list" :key="item.id" primary="content" @click.native="goBranchMap($event, item)" is-link>
             <img slot="title" style="height: 50px" :src="item.logoUrl" class="card-padding">
             <div slot>
               <p style="text-align: left;color: #000">{{item.name}}</p>
@@ -47,6 +47,7 @@ export default {
       pageSize: 15,
       latitude: 0,
       longitude: 0,
+      isLoading: false,
       // topLoading: false,
       // bottomLoading: false,
       list: []
@@ -66,7 +67,7 @@ export default {
     //   const scope = this;
     //   this.refreshMoreData();
     // },
-    goMerchantMap(event, item) {
+    goBranchMap(event, item) {
       this.$router.push({ path: `/branch_map/${item.id}` });
     },
     refreshDataList(value) {
@@ -77,7 +78,7 @@ export default {
         .get(
           `${
             this.appContextPath
-          }appweb/branch/list?pageSize=15&pageNum=1&keyWord=key&type=testType&lati=${this.latitude}&longi=${this.longitude}`
+          }appweb/allianceBusi/list?pageSize=15&pageNum=1&keyWord=key&type=testType&lati=${this.latitude}&longi=${this.longitude}`
         )
         .then(success => {
           scope.list = (success &&
@@ -88,7 +89,7 @@ export default {
           };
           scope.$refs.scrollerEvent.donePulldown();
           scope.$refs.scrollerEvent.reset({ top: 0 });
-          scope.isLoading = false;
+          this.isLoading = false;
         });
     },
     refreshMoreData(value) {
@@ -97,7 +98,7 @@ export default {
       const scope = this;
       this.$http
         .get(
-          `${this.appContextPath}appweb/branch/list?pageSize=${
+          `${this.appContextPath}appweb/allianceBusi/detail?pageSize=${
             this.pageSize
           }&pageNum=${
             ++this.pageNum
@@ -113,7 +114,7 @@ export default {
           );
           scope.$refs.scrollerEvent.donePullup();
           scope.$refs.scrollerEvent.reset();
-          scope.isLoading = false;
+          this.isLoading = false;
         });
     },
     invokenavigator(func) {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <loading v-model="isLoading"></loading>
-    <group title="附近联盟商家">
+    <group title="历史下单记录">
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
       <scroller :lock-x=true 
                 :pulldown-config="{downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
@@ -9,15 +9,16 @@
                 ref="scrollerEvent" 
                 :use-pulldown=true 
                 :use-pullup=true 
-                @on-pulldown-loading="invokenavigator(refreshDataList)" 
-                @on-pullup-loading="invokenavigator(refreshMoreData)">
+                @on-pulldown-loading="refreshDataList" 
+                @on-pullup-loading="refreshMoreData">
         <div>
-          <cell v-for="item in list" :key="item.id" primary="content" @click.native="goMerchantMap($event, item)" is-link>
-            <img slot="title" style="height: 50px" :src="item.logoUrl" class="card-padding">
+          <cell v-for="item in list" :key="item.id" primary="content" @click.native="goBranchMap($event, item)">
+            <img slot="title" style="height: 50px" :src="item.picUrl" class="card-padding">
             <div slot>
               <p style="text-align: left;color: #000">{{item.name}}</p>
               <p style="text-align: left;font-size:12px">{{item.description}}</p>
-              <p style="text-align: left;color: #008B8B">联系电话： {{ item.tel }}</p>
+              <p style="font-size:16px;color:#FF0000;">¥ {{item.price}} + {{item.pointCost}} 积分</p>
+              <p style="font-size:12px; color:#999;">下单时间: {{item.orderTs | dateFormat}}</p>
             </div>
           </cell>
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
@@ -28,11 +29,19 @@
 </template>
 
 <script>
-import { Badge, Cell, Scroller, Loading, LoadMore, Group } from "vux";
+import {
+  Badge,
+  Cell,
+  Scroller,
+  Loading,
+  LoadMore,
+  Group,
+  dateFormat
+} from "vux";
 import { mapGetters } from "vuex";
 
 export default {
-  name: "BranchList",
+  name: "PointCostHistory",
   components: {
     Badge,
     Cell,
@@ -45,8 +54,7 @@ export default {
     return {
       pageNum: 1,
       pageSize: 15,
-      latitude: 0,
-      longitude: 0,
+      isLoading: false,
       // topLoading: false,
       // bottomLoading: false,
       list: []
@@ -54,6 +62,11 @@ export default {
   },
   computed: {
     ...mapGetters(["appContextPath", "isLocal"])
+  },
+  filters: {
+    dateFormat: function(value) {
+      return dateFormat(new Date(value), "YYYY-MM-DD");
+    }
   },
   methods: {
     // onCellsListScroll(event) {
@@ -66,18 +79,13 @@ export default {
     //   const scope = this;
     //   this.refreshMoreData();
     // },
-    goMerchantMap(event, item) {
-      this.$router.push({ path: `/branch_map/${item.id}` });
-    },
-    refreshDataList(value) {
-      this.longitude = (value && value.coords.longitude) || 0;
-      this.latitude = (value && value.coords.latitude) || 0;
+    refreshDataList() {
       const scope = this;
       this.$http
         .get(
           `${
             this.appContextPath
-          }appweb/branch/list?pageSize=15&pageNum=1&keyWord=key&type=testType&lati=${this.latitude}&longi=${this.longitude}`
+          }appweb/pointExchange/listOrder?pageSize=15&pageNum=1`
         )
         .then(success => {
           scope.list = (success &&
@@ -88,20 +96,14 @@ export default {
           };
           scope.$refs.scrollerEvent.donePulldown();
           scope.$refs.scrollerEvent.reset({ top: 0 });
-          scope.isLoading = false;
+          this.isLoading = false;
         });
     },
-    refreshMoreData(value) {
-      this.longitude = (value && value.coords.longitude) || 0;
-      this.latitude = (value && value.coords.latitude) || 0;
+    refreshMoreData() {
       const scope = this;
       this.$http
         .get(
-          `${this.appContextPath}appweb/branch/list?pageSize=${
-            this.pageSize
-          }&pageNum=${
-            ++this.pageNum
-          }&keyWord=key&type=testType&lati=${this.latitude}&longi=${this.longitude}`
+          `${this.appContextPath}appweb/pointExchange/listOrder?pageSize=${this.pageSize}&pageNum=${++this.pageNum}`
         )
         .then(success => {
           scope.list = scope.list.concat(
@@ -113,54 +115,12 @@ export default {
           );
           scope.$refs.scrollerEvent.donePullup();
           scope.$refs.scrollerEvent.reset();
-          scope.isLoading = false;
+          this.isLoading = false;
         });
-    },
-    invokenavigator(func) {
-      this.isLoading = true;
-      const scope = this;
-      if (navigator.geolocation) {
-        const title = "地图加载失败";
-        navigator.geolocation.getCurrentPosition(
-          func,
-          value => {
-            switch (value.code) {
-              case 1:
-                scope.$vux.alert.show({
-                  title,
-                  content: "坐标不得为空"
-                });
-                break;
-              case 2:
-                scope.$vux.alert.show({
-                  title,
-                  content: "暂时获取不到位置信息"
-                });
-                break;
-              case 3:
-                scope.$vux.alert.show({
-                  title,
-                  content: "获取信息超时"
-                });
-                break;
-              case 4:
-                scope.$vux.alert.show({
-                  title,
-                  content: "未知错误"
-                });
-                break;
-            }
-          },
-          {
-            enableHighAccuracy: true,
-            maximumAge: 1000
-          }
-        );
-      }
     }
   },
   mounted() {
-    this.invokenavigator(this.refreshDataList);
+    this.refreshDataList();
   }
 };
 </script>

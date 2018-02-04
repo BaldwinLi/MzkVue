@@ -1,28 +1,23 @@
 <template>
   <div>
-    <group title="积分兑换商品列表">
+    <group title="历史收获信息">
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-     <scroller :lock-x=true 
-               :pulldown-config="{downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
-               :pullup-config="{upContent:'上拉加载更多', downContent: '释放后加载', loadingContent: '正在加载...',}" 
-               ref="scrollerEvent" 
-               :use-pulldown=true 
-               :use-pullup=true 
-               @on-pulldown-loading="refreshDataList" 
-               @on-pullup-loading="refreshMoreData">
+      <scroller :lock-x=true 
+                :pulldown-config="{downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
+                :pullup-config="{upContent:'上拉加载更多', downContent: '释放后加载', loadingContent: '正在加载...',}" 
+                ref="scrollerEvent" 
+                :use-pulldown=true 
+                :use-pullup=true 
+                @on-pulldown-loading="refreshDataList" 
+                @on-pullup-loading="refreshMoreData">
         <div>
-          <flexbox :gutter="0" wrap="wrap">
-            <flexbox-item :span="1/3" v-for="item in list" :key="item.id">
-              <card @click.native="goCommodityOrder(item.id)">
-                <img slot="header" :src="item.picUrl" style="width:100%;display:block;">
+            <card v-for="(item, index) in list" :key="index">
                 <div slot="content" class="card-padding">
-                  <p style="font-size:14px;">{{item.name}}</p>
-                  <p style="font-size:10px;line-height:1 ;color:#999;">{{item.description}}</p>
-                  <p style="font-size:12px;color:#FF0000;">¥ {{item.price}} + {{item.pointCost}} 积分</p>
+                  <p style="padding: 5px; font-size:14px;">收件人: {{item.receiver}}</p>
+                  <p style="padding: 5px; font-size:12px; color:#0000EE;">收件人联系方式: {{item.tel}}</p>
+                  <p style="padding: 5px; font-size:12px; color:#999;">收件地址: {{item.address}}</p>
                 </div>
-              </card>
-            </flexbox-item>
-          </flexbox>
+            </card>
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
         </div>
       </scroller>
@@ -31,32 +26,49 @@
 </template>
 
 <script>
-import { Flexbox, FlexboxItem, Card, LoadMore, Scroller, Group } from "vux";
+import { Badge, Card, Scroller, LoadMore, Group, dateFormat } from "vux";
 import { mapGetters } from "vuex";
 
 export default {
-  name: "CommodityList",
+  name: "order_history",
   components: {
-    Flexbox,
-    FlexboxItem,
+    Badge,
     Card,
-    // LoadMore,
     Scroller,
+    // LoadMore,
     Group
   },
   data() {
     return {
       pageNum: 1,
-      pageSize: 15,
+      pageSize: 10,
       // topLoading: false,
       // bottomLoading: false,
       list: []
     };
   },
+  filters: {
+    dateFormat: function(value) {
+      return dateFormat(new Date(value), 'YYYY-MM-DD')
+    }
+  },
   computed: {
-    ...mapGetters(["appContextPath"])
+    ...mapGetters(["appContextPath", "isLocal"])
   },
   methods: {
+    // onCellsListScroll(event) {
+    //   const scope = this;
+    //   if (event.top < this.$refs["scrollerEvent"].$el.clientTop - 100) {
+    //     this.refreshDataList();
+    //   }
+    // },
+    // onScrollBottom() {
+    //   const scope = this;
+    //   this.refreshMoreData();
+    // },
+    goAnnouncementDetail(event, item) {
+      this.$router.push({ path: `/announcementDetail/${item.id}` });
+    },
     refreshDataList() {
       // this.topLoading = true;
       const scope = this;
@@ -64,7 +76,7 @@ export default {
         .get(
           `${
             this.appContextPath
-          }appweb/pointExchange/listItem?pageSize=15&pageNum=1`
+          }appweb/pointExchange/listHisAdress`
         )
         .then(success => {
           scope.list = (success &&
@@ -84,7 +96,7 @@ export default {
         .get(
           `${
             this.appContextPath
-          }appweb/pointExchange/listItem?pageSize=15&pageNum=${++this.pageNum}`
+          }appweb/pointExchange/listHisAdress`
         )
         .then(success => {
           scope.list = scope.list.concat(
@@ -97,9 +109,6 @@ export default {
           scope.$refs.scrollerEvent.donePullup();
           scope.$refs.scrollerEvent.reset();
         });
-    },
-    goCommodityOrder(id){
-      this.$router.push({ path: `/commodity_order/${id}` });
     }
   },
   mounted() {

@@ -30,9 +30,21 @@ export default new Router({
       }
     },
     {
-      path: '/commodity_detail/:id',
+      path: '/commodity_order/:id',
       component: function (resolve) {
-        require(['../components/mall/CommodityDetail'], resolve)
+        require(['../components/mall/CommodityOrder'], resolve)
+      }
+    },
+    {
+      path: '/order_history',
+      component: function (resolve) {
+        require(['../components/mall/OrderHistory'], resolve)
+      }
+    },
+    {
+      path: '/point_cost_history',
+      component: function (resolve) {
+        require(['../components/mall/PointCostHistory'], resolve)
       }
     },
     {
@@ -48,9 +60,15 @@ export default new Router({
       }
     },
     {
-      path: '/search',
+      path: '/branch_list',
       component: function (resolve) {
-        require(['../components/search/Search'], resolve)
+        require(['../components/branch/BranchList'], resolve)
+      }
+    },
+    {
+      path: '/branch_map',
+      component: function (resolve) {
+        require(['../components/branch/BranchMap'], resolve)
       }
     },
     {
