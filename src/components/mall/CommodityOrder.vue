@@ -87,7 +87,7 @@ export default {
     submit() {
       if (!(this.detail.address && this.detail.receiver && this.detail.tel)) {
         this.$vux.alert.show({
-          title: "提交失败",
+          title: "下单失败",
           content: "请填入您的邮寄地址、收件人、收件人联系方式"
         });
         return;
@@ -105,7 +105,7 @@ export default {
         .then(success => {
           if (success && success.data && success.data.status) {
             scope.$vux.alert.show({
-              content: "提交成功"
+              content: "下单成功"
             });
           }
           scope.$router.push({ path: `/commodity_list` });
@@ -113,7 +113,7 @@ export default {
         });
     },
     queryReceiveHistory() {
-      this.$router.push({ path: `/order_history` });
+      this.$router.push({ path: `/order_history/${this.$route.params.id}` });
     },
     goPointCostHistory() {
       this.$router.push({ path: `/point_cost_history` });
@@ -128,7 +128,8 @@ export default {
             (success &&
               success.data &&
               success.data.result &&
-              success.data.result.point) ||
+              success.data.result.point &&
+              success.data.result.point.point) ||
             0;
           scope.isLoading = false;
         });
@@ -151,7 +152,10 @@ export default {
             success.data.result &&
             success.data.result.detail) ||
           "无数据";
-        this.isLoading = false;
+        scope.detail.receiver = scope.$route.query.receiver || "";
+        scope.detail.tel = scope.$route.query.tel || "";
+        scope.detail.address = scope.$route.query.address || "";
+        scope.isLoading = false;
       });
     this.getPointBalance();
     this.updateTitle("商品详情");

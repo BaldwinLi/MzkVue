@@ -36,7 +36,7 @@ export default new Router({
       }
     },
     {
-      path: '/order_history',
+      path: '/order_history/:id',
       component: function (resolve) {
         require(['../components/mall/OrderHistory'], resolve)
       }

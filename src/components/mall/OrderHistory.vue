@@ -11,13 +11,13 @@
                 @on-pulldown-loading="refreshDataList" 
                 @on-pullup-loading="refreshMoreData">
         <div>
-            <card v-for="(item, index) in list" :key="index">
-                <div slot="content" class="card-padding">
+            <cell v-for="(item, index) in list" :key="index" @click.native="goBackOrder(item)" is-link>
+                <div slot="inline-desc" class="card-padding">
                   <p style="padding: 5px; font-size:14px;">收件人: {{item.receiver}}</p>
                   <p style="padding: 5px; font-size:12px; color:#0000EE;">收件人联系方式: {{item.tel}}</p>
                   <p style="padding: 5px; font-size:12px; color:#999;">收件地址: {{item.address}}</p>
                 </div>
-            </card>
+            </cell>
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
         </div>
       </scroller>
@@ -26,14 +26,14 @@
 </template>
 
 <script>
-import { Badge, Card, Scroller, LoadMore, Group, dateFormat } from "vux";
+import { Badge, Cell, Scroller, LoadMore, Group, dateFormat } from "vux";
 import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "order_history",
   components: {
     Badge,
-    Card,
+    Cell,
     Scroller,
     // LoadMore,
     Group
@@ -49,7 +49,7 @@ export default {
   },
   filters: {
     dateFormat: function(value) {
-      return dateFormat(new Date(value), 'YYYY-MM-DD')
+      return dateFormat(new Date(value), "YYYY-MM-DD");
     }
   },
   computed: {
@@ -66,18 +66,20 @@ export default {
     //   const scope = this;
     //   this.refreshMoreData();
     // },
-    goAnnouncementDetail(event, item) {
-      this.$router.push({ path: `/announcementDetail/${item.id}` });
+    goBackOrder(item) {
+      this.$router.push({
+        path: `/commodity_order/${this.$route.params.id}`,
+        query: { 
+            receiver: item.receiver,
+            tel: item.tel,
+            address: item.address }
+      });
     },
     refreshDataList() {
       // this.topLoading = true;
       const scope = this;
       this.$http
-        .get(
-          `${
-            this.appContextPath
-          }appweb/pointExchange/listHisAdress`
-        )
+        .get(`${this.appContextPath}appweb/pointExchange/listHisAdress`)
         .then(success => {
           scope.list = (success &&
             success.data &&
@@ -93,11 +95,7 @@ export default {
       // this.bottomLoading = true;
       const scope = this;
       this.$http
-        .get(
-          `${
-            this.appContextPath
-          }appweb/pointExchange/listHisAdress`
-        )
+        .get(`${this.appContextPath}appweb/pointExchange/listHisAdress`)
         .then(success => {
           scope.list = scope.list.concat(
             (success &&
