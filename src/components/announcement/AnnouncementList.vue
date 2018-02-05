@@ -24,7 +24,7 @@
 
 <script>
 import { Badge, Cell, Scroller, LoadMore, Group } from "vux";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "AnnouncementList",
@@ -58,6 +58,7 @@ export default {
     //   const scope = this;
     //   this.refreshMoreData();
     // },
+    ...mapMutations(["updateTitle"]),
     goAnnouncementDetail(event, item) {
       this.$router.push({ path: `/announcement_detail/${item.id}` });
     },
@@ -101,6 +102,7 @@ export default {
   },
   mounted() {
     this.refreshDataList();
+    this.updateTitle("公告列表");
   }
 };
 </script>

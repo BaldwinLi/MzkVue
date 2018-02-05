@@ -9,7 +9,7 @@
 
 <script>
 import { Badge, Cell, Group, Loading } from "vux";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "CardBalance",
@@ -25,9 +25,10 @@ export default {
     };
   },
   computed: {
-      ...mapGetters([
-          'appContextPath'
-      ])
+    ...mapGetters(["appContextPath"])
+  },
+  methods: {
+    ...mapMutations(["updateTitle"])
   },
   mounted() {
     const scope = this;
@@ -43,6 +44,7 @@ export default {
           "无数据";
         this.isLoading = false;
       });
+      this.updateTitle("明珠卡余额");
   }
 };
 </script>

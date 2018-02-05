@@ -5,31 +5,36 @@
 </template>
 
 <script>
-import {Loading} from 'vux';
-import { mapGetters } from "vuex";
+import { Loading } from "vux";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
-  name: 'AnnouncementDetail',
+  name: "AnnouncementDetail",
   components: {
-      Loading
+    Loading
   },
-  data () {
+  data() {
     return {
       detail: {},
       isLoading: false
-    }
+    };
   },
   computed: {
-      ...mapGetters([
-          'appContextPath'
-      ])
+    ...mapGetters(["appContextPath"])
+  },
+  methods: {
+    ...mapMutations(["updateTitle"])
   },
   mounted() {
     const scope = this;
     this.isLoading = true;
-    this.$http.get(`${this.appContextPath}appweb/bulletin/detail?id=${this.$route.params.id}`)
-    .then(
-      success => {
+    this.$http
+      .get(
+        `${this.appContextPath}appweb/bulletin/detail?id=${
+          this.$route.params.id
+        }`
+      )
+      .then(success => {
         scope.detail = (success &&
           success.data &&
           success.data.result &&
@@ -38,10 +43,10 @@ export default {
           content: "无数据"
         };
         this.isLoading = false;
-      }
-    );
+      });
+    this.updateTitle("公告详情");
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

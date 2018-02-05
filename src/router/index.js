@@ -66,7 +66,7 @@ export default new Router({
       }
     },
     {
-      path: '/branch_map',
+      path: '/branch_map/:id',
       component: function (resolve) {
         require(['../components/branch/BranchMap'], resolve)
       }

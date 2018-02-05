@@ -10,11 +10,15 @@ const proxyedHostNames = [
 
 export default new Vuex.Store({ // 名字自己定义
   state: {
-    isLoading: false
+    isLoading: false,
+    title: '首页'
   },
   mutations: {
     updateLoadingStatus(state, payload) {
       state.isLoading = payload.isLoading;
+    },
+    updateTitle(state, payload){
+      state.title = payload;
     }
   },
   getters: {

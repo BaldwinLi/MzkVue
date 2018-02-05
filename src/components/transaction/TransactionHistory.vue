@@ -1,6 +1,6 @@
 <template>
   <div>
-    <group title="公告列表">
+    <group>
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
       <scroller :lock-x=true 
                 :pulldown-config="{downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
@@ -28,7 +28,7 @@
 
 <script>
 import { Badge, Card, Scroller, LoadMore, Group, dateFormat } from "vux";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "AnnouncementList",
@@ -111,10 +111,12 @@ export default {
           scope.$refs.scrollerEvent.donePullup();
           scope.$refs.scrollerEvent.reset();
         });
-    }
+    },
+    ...mapMutations(["updateTitle"])
   },
   mounted() {
     this.refreshDataList();
+    this.updateTitle("明珠卡缴费记录");
   }
 };
 </script>

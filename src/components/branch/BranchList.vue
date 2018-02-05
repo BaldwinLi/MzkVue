@@ -1,7 +1,7 @@
 <template>
   <div>
     <loading v-model="isLoading"></loading>
-    <group title="附近网点">
+    <group>
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
       <scroller :lock-x=true 
                 :pulldown-config="{downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
@@ -29,7 +29,7 @@
 
 <script>
 import { Badge, Cell, Scroller, Loading, LoadMore, Group } from "vux";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "BranchList",
@@ -67,6 +67,7 @@ export default {
     //   const scope = this;
     //   this.refreshMoreData();
     // },
+    ...mapMutations(["updateTitle"]),
     goBranchMap(event, item) {
       this.$router.push({ path: `/branch_map/${item.id}` });
     },
@@ -78,7 +79,9 @@ export default {
         .get(
           `${
             this.appContextPath
-          }appweb/allianceBusi/list?pageSize=15&pageNum=1&keyWord=key&type=testType&lati=${this.latitude}&longi=${this.longitude}`
+          }appweb/allianceBusi/list?pageSize=15&pageNum=1&keyWord=key&type=testType&lati=${
+            this.latitude
+          }&longi=${this.longitude}`
         )
         .then(success => {
           scope.list = (success &&
@@ -100,9 +103,9 @@ export default {
         .get(
           `${this.appContextPath}appweb/allianceBusi/detail?pageSize=${
             this.pageSize
-          }&pageNum=${
-            ++this.pageNum
-          }&keyWord=key&type=testType&lati=${this.latitude}&longi=${this.longitude}`
+          }&pageNum=${++this.pageNum}&keyWord=key&type=testType&lati=${
+            this.latitude
+          }&longi=${this.longitude}`
         )
         .then(success => {
           scope.list = scope.list.concat(
@@ -162,6 +165,7 @@ export default {
   },
   mounted() {
     this.invokenavigator(this.refreshDataList);
+    this.updateTitle("附近网点");
   }
 };
 </script>

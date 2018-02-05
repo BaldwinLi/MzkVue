@@ -13,6 +13,7 @@
 
 <script>
 import { Badge, CellBox, Group } from "vux";
+import { mapMutations } from "vuex";
 export default {
   name: 'Transaction',
   components: {
@@ -29,7 +30,11 @@ export default {
     },
     queryTransactionHistory() {
       this.$router.push({ path: `/transaction_history` });
-    }
+    },
+    ...mapMutations(["updateTitle"])
+  },
+  mounted() {
+    this.updateTitle("明珠卡");
   }
 }
 </script>

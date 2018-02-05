@@ -1,7 +1,7 @@
 <template>
   <div>
     <loading v-model="isLoading"></loading>
-    <group title="历史下单记录">
+    <group>
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
       <scroller :lock-x=true 
                 :pulldown-config="{downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
@@ -17,7 +17,8 @@
             <div slot>
               <p style="text-align: left;color: #000">{{item.name}}</p>
               <p style="text-align: left;font-size:12px">{{item.description}}</p>
-              <p style="font-size:16px;color:#FF0000;">¥ {{item.price}} + {{item.pointCost}} 积分</p>
+              <p style="font-size:16px;color:#FF0000;">{{item.pointCost}} 积分</p>
+              <p style="font-size:12px;color:#EEC900;">参考价格：¥ {{item.price}}</p>
               <p style="font-size:12px; color:#999;">下单时间: {{item.orderTs | dateFormat}}</p>
             </div>
           </cell>
@@ -38,7 +39,7 @@ import {
   Group,
   dateFormat
 } from "vux";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "PointCostHistory",
@@ -117,10 +118,12 @@ export default {
           scope.$refs.scrollerEvent.reset();
           this.isLoading = false;
         });
-    }
+    },
+    ...mapMutations(["updateTitle"])
   },
   mounted() {
     this.refreshDataList();
+    this.updateTitle("历史下单记录");
   }
 };
 </script>

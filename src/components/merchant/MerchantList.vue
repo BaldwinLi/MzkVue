@@ -1,7 +1,7 @@
 <template>
   <div>
     <loading v-model="isLoading"></loading>
-    <group title="附近联盟商家">
+    <group>
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
       <scroller :lock-x=true 
                 :pulldown-config="{downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
@@ -29,7 +29,7 @@
 
 <script>
 import { Badge, Cell, Scroller, Loading, LoadMore, Group } from "vux";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "BranchList",
@@ -47,6 +47,7 @@ export default {
       pageSize: 15,
       latitude: 0,
       longitude: 0,
+      isLoading: false,
       // topLoading: false,
       // bottomLoading: false,
       list: []
@@ -67,7 +68,7 @@ export default {
     //   this.refreshMoreData();
     // },
     goMerchantMap(event, item) {
-      this.$router.push({ path: `/branch_map/${item.id}` });
+      this.$router.push({ path: `/merchant_map/${item.id}` });
     },
     refreshDataList(value) {
       this.longitude = (value && value.coords.longitude) || 0;
@@ -157,10 +158,12 @@ export default {
           }
         );
       }
-    }
+    },
+    ...mapMutations(["updateTitle"])
   },
   mounted() {
     this.invokenavigator(this.refreshDataList);
+    this.updateTitle("附近联盟商家");
   }
 };
 </script>

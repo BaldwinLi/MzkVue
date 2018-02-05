@@ -7,7 +7,7 @@
           </div>
         </cell>
         <cell title="查看积分兑换历史记录" @click.native="goPointCostHistory" is-link></cell>
-        <card>
+        <card style="margin-bottom: 30px;">
             <img slot="header" :src="detail.picUrl" style="width:100%;display:block;">
             <div slot="content" class="card-padding">
                 <div>
@@ -24,18 +24,19 @@
                 </div>
                 <p class="card-padding" style="font-size:18px;">{{detail.name}}</p>
                 <p class="card-padding" style="font-size:14px;line-height:1 ;color:#999;">{{detail.description}}</p>
-                <p class="card-padding" style="font-size:16px;color:#FF0000;">¥ {{detail.price}} + {{detail.pointCost}} 积分</p>
+                <p class="card-padding" style="font-size:16px;color:#FF0000;">{{detail.pointCost}} 积分</p>
+                <p class="card-padding" style="font-size:12px;color:#EEC900;">参考价格：¥ {{detail.price}}</p>
                 <!-- <x-address title="请选择地址" @on-hide="selectedAddress" v-model="detail.address" :list="addressData" placeholder="请选择地址">
                     <template slot="title" slot-scope="props">
                         <span style="vertical-align:middle;"><i class="fa fa-map-marker"></i> 邮寄地址</span>
                     </template>
                 </x-address> -->
             </div>
-            <div slot="footer" style="position: fixed; bottom: -15px; width: 100%;">
-              <x-button @click.native="queryReceiveHistory" style="background: #4682B4; color: #fff; width: 50%; float: left; margin-top: 15px;">查看历史收获信息</x-button>
-              <x-button @click.native="submit" style="background: #FF6347; color: #fff; width: 50%; float: left; margin-top: 15px;">确认下单</x-button>
-            </div>
         </card>
+        <div slot="footer" style="position: fixed; bottom: 0px; width: 100%;">
+            <x-button @click.native="queryReceiveHistory" style="background: #4682B4; color: #fff; width: 50%; float: left; margin-top: 15px;">查看历史收获信息</x-button>
+            <x-button @click.native="submit" style="background: #FF6347; color: #fff; width: 50%; float: left; margin-top: 15px;">确认下单</x-button>
+        </div>
         <!-- <div v-transfer-dom>
             <alert v-model="show2" :title="$t('Congratulations')" :content="$t('Your Message is sent successfully~')"></alert>
         </div> -->
@@ -54,7 +55,7 @@ import {
   //   Alert
   //   TransferDomDirective as TransferDom
 } from "vux";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "CommodityDetail",
@@ -115,15 +116,13 @@ export default {
       this.$router.push({ path: `/order_history` });
     },
     goPointCostHistory() {
-      this.$router.push({path: `/point_cost_history`})
+      this.$router.push({ path: `/point_cost_history` });
     },
     getPointBalance() {
       this.isLoading = true;
       const scope = this;
       this.$http
-        .get(
-          `${this.appContextPath}appweb/pointExchange/queryPoint`
-        )
+        .get(`${this.appContextPath}appweb/pointExchange/queryPoint`)
         .then(success => {
           scope.pointBalance =
             (success &&
@@ -133,7 +132,8 @@ export default {
             0;
           scope.isLoading = false;
         });
-    }
+    },
+    ...mapMutations(["updateTitle"])
   },
   mounted() {
     const scope = this;
@@ -153,7 +153,8 @@ export default {
           "无数据";
         this.isLoading = false;
       });
-      this.getPointBalance();
+    this.getPointBalance();
+    this.updateTitle("商品详情");
   }
 };
 </script>
@@ -161,6 +162,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .card-padding {
-  padding: 15px;
+  padding: 8px;
 }
 </style>

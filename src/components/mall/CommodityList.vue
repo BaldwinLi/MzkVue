@@ -17,8 +17,9 @@
                 <img slot="header" :src="item.picUrl" style="width:100%;display:block;">
                 <div slot="content" class="card-padding">
                   <p style="font-size:14px;">{{item.name}}</p>
-                  <p style="font-size:10px;line-height:1 ;color:#999;">{{item.description}}</p>
-                  <p style="font-size:12px;color:#FF0000;">¥ {{item.price}} + {{item.pointCost}} 积分</p>
+                  <!-- <p style="font-size:10px;line-height:1 ;color:#999;">{{item.description}}</p> -->
+                  <p style="font-size:12px;color:#FF0000;">{{item.pointCost}} 积分</p>
+                  <p style="font-size:10px;color:#EEC900;">参考价格：¥ {{item.price}}</p>
                 </div>
               </card>
             </flexbox-item>
@@ -32,7 +33,7 @@
 
 <script>
 import { Flexbox, FlexboxItem, Card, LoadMore, Scroller, Group } from "vux";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "CommodityList",
@@ -57,6 +58,7 @@ export default {
     ...mapGetters(["appContextPath"])
   },
   methods: {
+    ...mapMutations(["updateTitle"]),
     refreshDataList() {
       // this.topLoading = true;
       const scope = this;
@@ -104,6 +106,7 @@ export default {
   },
   mounted() {
     this.refreshDataList();
+    this.updateTitle("积分兑换商城");
   }
 };
 </script>

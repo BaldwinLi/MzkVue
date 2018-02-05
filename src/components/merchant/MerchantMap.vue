@@ -7,7 +7,7 @@
 
 <script>
 import { Loading } from "vux";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "MerchantMap",
@@ -46,7 +46,8 @@ export default {
             {};
           this.isLoading = false;
         });
-    }
+    },
+    ...mapMutations(["updateTitle"])
   },
   mounted() {
     const scope = this;
@@ -89,6 +90,7 @@ export default {
       );
     }
     this.refreshDataList();
+    this.updateTitle("商家位置");
   }
 };
 </script>
