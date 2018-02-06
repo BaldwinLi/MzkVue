@@ -49,6 +49,7 @@ if (auth_token && auth_token !== 'undefined') {
   ).then(
     success => {
       window.sessionStorage.setItem('token', success.data.result.token);
+      Vue.http.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8';
       Vue.http.defaults.headers.common['web-token'] = success.data.result.token;
       new Vue({
         router,

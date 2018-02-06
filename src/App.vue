@@ -28,11 +28,11 @@ export default {
       this.updateLoadingStatus({ isLoading: true });
       this.$http.get(`${this.appContextPath}appweb/pointExchange/signIn`).then(
         success => {
-          if (success && success.data && success.data.status === "OK") {
-            scope.$vux.alert.show({
-              content: (success && success.data && success.data.result) || ""
-            });
-          }
+          // if (success && success.data && success.data.status === "OK") {
+          scope.$vux.alert.show({
+            content: (success && success.data && success.data.result) || ""
+          });
+          // }
           scope.updateLoadingStatus({ isLoading: false });
         },
         error => {
