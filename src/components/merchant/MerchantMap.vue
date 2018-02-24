@@ -1,13 +1,14 @@
 <template>
   <div>
       <loading v-model="isLoading"></loading>
-      <div id="mapContainer"></div>
+      <div id="merchant-map-container"></div>
   </div>
 </template>
 
 <script>
 import { Loading } from "vux";
 import { mapGetters, mapMutations } from "vuex";
+import initBaiduMap from '@/initBaiduMap';
 
 export default {
   name: "MerchantMap",
@@ -48,6 +49,9 @@ export default {
         });
     },
     ...mapMutations(["updateTitle"])
+  },
+  beforeCreate() {
+    initBaiduMap();
   },
   mounted() {
     const scope = this;
@@ -97,5 +101,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+#merchant-map-container {
+  height: 100%;
+}
 </style>

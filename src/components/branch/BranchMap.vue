@@ -1,13 +1,14 @@
 <template>
   <div>
       <loading v-model="isLoading"></loading>
-      <div id="mapContainer"></div>
+      <div id="branch-map-container"></div>
   </div>
 </template>
 
 <script>
 import { Loading } from "vux";
 import { mapGetters, mapMutations } from "vuex";
+import initBaiduMap from '@/initBaiduMap';
 
 export default {
   name: "BranchMap",
@@ -25,6 +26,9 @@ export default {
   },
   methods: {
     ...mapMutations(["updateTitle"])
+  },
+  beforeCreate() {
+    initBaiduMap();
   },
   mounted() {
     const scope = this;
@@ -49,5 +53,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+#branch-map-container {
+    height: 100%;
+}
 </style>
