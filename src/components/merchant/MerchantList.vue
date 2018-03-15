@@ -129,7 +129,7 @@ export default {
               case 1:
                 scope.$vux.alert.show({
                   title,
-                  content: "坐标不得为空"
+                  content: "您的网络协议不允许使用定位服务"
                 });
                 break;
               case 2:
@@ -151,6 +151,7 @@ export default {
                 });
                 break;
             }
+            this.isLoading = false;
           },
           {
             enableHighAccuracy: true,

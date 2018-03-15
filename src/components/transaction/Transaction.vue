@@ -7,6 +7,9 @@
       <cell-box @click.native="queryTransactionHistory" is-link>
         交易明细查询
       </cell-box>
+      <cell-box @click.native="queryReconciliation" is-link>
+        交易对账
+      </cell-box>
     </group>
   </div>
 </template>
@@ -30,6 +33,9 @@ export default {
     },
     queryTransactionHistory() {
       this.$router.push({ path: `/transaction_history` });
+    },
+    queryReconciliation() {
+      this.$router.push({ path: `/reconciliation` });
     },
     ...mapMutations(["updateTitle"])
   },
