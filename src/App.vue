@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <x-header style="background-color:#EE7942;">
+    <x-header style="background-color:#0181ca;">
       {{title}}
       <a slot="right" @click="signIn">签到</a>
     </x-header>

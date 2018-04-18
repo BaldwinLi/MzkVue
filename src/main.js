@@ -44,28 +44,41 @@ if (auth_token && auth_token !== 'undefined') {
     store
   }).$mount('#app-box');
 } else {
-  Vue.http.get(
-    store.getters.appContextPath + (store.getters.isLocal ? "appweb/token/getTest?userId=151790291007882" : "appweb/token/get")
-  ).then(
-    success => {
-      window.sessionStorage.setItem('token', success.data.result.token);
-      Vue.http.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8';
-      Vue.http.defaults.headers.common['web-token'] = success.data.result.token;
-      new Vue({
-        router,
-        store,
-        render: h => h(App)
-      }).$mount('#app-box');
-    },
-    error => {
-      console.error('Get token failed');
-      new Vue({
-        router,
-        store,
-        render: h => h(App)
-      }).$mount('#app-box');
-    }
-  );
+  if (store.getters.isLocal) {
+    Vue.http.get(
+      store.getters.appContextPath + "appweb/token/getTest?userId=huangmu"
+    ).then(
+      success => {
+        window.sessionStorage.setItem('token', success.data.result.token);
+        Vue.http.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8';
+        Vue.http.defaults.headers.common['web-token'] = success.data.result.token;
+        new Vue({
+          router,
+          store,
+          render: h => h(App)
+        }).$mount('#app-box');
+      },
+      error => {
+        console.error('Get token failed');
+        new Vue({
+          router,
+          store,
+          render: h => h(App)
+        }).$mount('#app-box');
+      }
+    );
+  } else {
+    const _token = window.location.hash.match(/token=.*$/g);
+    window.sessionStorage.setItem('token', _token);
+        Vue.http.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8';
+        Vue.http.defaults.headers.common['web-token'] = _token;
+        new Vue({
+          router,
+          store,
+          render: h => h(App)
+        }).$mount('#app-box');
+  }
+
 }
 
 /* eslint-disable no-new */
