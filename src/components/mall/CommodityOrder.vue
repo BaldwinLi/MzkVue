@@ -34,8 +34,8 @@
             </div>
         </card>
         <div slot="footer" style="position: fixed; bottom: 0px; width: 100%;">
-            <x-button @click.native="queryReceiveHistory" style="background: #4682B4; color: #fff; width: 50%; float: left; margin-top: 15px;">查看历史收获信息</x-button>
-            <x-button @click.native="submit" style="background: #FF6347; color: #fff; width: 50%; float: left; margin-top: 15px;">确认下单</x-button>
+            <x-button @click.native="queryReceiveHistory" style="background: #4682B4; color: #fff; width: 60%; float: left; margin-top: 15px;">查看历史收获信息</x-button>
+            <x-button @click.native="submit" style="background: #FF6347; color: #fff; width: 40%; float: left; margin-top: 15px;">确认下单</x-button>
         </div>
         <!-- <div v-transfer-dom>
             <alert v-model="show2" :title="$t('Congratulations')" :content="$t('Your Message is sent successfully~')"></alert>

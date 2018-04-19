@@ -1,5 +1,5 @@
 export default () => {
-  if (!BMap) {
+  if (!window['BMap']) {
     const scriptEl = document.createElement('script');
     scriptEl.setAttribute('type', 'text/javascript');
     scriptEl.setAttribute('src', '//api.map.baidu.com/api?ak=mi3slB4ZEIbodHmHYkCIIB1iZ656zqmA&type=lite&v=1.0');

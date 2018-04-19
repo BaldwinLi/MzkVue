@@ -46,7 +46,7 @@ if (auth_token && auth_token !== 'undefined') {
 } else {
   if (store.getters.isLocal) {
     Vue.http.get(
-      store.getters.appContextPath + "appweb/token/getTest?userId=huangmu"
+      store.getters.appContextPath + "appweb/testtoken/getTest?userId=huangmu"
     ).then(
       success => {
         window.sessionStorage.setItem('token', success.data.result.token);

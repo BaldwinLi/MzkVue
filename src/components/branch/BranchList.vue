@@ -3,9 +3,11 @@
     <loading v-model="isLoading"></loading>
     <group>
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-      <scroller :lock-x=true 
-                :pulldown-config="{downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
-                :pullup-config="{upContent:'上拉加载更多', downContent: '释放后加载', loadingContent: '正在加载...',}" 
+      <p style="text-align: center;color: #000" v-if="list.length === 0">找不到信息</p>
+      <scroller v-if="list.length > 0"
+                :lock-x=true 
+                :pulldown-config="{content: '下拉刷新', downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
+                :pullup-config="{content: '上拉加载更多', upContent:'上拉加载更多', downContent: '释放后加载', loadingContent: '正在加载...',}" 
                 ref="scrollerEvent" 
                 :use-pulldown=true 
                 :use-pullup=true 
@@ -84,12 +86,12 @@ export default {
           }&longi=${this.longitude}`
         )
         .then(success => {
-          scope.list = (success &&
-            success.data &&
-            success.data.result &&
-            success.data.result.list) || {
-            content: "无数据"
-          };
+          scope.list =
+            (success &&
+              success.data &&
+              success.data.result &&
+              success.data.result.list) ||
+            [];
           scope.$refs.scrollerEvent.donePulldown();
           scope.$refs.scrollerEvent.reset({ top: 0 });
           this.isLoading = false;
