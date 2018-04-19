@@ -68,7 +68,11 @@ if (auth_token && auth_token !== 'undefined') {
       }
     );
   } else {
-    const _token = window.location.hash.match(/token=.*$/g);
+    let _token = window.location.hash.match(/token=.*$/g);
+    if(_token) {
+      _token = _token[0];
+      _token = _token && _token.replace('token=', '') || '';
+    };
     window.sessionStorage.setItem('token', _token);
         Vue.http.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8';
         Vue.http.defaults.headers.common['web-token'] = _token;

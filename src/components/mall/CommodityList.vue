@@ -1,5 +1,6 @@
 <template>
   <div>
+    <a class="sign-in" @click="signIn">签到</a>
     <group title="积分兑换商品列表">
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
      <scroller :lock-x=true 
@@ -58,7 +59,29 @@ export default {
     ...mapGetters(["appContextPath"])
   },
   methods: {
-    ...mapMutations(["updateTitle"]),
+    ...mapMutations(["updateTitle", "updateLoadingStatus"]),
+    signIn(event) {
+      const scope = this;
+      this.updateLoadingStatus({ isLoading: true });
+      this.$http.get(`${this.appContextPath}appweb/pointExchange/signIn`).then(
+        success => {
+          // if (success && success.data && success.data.status === "OK") {
+          scope.$vux.alert.show({
+            content: (success && success.data && success.data.result) || ""
+          });
+          // }
+          scope.updateLoadingStatus({ isLoading: false });
+        },
+        error => {
+          if (error && error.data && error.data.status === "FAIL") {
+            scope.$vux.alert.show({
+              content: (error && error.data && error.data.result) || ""
+            });
+          }
+          scope.updateLoadingStatus({ isLoading: false });
+        }
+      );
+    },
     refreshDataList() {
       // this.topLoading = true;
       const scope = this;
@@ -100,7 +123,7 @@ export default {
           scope.$refs.scrollerEvent.reset();
         });
     },
-    goCommodityOrder(id){
+    goCommodityOrder(id) {
       this.$router.push({ path: `/commodity_order/${id}` });
     }
   },
@@ -115,5 +138,13 @@ export default {
 <style scoped>
 .card-padding {
   padding: 15px;
+}
+.sign-in {
+  float: right;
+  line-height: 20px;
+  padding-left: 15px;
+  padding-right: 15px;
+  color: #528b8b;
+  font-size: 14px;
 }
 </style>
