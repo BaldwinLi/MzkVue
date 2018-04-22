@@ -2,11 +2,11 @@
   <div>
     <group>
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-      <p style="text-align: center;color: #000" v-if="list.length === 0">找不到信息</p>
+      <p style="text-align: center;color: #000" v-if="!isLoading && list.length === 0">找不到信息</p>
       <scroller v-if="list.length > 0"
                 :lock-x=true 
-                :pulldown-config="{content: '下拉刷新', downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
-                :pullup-config="{content: '上拉加载更多', upContent:'上拉加载更多', downContent: '释放后加载', loadingContent: '正在加载...',}" 
+                :pulldown-config="pulldownConfig" 
+                :pullup-config="pullupConfig"
                 ref="scrollerEvent" 
                 :use-pulldown=true 
                 :use-pullup=true 
@@ -30,10 +30,11 @@
 
 <script>
 import { Badge, Card, Scroller, LoadMore, Group, dateFormat } from "vux";
-import { mapGetters, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
+import { pulldownConfig, pullupConfig } from "../config";
 
 export default {
-  name: "AnnouncementList",
+  name: "TransactionHistory",
   components: {
     Badge,
     Card,
@@ -45,6 +46,8 @@ export default {
     return {
       pageNum: 1,
       pageSize: 10,
+      pulldownConfig,
+      pullupConfig,
       // topLoading: false,
       // bottomLoading: false,
       list: []
@@ -52,11 +55,12 @@ export default {
   },
   filters: {
     dateFormat: function(value) {
-      return dateFormat(new Date(value), 'YYYY-MM-DD')
+      return dateFormat(new Date(value), "YYYY-MM-DD");
     }
   },
   computed: {
-    ...mapGetters(["appContextPath", "isLocal"])
+    ...mapGetters(["appContextPath", "isLocal"]),
+    ...mapState(["isLoading"])
   },
   methods: {
     // onCellsListScroll(event) {
@@ -74,6 +78,7 @@ export default {
     },
     refreshDataList() {
       // this.topLoading = true;
+      this.updateLoadingStatus({ isLoading: true });
       const scope = this;
       this.$http
         .get(
@@ -82,14 +87,16 @@ export default {
           }appweb/cardQuery/listChange?cardNo=10&pageSize=15&pageNum=1`
         )
         .then(success => {
-          scope.list = (success &&
+          scope.list =
+            success &&
             success.data &&
             success.data.result &&
-            success.data.result.list) || {
-            content: "无数据"
-          };
-          scope.$refs.scrollerEvent.donePulldown();
-          scope.$refs.scrollerEvent.reset({ top: 0 });
+            success.data.result.list || [];
+          if (scope.$refs.scrollerEvent) {
+            scope.$refs.scrollerEvent.donePulldown();
+            scope.$refs.scrollerEvent.reset({ top: 0 });
+          }
+          this.updateLoadingStatus({ isLoading: false });
         });
     },
     refreshMoreData() {
@@ -110,11 +117,13 @@ export default {
               success.data.result.list) ||
               []
           );
-          scope.$refs.scrollerEvent.donePullup();
-          scope.$refs.scrollerEvent.reset();
+          if (scope.$refs.scrollerEvent) {
+            scope.$refs.scrollerEvent.donePullup();
+            scope.$refs.scrollerEvent.reset();
+          }
         });
     },
-    ...mapMutations(["updateTitle"])
+    ...mapMutations(["updateTitle", "updateLoadingStatus"])
   },
   mounted() {
     this.refreshDataList();

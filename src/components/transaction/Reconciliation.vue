@@ -22,21 +22,43 @@
     <div slot="footer" style="position: fixed; bottom: 0px; width: 100%;">
         <x-button @click.native="confirmReconcilate" style="background: #4682B4; color: #fff; left;">确认账单对账信息</x-button>
     </div>
+    <div v-transfer-dom>
+      <confirm v-model="showUserLoginModel"
+      :title="'请输入用户名密码'"
+      :close-on-confirm="false"
+      @on-confirm="onConfirm">
+        <div class="vux-prompt">
+          <input class="vux-prompt-msgbox" type="text" placeholder="用户名" v-model="loginfo.username">
+          <input class="vux-prompt-msgbox" style="margin-top: 5px" type="password" placeholder="密码" v-model="loginfo.password">
+        </div>
+      </confirm>
+    </div>
   </div>
 </template>
 
 <script>
-import { Group, Datetime, Loading, dateFormat, Card, XButton } from "vux";
+import {
+  Group,
+  Datetime,
+  Loading,
+  dateFormat,
+  Card,
+  XButton,
+  Confirm,
+  TransferDomDirective as TransferDom
+} from "vux";
 import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "CardBalance",
+  directives: { TransferDom },
   components: {
     Group,
     Datetime,
     Loading,
     Card,
-    XButton
+    XButton,
+    Confirm
   },
   data() {
     return {
@@ -50,7 +72,12 @@ export default {
       ),
       endDate: dateFormat(new Date(), "YYYY-MM-DD"),
       isLoading: false,
-      sum: {}
+      sum: {},
+      showUserLoginModel: true,
+      loginfo: {
+        username: "",
+        password: ""
+      }
     };
   },
   computed: {
@@ -74,11 +101,17 @@ export default {
             this.appContextPath
           }appweb/balance/confirm?start=${this.startDate
             .split("-")
-            .join("")}&end=${this.endDate.split("-").join("")}`
+            .join("")}&end=${this.endDate.split("-").join("")}`,
+          {
+            headers: {
+              user: this.loginfo.username,
+              pwd: this.loginfo.password
+            }
+          }
         )
         .then(success => {
           this.$vux.alert.show({
-            title,
+            title: "",
             content: "确认成功"
           });
           this.isLoading = false;
@@ -86,14 +119,20 @@ export default {
     },
     queryReconcilationInfo() {
       const scope = this;
-    //   this.isLoading = true;
+      //   this.isLoading = true;
       this.$http
         .get(
           `${
             this.appContextPath
           }appweb/balance/query?start=${this.startDate
             .split("-")
-            .join("")}&end=${this.endDate.split("-").join("")}`
+            .join("")}&end=${this.endDate.split("-").join("")}`,
+          {
+            headers: {
+              user: this.loginfo.username,
+              pwd: this.loginfo.password
+            }
+          }
         )
         .then(success => {
           scope.sum =
@@ -104,11 +143,16 @@ export default {
             "无数据";
           this.isLoading = false;
         });
+    },
+    onConfirm() {
+      if (this.loginfo.username && this.loginfo.password) {
+        this.showUserLoginModel = false;
+        this.queryReconcilationInfo();
+      }
     }
   },
   mounted() {
     this.updateTitle("明珠卡对账");
-    this.queryReconcilationInfo();
   }
 };
 </script>

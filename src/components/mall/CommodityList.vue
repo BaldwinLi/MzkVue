@@ -3,11 +3,11 @@
     <a class="sign-in" @click="signIn">签到</a>
     <group title="积分兑换商品列表">
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-      <p style="text-align: center;color: #000" v-if="list.length === 0">找不到信息</p>
+      <p style="text-align: center;color: #000" v-if="!isLoading && list.length === 0">找不到信息</p>
       <scroller v-if="list.length > 0"
                 :lock-x=true 
-               :pulldown-config="{content: '下拉刷新', downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
-               :pullup-config="{content: '上拉加载更多', upContent:'上拉加载更多', downContent: '释放后加载', loadingContent: '正在加载...',}" 
+               :pulldown-config="pulldownConfig" 
+               :pullup-config="pullupConfig"
                ref="scrollerEvent" 
                :use-pulldown=true 
                :use-pullup=true 
@@ -36,7 +36,8 @@
 
 <script>
 import { Flexbox, FlexboxItem, Card, LoadMore, Scroller, Group } from "vux";
-import { mapGetters, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
+import { pulldownConfig, pullupConfig } from "../config";
 
 export default {
   name: "CommodityList",
@@ -52,13 +53,16 @@ export default {
     return {
       pageNum: 1,
       pageSize: 15,
+      pulldownConfig,
+      pullupConfig,
       // topLoading: false,
       // bottomLoading: false,
       list: []
     };
   },
   computed: {
-    ...mapGetters(["appContextPath"])
+    ...mapGetters(["appContextPath"]),
+    ...mapState(["isLoading"])
   },
   methods: {
     ...mapMutations(["updateTitle", "updateLoadingStatus"]),
@@ -85,7 +89,7 @@ export default {
       );
     },
     refreshDataList() {
-      // this.topLoading = true;
+      this.updateLoadingStatus({ isLoading: true });
       const scope = this;
       this.$http
         .get(
@@ -97,11 +101,12 @@ export default {
           scope.list = (success &&
             success.data &&
             success.data.result &&
-            success.data.result.list) || {
-            content: "无数据"
-          };
-          scope.$refs.scrollerEvent.donePulldown();
-          scope.$refs.scrollerEvent.reset({ top: 0 });
+            success.data.result.list) || [];
+          if (scope.$refs.scrollerEvent) {
+            scope.$refs.scrollerEvent.donePulldown();
+            scope.$refs.scrollerEvent.reset({ top: 0 });
+          }
+          scope.updateLoadingStatus({ isLoading: false });
         });
     },
     refreshMoreData() {
@@ -121,8 +126,10 @@ export default {
               success.data.result.list) ||
               []
           );
-          scope.$refs.scrollerEvent.donePullup();
-          scope.$refs.scrollerEvent.reset();
+          if (scope.$refs.scrollerEvent) {
+            scope.$refs.scrollerEvent.donePullup();
+            scope.$refs.scrollerEvent.reset();
+          }
         });
     },
     goCommodityOrder(id) {

@@ -2,7 +2,7 @@
   <div>
     <loading v-model="isLoading"></loading>
     <group>
-      <cell title="明珠卡余额" :value="'¥ '+balance"></cell>
+      <cell title="明珠卡余额" :value="balance"></cell>
     </group>
   </div>
 </template>
@@ -37,14 +37,15 @@ export default {
       .get(`${this.appContextPath}appweb/cardQuery/balance?cardNo=10`)
       .then(success => {
         scope.balance =
-          (success &&
-            success.data &&
-            success.data.result &&
-            success.data.result.balance) ||
-          "无数据";
+          success &&
+          success.data &&
+          success.data.result &&
+          success.data.result.balance;
+        if (scope.balance) scope.balance = "¥ " + scope.balance;
+        else scope.balance = "无数据";
         this.isLoading = false;
       });
-      this.updateTitle("明珠卡余额");
+    this.updateTitle("明珠卡余额");
   }
 };
 </script>

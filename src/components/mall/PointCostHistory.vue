@@ -3,18 +3,18 @@
     <loading v-model="isLoading"></loading>
     <group>
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-      <p style="text-align: center;color: #000" v-if="list.length === 0">找不到信息</p>
+      <p style="text-align: center;color: #000" v-if="!isLoading && list.length === 0">找不到信息</p>
       <scroller v-if="list.length > 0"
                 :lock-x=true 
-                :pulldown-config="{content: '下拉刷新', downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
-                :pullup-config="{content: '上拉加载更多', upContent:'上拉加载更多', downContent: '释放后加载', loadingContent: '正在加载...',}" 
+                :pulldown-config="pulldownConfig" 
+                :pullup-config="pullupConfig"
                 ref="scrollerEvent" 
                 :use-pulldown=true 
                 :use-pullup=true 
                 @on-pulldown-loading="refreshDataList" 
                 @on-pullup-loading="refreshMoreData">
         <div>
-          <cell v-for="item in list" :key="item.id" primary="content" @click.native="goBranchMap($event, item)">
+          <cell v-for="item in list" :key="item.id" primary="content">
             <img slot="title" style="height: 50px" :src="item.picUrl" class="card-padding">
             <div slot>
               <p style="text-align: left;color: #000">{{item.name}}</p>
@@ -42,6 +42,7 @@ import {
   dateFormat
 } from "vux";
 import { mapGetters, mapMutations } from "vuex";
+import { pulldownConfig, pullupConfig } from "../config";
 
 export default {
   name: "PointCostHistory",
@@ -58,6 +59,8 @@ export default {
       pageNum: 1,
       pageSize: 15,
       isLoading: false,
+      pulldownConfig,
+      pullupConfig,
       // topLoading: false,
       // bottomLoading: false,
       list: []
@@ -84,6 +87,7 @@ export default {
     // },
     refreshDataList() {
       const scope = this;
+      this.isLoading = true;
       this.$http
         .get(
           `${
@@ -91,14 +95,16 @@ export default {
           }appweb/pointExchange/listOrder?pageSize=15&pageNum=1`
         )
         .then(success => {
-          scope.list = (success &&
-            success.data &&
-            success.data.result &&
-            success.data.result.list) || {
-            content: "无数据"
-          };
-          scope.$refs.scrollerEvent.donePulldown();
-          scope.$refs.scrollerEvent.reset({ top: 0 });
+          scope.list =
+            (success &&
+              success.data &&
+              success.data.result &&
+              success.data.result.list) ||
+            [];
+          if (scope.$refs.scrollerEvent) {
+            scope.$refs.scrollerEvent.donePulldown();
+            scope.$refs.scrollerEvent.reset({ top: 0 });
+          }
           this.isLoading = false;
         });
     },
@@ -106,7 +112,9 @@ export default {
       const scope = this;
       this.$http
         .get(
-          `${this.appContextPath}appweb/pointExchange/listOrder?pageSize=${this.pageSize}&pageNum=${++this.pageNum}`
+          `${this.appContextPath}appweb/pointExchange/listOrder?pageSize=${
+            this.pageSize
+          }&pageNum=${++this.pageNum}`
         )
         .then(success => {
           scope.list = scope.list.concat(
@@ -116,8 +124,10 @@ export default {
               success.data.result.list) ||
               []
           );
-          scope.$refs.scrollerEvent.donePullup();
-          scope.$refs.scrollerEvent.reset();
+          if (scope.$refs.scrollerEvent) {
+            scope.$refs.scrollerEvent.donePullup();
+            scope.$refs.scrollerEvent.reset();
+          }
           this.isLoading = false;
         });
     },

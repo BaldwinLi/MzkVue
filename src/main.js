@@ -9,13 +9,15 @@ import App from './App'
 import Home from './components/Home'
 import {
   AjaxPlugin,
-  AlertPlugin
+  AlertPlugin,
+  ConfirmPlugin
 } from 'vux'
 import store from './vuex/store';
 
 Vue.use(Vuex)
 Vue.use(AjaxPlugin)
 Vue.use(AlertPlugin)
+Vue.use(ConfirmPlugin)
 
 router.beforeEach(function (to, from, next) {
   store.commit('updateLoadingStatus', {

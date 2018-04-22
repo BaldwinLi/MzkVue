@@ -3,11 +3,11 @@
     <loading v-model="isLoading"></loading>
     <group>
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-      <p style="text-align: center;color: #000" v-if="list.length === 0">找不到信息</p>
+      <p style="text-align: center;color: #000" v-if="!isLoading && list.length === 0">找不到信息</p>
       <scroller v-if="list.length > 0"
                 :lock-x=true 
-                :pulldown-config="{content: '下拉刷新', downContent: '下拉刷新', upContent: '释放后更新', loadingContent: '正在刷新...',}" 
-                :pullup-config="{content: '上拉加载更多', upContent:'上拉加载更多', downContent: '释放后加载', loadingContent: '正在加载...',}" 
+                :pulldown-config="pulldownConfig" 
+                :pullup-config="pullupConfig"
                 ref="scrollerEvent" 
                 :use-pulldown=true 
                 :use-pullup=true 
@@ -32,6 +32,7 @@
 <script>
 import { Badge, Cell, Scroller, Loading, LoadMore, Group } from "vux";
 import { mapGetters, mapMutations } from "vuex";
+import { pulldownConfig, pullupConfig } from "../config";
 
 export default {
   name: "BranchList",
@@ -50,6 +51,8 @@ export default {
       latitude: 0,
       longitude: 0,
       isLoading: false,
+      pulldownConfig,
+      pullupConfig,
       // topLoading: false,
       // bottomLoading: false,
       list: []
@@ -87,8 +90,10 @@ export default {
             success.data &&
             success.data.result &&
             success.data.result.list) || [];
-          scope.$refs.scrollerEvent.donePulldown();
-          scope.$refs.scrollerEvent.reset({ top: 0 });
+          if (scope.$refs.scrollerEvent) {
+            scope.$refs.scrollerEvent.donePulldown();
+            scope.$refs.scrollerEvent.reset({ top: 0 });
+          }
           scope.isLoading = false;
         });
     },
@@ -112,8 +117,10 @@ export default {
               success.data.result.list) ||
               []
           );
-          scope.$refs.scrollerEvent.donePullup();
-          scope.$refs.scrollerEvent.reset();
+          if (scope.$refs.scrollerEvent) {
+            scope.$refs.scrollerEvent.donePullup();
+            scope.$refs.scrollerEvent.reset();
+          }
           scope.isLoading = false;
         });
     },
