@@ -8,7 +8,7 @@
 <script>
 import { Loading } from "vux";
 import { mapGetters, mapMutations } from "vuex";
-import initBaiduMap from '@/initBaiduMap';
+import initBaiduMap from "@/initBaiduMap";
 
 export default {
   name: "MerchantMap",
@@ -45,13 +45,26 @@ export default {
               success.data.result &&
               success.data.result.detail) ||
             {};
+          this.renderBMap(
+            scope.detail.distance,
+            scope.detail.latitude,
+            scope.detail.longitude
+          );
           this.isLoading = false;
         });
     },
+    renderBMap(distance, latitude, longitude) {
+      initBaiduMap().then(result => {
+        if (result) {
+          const map = new BMap.Map("merchant-map-container");
+          // 创建地图实例
+          const point = new BMap.Point(latitude, longitude);
+          // 创建点坐标
+          map.centerAndZoom(point, distance);
+        }
+      });
+    },
     ...mapMutations(["updateTitle"])
-  },
-  beforeCreate() {
-    initBaiduMap();
   },
   mounted() {
     const scope = this;

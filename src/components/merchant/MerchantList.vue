@@ -83,7 +83,7 @@ export default {
         .get(
           `${
             this.appContextPath
-          }appweb/branch/list?pageSize=15&pageNum=1&keyWord=key&type=testType&lati=${this.latitude}&longi=${this.longitude}`
+          }appweb/branch/list?pageSize=15&pageNum=1&lati=${this.latitude}&longi=${this.longitude}`
         )
         .then(success => {
           scope.list = (success &&
