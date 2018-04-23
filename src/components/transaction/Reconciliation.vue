@@ -20,16 +20,31 @@
         </div>
     </card>
     <div slot="footer" style="position: fixed; bottom: 0px; width: 100%;">
-        <x-button @click.native="confirmReconcilate" style="background: #4682B4; color: #fff; left;">确认账单对账信息</x-button>
+        <x-button @click.native="confirmReconcilate" style="background: #4682B4; color: #fff; float: left; width: 60%">确认账单对账信息</x-button>
+        <x-button @click.native="showChangePwdModel = true" style="background: #FF6347; color: #fff; float: left; width: 40%; margin-top: 0">修改密码</x-button>
     </div>
     <div v-transfer-dom>
       <confirm v-model="showUserLoginModel"
-      :title="'请输入用户名密码'"
+      :title="'请输入用户名和密码'"
       :close-on-confirm="false"
-      @on-confirm="onConfirm">
+      @on-confirm="onConfirm"
+      @on-cancel="onCancel">
         <div class="vux-prompt">
           <input class="vux-prompt-msgbox" type="text" placeholder="用户名" v-model="loginfo.username">
           <input class="vux-prompt-msgbox" style="margin-top: 5px" type="password" placeholder="密码" v-model="loginfo.password">
+        </div>
+      </confirm>
+    </div>
+    <div v-transfer-dom>
+      <confirm v-model="showChangePwdModel"
+      :title="'修改密码'"
+      :close-on-confirm="false"
+      @on-confirm="changePwd">
+        <div class="vux-prompt">
+          <input class="vux-prompt-msgbox" type="password" placeholder="旧密码" v-model="changePwdInfo.password">
+          <input class="vux-prompt-msgbox" style="margin-top: 5px" type="password" placeholder="新密码" v-model="changePwdInfo.newpassword">
+          <input class="vux-prompt-msgbox" style="margin-top: 5px" type="password" placeholder="新密码确认" v-model="changePwdInfo.newpasswordConfirm">
+          <p v-if="!isPwdConfirm" style="color: #EE2C2C" >两次输入的密码不一致。</p>
         </div>
       </confirm>
     </div>
@@ -74,10 +89,17 @@ export default {
       isLoading: false,
       sum: {},
       showUserLoginModel: true,
+      showChangePwdModel: false,
       loginfo: {
         username: "",
         password: ""
-      }
+      },
+      changePwdInfo: {
+        password: "",
+        newpassword: "",
+        newpasswordConfirm: ""
+      },
+      isPwdConfirm: true
     };
   },
   computed: {
@@ -110,16 +132,24 @@ export default {
           }
         )
         .then(success => {
-          this.$vux.alert.show({
-            title: "",
-            content: "确认成功"
-          });
+          if (success.data.status === "OK") {
+            this.$vux.alert.show({
+              title: "",
+              content: "确认成功"
+            });
+          } else if (
+            success.data.status === "FAIL" &&
+            success.data.result ==
+              "Can't find shopInfo with given user and pwd."
+          ) {
+            this.showUserLoginModel = true;
+          }
           this.isLoading = false;
         });
     },
     queryReconcilationInfo() {
       const scope = this;
-      //   this.isLoading = true;
+      this.isLoading = true;
       this.$http
         .get(
           `${
@@ -135,12 +165,21 @@ export default {
           }
         )
         .then(success => {
-          scope.sum =
-            (success &&
-              success.data &&
-              success.data.result &&
-              success.data.result.sum) ||
-            "无数据";
+          if (success.data.status === "OK") {
+            scope.sum =
+              (success &&
+                success.data &&
+                success.data.result &&
+                success.data.result.sum) ||
+              {};
+          } else if (
+            success.data.status === "FAIL" &&
+            success.data.result ==
+              "Can't find shopInfo with given user and pwd."
+          ) {
+            this.showUserLoginModel = true;
+          }
+
           this.isLoading = false;
         });
     },
@@ -148,6 +187,63 @@ export default {
       if (this.loginfo.username && this.loginfo.password) {
         this.showUserLoginModel = false;
         this.queryReconcilationInfo();
+      }
+    },
+    onCancel() {
+      const scope = this;
+      this.$vux.confirm.show({
+        title: "",
+        content: "取消用户验证将推出对账, 是否确认取消？",
+        onCancel() {
+          scope.showUserLoginModel = true;
+        },
+        onConfirm() {
+          window.history.back();
+        }
+      });
+    },
+    changePwd() {
+      if (
+        this.changePwdInfo.password &&
+        this.changePwdInfo.newpassword &&
+        this.changePwdInfo.newpasswordConfirm
+      ) {
+        if (
+          this.changePwdInfo.newpassword !==
+          this.changePwdInfo.newpasswordConfirm
+        ) {
+          this.isPwdConfirm = false;
+        } else {
+          this.showChangePwdModel = false;
+          this.isLoading = true;
+          this.$http
+            .get(
+              `${this.appContextPath}appweb/balance/chgpwd?pwd=${
+                this.changePwdInfo.newpassword
+              }`,
+              {
+                headers: {
+                  user: this.loginfo.username,
+                  pwd: this.changePwdInfo.password
+                }
+              }
+            )
+            .then(success => {
+              if (success.data.status === "OK") {
+                this.$vux.alert.show({
+                  title: "",
+                  content: "修改密码成功"
+                });
+              } else if (
+                success.data.status === "FAIL" &&
+                success.data.result ==
+                  "Can't find shopInfo with given user and pwd."
+              ) {
+                this.showUserLoginModel = true;
+              }
+              this.isLoading = false;
+            });
+        }
       }
     }
   },

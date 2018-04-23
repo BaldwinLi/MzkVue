@@ -24,8 +24,8 @@ export default new Vuex.Store({ // 名字自己定义
       getters: {
         isLocal: () => proxyedHostNames.includes(window.location.hostname),
         appContextPath: () => (proxyedHostNames.includes(window.location.hostname) ?
-          `${window.location.origin}/dev_api/` :
-          (window.location.origin + (window.location.protocol==='https:' ? '/MzkAppServiceTest/' : '/MzkAppService/'))),
+          `${window.location.origin}/dev_api/` : `${window.location.origin}/MzkAppService/`)
+          // (window.location.origin + (window.location.protocol==='https:' ? '/MzkAppServiceTest/' : '/MzkAppService/'))),
           }
       }); // 这里你可能已经有其他 module
 
