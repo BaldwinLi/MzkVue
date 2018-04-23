@@ -193,7 +193,7 @@ export default {
       const scope = this;
       this.$vux.confirm.show({
         title: "",
-        content: "取消用户验证将推出对账, 是否确认取消？",
+        content: "取消用户验证将退出对账, 是否确认取消？",
         onCancel() {
           scope.showUserLoginModel = true;
         },
