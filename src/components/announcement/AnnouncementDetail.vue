@@ -1,17 +1,21 @@
 <template>
-  <div v-html="detail">
+  <div>
+    <card :header="{title: detail.title || '' }" :footer="{title: detail.createTs ? ('发布时间：' + dateFormat(detail.createTs)) : ''}">
+      <div slot="content" v-html="detail.content"></div>
+    </card>
       <loading v-model="isLoading"></loading>
   </div>
 </template>
 
 <script>
-import { Loading } from "vux";
+import { Loading, Card, dateFormat } from "vux";
 import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "AnnouncementDetail",
   components: {
-    Loading
+    Loading,
+    Card
   },
   data() {
     return {
@@ -23,7 +27,10 @@ export default {
     ...mapGetters(["appContextPath"])
   },
   methods: {
-    ...mapMutations(["updateTitle"])
+    ...mapMutations(["updateTitle"]),
+    dateFormat: function(value) {
+      return dateFormat(new Date(value), "YYYY-MM-DD");
+    }
   },
   mounted() {
     const scope = this;
@@ -39,8 +46,8 @@ export default {
           success.data &&
           success.data.result &&
           success.data.result.detail &&
-          success.data.result.detail.content) || {
-          content: "无数据"
+          success.data.result.detail) || {
+          content: `<p style="text-align: center">暂无数据</p>`
         };
         this.isLoading = false;
       });
