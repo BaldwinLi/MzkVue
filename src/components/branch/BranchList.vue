@@ -84,7 +84,7 @@ export default {
         .get(
           `${
             this.appContextPath
-          }appweb/allianceBusi/list?pageSize=15&pageNum=1&keyWord=key&type=testType&lati=${
+          }appweb/allianceBusi/list?pageSize=15&pageNum=1&lati=${
             this.latitude
           }&longi=${this.longitude}`
         )
@@ -110,7 +110,7 @@ export default {
         .get(
           `${this.appContextPath}appweb/allianceBusi/detail?pageSize=${
             this.pageSize
-          }&pageNum=${++this.pageNum}&keyWord=key&type=testType&lati=${
+          }&pageNum=${++this.pageNum}&lati=${
             this.latitude
           }&longi=${this.longitude}`
         )
@@ -135,7 +135,7 @@ export default {
       if (navigator.geolocation) {
         const title = "地图加载失败";
         navigator.geolocation.getCurrentPosition(
-          func,
+          func.bind(this),
           value => {
             switch (value.code) {
               case 1:
@@ -174,6 +174,7 @@ export default {
     }
   },
   mounted() {
+    // this.refreshDataList();
     this.invokenavigator(this.refreshDataList);
     this.updateTitle("附近网点");
   }

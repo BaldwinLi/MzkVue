@@ -3,7 +3,7 @@
     <loading v-model="isLoading"></loading>
     <group>
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-      <p style="text-align: center;color: #000" v-if="!isLoading && list.length === 0">找不到信息</p>
+      <p class="no-data" v-if="!isLoading && list.length === 0">暂无数据</p>
       <scroller v-if="list.length > 0"
                 :lock-x=true 
                 :pulldown-config="pulldownConfig" 
@@ -84,6 +84,7 @@ export default {
           `${
             this.appContextPath
           }appweb/branch/list?pageSize=15&pageNum=1&lati=${this.latitude}&longi=${this.longitude}`
+          // 
         )
         .then(success => {
           scope.list = (success &&
@@ -107,7 +108,7 @@ export default {
             this.pageSize
           }&pageNum=${
             ++this.pageNum
-          }&keyWord=key&type=testType&lati=${this.latitude}&longi=${this.longitude}`
+          }&lati=${this.latitude}&longi=${this.longitude}`
         )
         .then(success => {
           scope.list = scope.list.concat(
@@ -170,6 +171,7 @@ export default {
     ...mapMutations(["updateTitle"])
   },
   mounted() {
+    // this.refreshDataList()
     this.invokenavigator(this.refreshDataList);
     this.updateTitle("附近联盟商家");
   }

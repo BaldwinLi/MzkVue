@@ -3,7 +3,7 @@
     <loading v-model="isLoading"></loading>
     <group>
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-      <p style="text-align: center;color: #000" v-if="!isLoading && list.length === 0">找不到信息</p>
+      <p class="no-data" v-if="!isLoading && list.length === 0">暂无数据</p>
       <scroller v-if="list.length > 0"
                 :lock-x=true 
                 :pulldown-config="pulldownConfig" 
