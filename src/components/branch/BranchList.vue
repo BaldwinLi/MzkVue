@@ -32,7 +32,7 @@
 <script>
 import { Badge, Cell, Scroller, Loading, LoadMore, Group } from "vux";
 import { mapGetters, mapMutations } from "vuex";
-import { pulldownConfig, pullupConfig } from "../config";
+import { pulldownConfig, pullupConfig, geolocationOptions, geolocationErrorCallback } from "../config";
 
 export default {
   name: "BranchList",
@@ -133,42 +133,13 @@ export default {
       this.isLoading = true;
       const scope = this;
       if (navigator.geolocation) {
-        const title = "地图加载失败";
         navigator.geolocation.getCurrentPosition(
           func.bind(this),
           value => {
-            switch (value.code) {
-              case 1:
-                scope.$vux.alert.show({
-                  title,
-                  content: "您的网络协议不允许使用定位服务"
-                });
-                break;
-              case 2:
-                scope.$vux.alert.show({
-                  title,
-                  content: "暂时获取不到位置信息"
-                });
-                break;
-              case 3:
-                scope.$vux.alert.show({
-                  title,
-                  content: "获取信息超时"
-                });
-                break;
-              case 4:
-                scope.$vux.alert.show({
-                  title,
-                  content: "未知错误"
-                });
-                break;
-            }
+            geolocationErrorCallback(value, scope.$vux.alert);
             this.isLoading = false;
           },
-          {
-            enableHighAccuracy: true,
-            maximumAge: 1000
-          }
+          geolocationOptions
         );
       }
     }

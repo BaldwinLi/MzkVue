@@ -14,9 +14,9 @@
         </group>
     <card>
         <div slot="content" class="card-padding">
-            <p style="padding: 5px; font-size:16px; color:#0000EE;">商户名称: {{sum.shopName}}</p>
-            <p style="padding: 5px; font-size:16px; color:#999;">交易笔数: {{sum.amount || 0}} 笔</p>
-            <p style="padding: 5px; font-size:16px; color:#FF0000;">交易总金额: ¥ {{sum.sum || '0.00'}}</p>
+            <p style="padding: 0.5rem; font-size:1.6rem; color:#0000EE;">商户名称: {{sum.shopName}}</p>
+            <p style="padding: 0.5rem; font-size:1.6rem; color:#999;">交易笔数: {{sum.amount || 0}} 笔</p>
+            <p style="padding: 0.5rem; font-size:1.6rem; color:#FF0000;">交易总金额: ¥ {{sum.sum || '0.00'}}</p>
         </div>
     </card>
     <div slot="footer" style="position: fixed; bottom: 0px; width: 100%;">
@@ -31,7 +31,7 @@
       @on-cancel="onCancel">
         <div class="vux-prompt">
           <input class="vux-prompt-msgbox" type="text" placeholder="用户名" v-model="loginfo.username">
-          <input class="vux-prompt-msgbox" style="margin-top: 5px" type="password" placeholder="密码" v-model="loginfo.password">
+          <input class="vux-prompt-msgbox" style="margin-top: 0.5rem" type="password" placeholder="密码" v-model="loginfo.password">
         </div>
       </confirm>
     </div>
@@ -42,8 +42,8 @@
       @on-confirm="changePwd">
         <div class="vux-prompt">
           <input class="vux-prompt-msgbox" type="password" placeholder="旧密码" v-model="changePwdInfo.password">
-          <input class="vux-prompt-msgbox" style="margin-top: 5px" type="password" placeholder="新密码" v-model="changePwdInfo.newpassword">
-          <input class="vux-prompt-msgbox" style="margin-top: 5px" type="password" placeholder="新密码确认" v-model="changePwdInfo.newpasswordConfirm">
+          <input class="vux-prompt-msgbox" style="margin-top: 0.5rem" type="password" placeholder="新密码" v-model="changePwdInfo.newpassword">
+          <input class="vux-prompt-msgbox" style="margin-top: 0.5rem" type="password" placeholder="新密码确认" v-model="changePwdInfo.newpasswordConfirm">
           <p v-if="!isPwdConfirm" style="color: #EE2C2C" >两次输入的密码不一致。</p>
         </div>
       </confirm>
@@ -256,6 +256,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .card-padding {
-  padding: 15px;
+  padding: 1.5rem;
 }
 </style>

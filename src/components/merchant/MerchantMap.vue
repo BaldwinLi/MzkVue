@@ -9,6 +9,7 @@
 import { Loading } from "vux";
 import { mapGetters, mapMutations } from "vuex";
 import initBaiduMap from "@/initBaiduMap";
+import { geolocationOptions, geolocationErrorCallback } from "../config";
 
 export default {
   name: "MerchantMap",
@@ -69,42 +70,13 @@ export default {
   mounted() {
     const scope = this;
     if (navigator.geolocation) {
-      const title = "地图加载失败";
       navigator.geolocation.getCurrentPosition(
         this.refreshDataList,
         value => {
-          switch (value.code) {
-            case 1:
-              scope.$vux.alert.show({
-                title,
-                content: "您的网络协议不允许使用定位服务"
-              });
-              break;
-            case 2:
-              scope.$vux.alert.show({
-                title,
-                content: "暂时获取不到位置信息"
-              });
-              break;
-            case 3:
-              scope.$vux.alert.show({
-                title,
-                content: "获取信息超时"
-              });
-              break;
-            case 4:
-              scope.$vux.alert.show({
-                title,
-                content: "未知错误"
-              });
-              break;
-          }
+          geolocationErrorCallback(value, scope.$vux.alert);
           this.isLoading = false;
         },
-        {
-          enableHighAccuracy: true,
-          maximumAge: 1000
-        }
+        geolocationOptions
       );
     }
     this.refreshDataList();

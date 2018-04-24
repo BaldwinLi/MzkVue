@@ -43,7 +43,7 @@ export default {
   margin-top: 35%;
 }
 .x-button-style {
-  border-radius: 99px !important;
-  margin: 20px 20px 0px 0px;
+  border-radius: 10rem !important;
+  margin: 2rem 2rem 0 0;
 }
 </style>

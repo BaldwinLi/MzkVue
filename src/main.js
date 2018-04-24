@@ -14,6 +14,9 @@ import {
   ConfirmPlugin
 } from 'vux'
 import store from './vuex/store';
+import cordova from './initCordova'
+
+cordova(App);
 
 Vue.use(Vuex)
 Vue.use(AjaxPlugin)

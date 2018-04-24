@@ -19,10 +19,10 @@
               <card @click.native="goCommodityOrder(item.id)">
                 <img slot="header" :src="item.picUrl" style="width:100%;display:block;">
                 <div slot="content" class="card-padding">
-                  <p style="font-size:14px;">{{item.name}}</p>
+                  <p style="font-size:1.1rem;">{{item.name}}</p>
                   <!-- <p style="font-size:10px;line-height:1 ;color:#999;">{{item.description}}</p> -->
-                  <p style="font-size:12px;color:#FF0000;">{{item.pointCost}} 积分</p>
-                  <p style="font-size:10px;color:#EEC900;">参考价格：¥ {{item.price}}</p>
+                  <p style="font-size:1.05rem;color:#FF0000;">{{item.pointCost}} 积分</p>
+                  <p style="font-size:1rem;color:#EEC900;">参考价格：¥ {{item.price}}</p>
                 </div>
               </card>
             </flexbox-item>
@@ -146,14 +146,14 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .card-padding {
-  padding: 15px;
+  padding: 1.5rem;
 }
 .sign-in {
   float: right;
-  line-height: 20px;
-  padding-left: 15px;
-  padding-right: 15px;
+  line-height: 2rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
   color: #528b8b;
-  font-size: 14px;
+  font-size: 1.4rem;
 }
 </style>

@@ -15,13 +15,13 @@
                 @on-pullup-loading="refreshMoreData">
         <div>
           <cell v-for="item in list" :key="item.id" primary="content" @click.native="goAnnouncementDetail($event, item)" is-link>
-            <p slot="title" v-if="item.title" class="card-padding"><i class="fa fa-bullhorn" style="font-size: 3.3rem;" aria-hidden="true"></i></p>
+            <p slot="title" v-if="item.title" class="card-padding"><i class="fa fa-bullhorn" style="font-size: 1.6rem;" aria-hidden="true"></i></p>
             <div style="text-align: left;" slot>
               <p class="header-text">
                 {{ item.title }}
-                <i style="font-size: 2.3rem; color: #999999; float: right; font-weight: normal;" aria-hidden="true">{{item.createTs | dateFormat}}</i>
+                <i style="font-size: 1.1rem; color: #999999; float: right; font-weight: normal;" aria-hidden="true">{{item.createTs | dateFormat}}</i>
               </p>
-              <p style="font-size: 2.4rem; height: 3rem; overflow: hidden;" v-html="item.content"></p>
+              <p style="font-size: 1.2rem; height: 1.5rem; overflow: hidden;" v-html="item.content"></p>
             </div>
           </cell>
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
@@ -133,9 +133,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .card-padding {
-  padding: 1.3rem;
-  margin: 1.3rem;
+  padding: 0.6rem;
+  margin: 0.6rem;
   background-color: #eedfcc;
-  border-radius: 4rem;
+  border-radius: 2rem;
 }
 </style>

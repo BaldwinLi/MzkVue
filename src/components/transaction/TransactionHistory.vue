@@ -15,10 +15,10 @@
         <div>
             <card v-for="(item, index) in list" :key="index">
                 <div slot="content" class="card-padding">
-                  <p style="padding: 5px; font-size:14px;">{{item.description}}</p>
-                  <p style="padding: 5px; font-size:12px; color:#0000EE;">明珠卡余额: ¥ {{item.balance}}</p>
-                  <p style="padding: 5px; font-size:12px;color:#FF0000;">明珠卡消费金额: ¥ {{item.amount}}</p>
-                  <p style="padding: 5px; font-size:12px; color:#999;">交易时间: {{item.ts | dateFormat}}</p>
+                  <p style="padding: 0.5rem; font-size:1.4rem;">{{item.description}}</p>
+                  <p style="padding: 0.5rem; font-size:1.2rem; color:#0000EE;">明珠卡余额: ¥ {{item.balance}}</p>
+                  <p style="padding: 0.5rem; font-size:1.2rem;color:#FF0000;">明珠卡消费金额: ¥ {{item.amount}}</p>
+                  <p style="padding: 0.5rem; font-size:1.2rem; color:#999;">交易时间: {{item.ts | dateFormat}}</p>
                 </div>
             </card>
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
@@ -135,6 +135,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .card-padding {
-  padding: 15px;
+  padding: 1.5rem;
 }
 </style>

@@ -15,9 +15,9 @@
         <div>
             <cell v-for="(item, index) in list" :key="index" @click.native="goBackOrder(item)" is-link>
                 <div slot="inline-desc" class="card-padding">
-                  <p style="padding: 5px; font-size:14px;">收件人: {{item.receiver}}</p>
-                  <p style="padding: 5px; font-size:12px; color:#0000EE;">收件人联系方式: {{item.tel}}</p>
-                  <p style="padding: 5px; font-size:12px; color:#999;">收件地址: {{item.address}}</p>
+                  <p style="padding: 0.5rem; font-size:1.4rem;">收件人: {{item.receiver}}</p>
+                  <p style="padding: 0.5rem; font-size:1.4rem; color:#0000EE;">收件人联系方式: {{item.tel}}</p>
+                  <p style="padding: 0.5rem; font-size:1.4rem; color:#999;">收件地址: {{item.address}}</p>
                 </div>
             </cell>
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
@@ -130,6 +130,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .card-padding {
-  padding: 15px;
+  padding: 1.5rem;
 }
 </style>

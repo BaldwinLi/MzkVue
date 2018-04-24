@@ -7,25 +7,25 @@
           </div>
         </cell>
         <cell title="查看积分兑换历史记录" @click.native="goPointCostHistory" is-link></cell>
-        <card style="margin-bottom: 30px;">
+        <card style="margin-bottom: 6rem;">
             <img slot="header" :src="detail.picUrl" style="width:100%;display:block;">
             <div slot="content" class="card-padding">
                 <div>
-                    <i class="fa fa-map-marker" style="float: left;margin-top: 12px;"></i>
+                    <i class="fa fa-map-marker" style="float: left;margin-top: 1.2rem;"></i>
                     <x-input title="邮寄地址" v-model="detail.address"></x-input>
                 </div>
                 <div>
-                  <i class="fa fa-user" style="float: left;margin-top: 12px;"></i>
+                  <i class="fa fa-user" style="float: left;margin-top: 1.2rem;"></i>
                   <x-input title="收件人" v-model="detail.receiver"></x-input>
                 </div>
                 <div>
-                  <i class="fa fa-phone" style="float: left;margin-top: 12px;"></i>
+                  <i class="fa fa-phone" style="float: left;margin-top: 1.2rem;"></i>
                   <x-input title="收件人联系方式" mask="999 9999 9999" v-model="detail.tel" :max="13" is-type="china-mobile"></x-input>
                 </div>
-                <p class="card-padding" style="font-size:18px;">{{detail.name}}</p>
-                <p class="card-padding" style="font-size:14px;line-height:1 ;color:#999;">{{detail.description}}</p>
-                <p class="card-padding" style="font-size:16px;color:#FF0000;">{{detail.pointCost}} 积分</p>
-                <p class="card-padding" style="font-size:12px;color:#EEC900;">参考价格：¥ {{detail.price}}</p>
+                <p class="card-padding" style="font-size:1.8rem;">{{detail.name}}</p>
+                <p class="card-padding" style="font-size:1.4rem;line-height:1rem ;color:#999;">{{detail.description}}</p>
+                <p class="card-padding" style="font-size:1.6rem;color:#FF0000;">{{detail.pointCost}} 积分</p>
+                <p class="card-padding" style="font-size:1.2ren;color:#EEC900;">参考价格：¥ {{detail.price}}</p>
                 <!-- <x-address title="请选择地址" @on-hide="selectedAddress" v-model="detail.address" :list="addressData" placeholder="请选择地址">
                     <template slot="title" slot-scope="props">
                         <span style="vertical-align:middle;"><i class="fa fa-map-marker"></i> 邮寄地址</span>
@@ -33,9 +33,9 @@
                 </x-address> -->
             </div>
         </card>
-        <div slot="footer" style="position: fixed; bottom: 0px; width: 100%;">
-            <x-button @click.native="queryReceiveHistory" style="background: #4682B4; color: #fff; width: 60%; float: left; margin-top: 15px;">查看历史收货信息</x-button>
-            <x-button @click.native="submit" style="background: #FF6347; color: #fff; width: 40%; float: left; margin-top: 15px;">确认下单</x-button>
+        <div slot="footer" style="position: fixed; bottom: 0; width: 100%;">
+            <x-button @click.native="queryReceiveHistory" style="background: #4682B4; color: #fff; width: 60%; float: left; margin-top: 1.5rem;">查看历史收货信息</x-button>
+            <x-button @click.native="submit" style="background: #FF6347; color: #fff; width: 40%; float: left; margin-top: 1.5rem;">确认下单</x-button>
         </div>
         <!-- <div v-transfer-dom>
             <alert v-model="show2" :title="$t('Congratulations')" :content="$t('Your Message is sent successfully~')"></alert>
@@ -166,6 +166,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .card-padding {
-  padding: 8px;
+  padding: 0.4rem;
 }
 </style>

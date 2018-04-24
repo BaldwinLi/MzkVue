@@ -15,13 +15,13 @@
                 @on-pullup-loading="refreshMoreData">
         <div>
           <cell v-for="item in list" :key="item.id" primary="content">
-            <img slot="title" style="height: 50px" :src="item.picUrl" class="card-padding">
+            <img slot="title" style="height: 5rem" :src="item.picUrl" class="card-padding">
             <div slot>
               <p style="text-align: left;color: #000">{{item.name}}</p>
-              <p style="text-align: left;font-size:12px">{{item.description}}</p>
-              <p style="font-size:16px;color:#FF0000;">{{item.pointCost}} 积分</p>
-              <p style="font-size:12px;color:#EEC900;">参考价格：¥ {{item.price}}</p>
-              <p style="font-size:12px; color:#999;">下单时间: {{item.orderTs | dateFormat}}</p>
+              <p style="text-align: left;font-size:1.2rem">{{item.description}}</p>
+              <p style="font-size:1.6rem;color:#FF0000;">{{item.pointCost}} 积分</p>
+              <p style="font-size:1.2rem;color:#EEC900;">参考价格：¥ {{item.price}}</p>
+              <p style="font-size:1.2rem; color:#999;">下单时间: {{item.orderTs | dateFormat}}</p>
             </div>
           </cell>
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
@@ -143,6 +143,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .card-padding {
-  padding: 15px;
+  padding: 1.5rem;
 }
 </style>

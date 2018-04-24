@@ -1,11 +1,11 @@
 <template>
   <div>
     <card>
-      <div slot="header" class="weui-panel__hd" style="padding: 1.1rem 1.2rem 0.8rem;">
+      <div slot="header" class="weui-panel__hd" style="padding: 0.55rem 0.6rem 0.4rem;">
         <p class="header-text" style="text-align: center;">{{detail.title}}</p>
-        <p v-if="detail.createTs" style= "font-size: 2.5rem; text-align: center; color: #999999;">{{detail.createTs | dateFormat}}</p>
+        <p v-if="detail.createTs" style= "font-size: 1.2rem; text-align: center; color: #999999;">{{detail.createTs | dateFormat}}</p>
       </div>
-      <div slot="content" style="padding: 1.1rem 1.2rem 0.8rem; font-size: 3rem; color: #999999;" v-html="detail.content"></div>
+      <div slot="content" style="padding: 0.6rem 0.55rem 0.4rem; font-size: 1.5rem; color: #999999;" v-html="detail.content"></div>
     </card>
       <loading v-model="isLoading"></loading>
   </div>
@@ -77,7 +77,7 @@ ul {
 }
 li {
   display: inline-block;
-  margin: 0 0.9rem;
+  margin: 0 0.45rem;
 }
 a {
   color: #42b983;
