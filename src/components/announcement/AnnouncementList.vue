@@ -1,9 +1,9 @@
 <template>
   <div>
     <loading v-model="isLoading"></loading>
-    <group title="公告列表">
+    <group>
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-      <p style="text-align: center;color: #000" v-if="!isLoading && list.length === 0">找不到信息</p>
+      <p class="no-data" v-if="!isLoading && list.length === 0">暂无数据</p>
       <scroller v-if="list.length > 0"
                 :lock-x=true
                 :pulldown-config="pulldownConfig" 
@@ -15,8 +15,14 @@
                 @on-pullup-loading="refreshMoreData">
         <div>
           <cell v-for="item in list" :key="item.id" primary="content" @click.native="goAnnouncementDetail($event, item)" is-link>
-            <p slot="title" v-if="item.title" class="card-padding">{{ item.title }} <badge></badge></p>
-            <div style="text-align: left;" v-html="item.content" slot></div>
+            <p slot="title" v-if="item.title" class="card-padding"><i class="fa fa-bullhorn" style="font-size: 3.3rem;" aria-hidden="true"></i></p>
+            <div style="text-align: left;" slot>
+              <p class="header-text">
+                {{ item.title }}
+                <i style="font-size: 2.3rem; color: #999999; float: right; font-weight: normal;" aria-hidden="true">{{item.createTs | dateFormat}}</i>
+              </p>
+              <p style="font-size: 2.4rem; height: 3rem; overflow: hidden;" v-html="item.content"></p>
+            </div>
           </cell>
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
         </div>
@@ -26,7 +32,15 @@
 </template>
 
 <script>
-import { Loading, Badge, Cell, Scroller, LoadMore, Group } from "vux";
+import {
+  Loading,
+  Badge,
+  Cell,
+  Scroller,
+  LoadMore,
+  Group,
+  dateFormat
+} from "vux";
 import { mapGetters, mapMutations } from "vuex";
 import { pulldownConfig, pullupConfig } from "../config";
 
@@ -47,40 +61,37 @@ export default {
       pageSize: 10,
       pulldownConfig,
       pullupConfig,
-      // topLoading: false,
-      // bottomLoading: false,
       list: []
     };
+  },
+  filters: {
+    dateFormat: function(value) {
+      const date = parseInt(dateFormat(new Date(value), "YYYYMMDD"));
+      const today = parseInt(dateFormat(Date.now(), "YYYYMMDD"));
+      if (date === today) return "今天 " + dateFormat(new Date(value), "hh:mm");
+      else return dateFormat(new Date(value), "YYYY-MM-DD");
+    }
   },
   computed: {
     ...mapGetters(["appContextPath", "isLocal"])
   },
   methods: {
-    // onCellsListScroll(event) {
-    //   const scope = this;
-    //   if (event.top < this.$refs["scrollerEvent"].$el.clientTop - 100) {
-    //     this.refreshDataList();
-    //   }
-    // },
-    // onScrollBottom() {
-    //   const scope = this;
-    //   this.refreshMoreData();
-    // },
     ...mapMutations(["updateTitle"]),
     goAnnouncementDetail(event, item) {
       this.$router.push({ path: `/announcement_detail/${item.id}` });
     },
     refreshDataList() {
-      // this.topLoading = true;
       this.isLoading = true;
       const scope = this;
       this.$http
         .get(`${this.appContextPath}appweb/bulletin/list?pageSize=10&pageNum=1`)
         .then(success => {
-          scope.list = (success &&
-            success.data &&
-            success.data.result &&
-            success.data.result.list) || [];
+          scope.list =
+            (success &&
+              success.data &&
+              success.data.result &&
+              success.data.result.list) ||
+            [];
           if (scope.$refs.scrollerEvent) {
             scope.$refs.scrollerEvent.donePulldown();
             scope.$refs.scrollerEvent.reset({ top: 0 });
@@ -122,6 +133,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .card-padding {
-  padding: 15px;
+  padding: 1.3rem;
+  margin: 1.3rem;
+  background-color: #eedfcc;
+  border-radius: 4rem;
 }
 </style>
