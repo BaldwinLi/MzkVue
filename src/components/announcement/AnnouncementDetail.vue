@@ -1,7 +1,7 @@
 <template>
   <div>
     <card :header="{title: detail.title || '' }" :footer="{title: detail.createTs ? ('发布时间：' + dateFormat(detail.createTs)) : ''}">
-      <div slot="content" v-html="detail.content"></div>
+      <div slot="content" style="padding: 14px 15px 10px;" v-html="detail.content"></div>
     </card>
       <loading v-model="isLoading"></loading>
   </div>

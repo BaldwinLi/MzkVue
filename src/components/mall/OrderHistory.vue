@@ -74,7 +74,7 @@ export default {
     },
     refreshDataList() {
       // this.topLoading = true;
-      scope.updateLoadingStatus({ isLoading: true });
+      this.updateLoadingStatus({ isLoading: true });
       const scope = this;
       this.$http
         .get(
