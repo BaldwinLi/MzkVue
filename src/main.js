@@ -16,7 +16,7 @@ import {
 import store from './vuex/store';
 import cordova from './initCordova'
 
-cordova(App);
+// cordova(App);
 
 Vue.use(Vuex)
 Vue.use(AjaxPlugin)

@@ -8,3 +8,15 @@
   text-align: center;
   color: #000
 }
+
+.footer-inscribe {
+  background-image: url(./footer_bg.jpg);
+  background-size: 15rem;
+  background-repeat: no-repeat;
+  height: 15rem;
+  width: 15rem;
+  right: 0;
+  float: right;
+  text-align: center;
+  font-size: 1.1rem;
+}

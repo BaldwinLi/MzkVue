@@ -6,6 +6,12 @@
         <p v-if="detail.createTs" style= "font-size: 1.2rem; text-align: center; color: #999999;">{{detail.createTs | dateFormat}}</p>
       </div>
       <div slot="content" style="padding: 0.6rem 0.55rem 0.4rem; font-size: 1.5rem; color: #999999;" v-html="detail.content"></div>
+      <div slot="footer" style="padding: 0.6rem 0.55rem 0.4rem; font-size: 1.6rem;">
+        <div class="footer-inscribe">
+          <p class="footer-text" style="margin-top: 3rem;">大连明珠卡公司</p>
+          <p class="footer-text">{{detail.createTs | dateFormat}}</p>
+        </div>
+      </div>
     </card>
       <loading v-model="isLoading"></loading>
   </div>
@@ -29,10 +35,11 @@ export default {
   },
   filters: {
     dateFormat: function(value) {
-      const date = parseInt(dateFormat(new Date(value), "YYYYMMDD"));
-      const today = parseInt(dateFormat(Date.now(), "YYYYMMDD"));
-      if (date === today) return "今天 " + dateFormat(new Date(value), "hh:mm");
-      else return dateFormat(new Date(value), "YYYY/MM/DD hh:mm");
+      // const date = parseInt(dateFormat(new Date(value), "YYYYMMDD"));
+      // const today = parseInt(dateFormat(Date.now(), "YYYYMMDD"));
+      // if (date === today) return "今天 " + dateFormat(new Date(value), "hh:mm");
+      // else
+      return dateFormat(new Date(value), "YYYY/MM/DD hh:mm");
     }
   },
   computed: {
@@ -66,7 +73,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
 h1,
 h2 {
   font-weight: normal;
@@ -81,5 +88,9 @@ li {
 }
 a {
   color: #42b983;
+}
+
+.footer-text {
+  margin: 1rem 1rem 1rem 4rem;
 }
 </style>
