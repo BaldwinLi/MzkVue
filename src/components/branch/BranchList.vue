@@ -10,7 +10,7 @@
                 :pullup-config="pullupConfig"
                 ref="scrollerEvent" 
                 :use-pulldown=true 
-                :use-pullup=true 
+                :use-pullup="enablePullup" 
                 @on-pulldown-loading="invokenavigator(refreshDataList)" 
                 @on-pullup-loading="invokenavigator(refreshMoreData)">
         <div>
@@ -32,7 +32,12 @@
 <script>
 import { Badge, Cell, Scroller, Loading, LoadMore, Group } from "vux";
 import { mapGetters, mapMutations } from "vuex";
-import { pulldownConfig, pullupConfig, geolocationOptions, geolocationErrorCallback } from "../config";
+import {
+  pulldownConfig,
+  pullupConfig,
+  geolocationOptions,
+  geolocationErrorCallback
+} from "../config";
 
 export default {
   name: "BranchList",
@@ -55,7 +60,8 @@ export default {
       isLoading: false,
       // topLoading: false,
       // bottomLoading: false,
-      list: []
+      list: [],
+      enablePullup: false
     };
   },
   computed: {
@@ -95,6 +101,7 @@ export default {
               success.data.result &&
               success.data.result.list) ||
             [];
+          if (scope.list.length === 15) scope.enablePullup = true;
           if (scope.$refs.scrollerEvent) {
             scope.$refs.scrollerEvent.donePulldown();
             scope.$refs.scrollerEvent.reset({ top: 0 });
@@ -110,9 +117,9 @@ export default {
         .get(
           `${this.appContextPath}appweb/allianceBusi/detail?pageSize=${
             this.pageSize
-          }&pageNum=${++this.pageNum}&lati=${
-            this.latitude
-          }&longi=${this.longitude}`
+          }&pageNum=${++this.pageNum}&lati=${this.latitude}&longi=${
+            this.longitude
+          }`
         )
         .then(success => {
           scope.list = scope.list.concat(

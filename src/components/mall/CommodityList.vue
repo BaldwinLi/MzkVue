@@ -6,13 +6,13 @@
       <p class="no-data" v-if="!isLoading && list.length === 0">暂无数据</p>
       <scroller v-if="list.length > 0"
                 :lock-x=true 
-               :pulldown-config="pulldownConfig" 
-               :pullup-config="pullupConfig"
-               ref="scrollerEvent" 
-               :use-pulldown=true 
-               :use-pullup=true 
-               @on-pulldown-loading="refreshDataList" 
-               @on-pullup-loading="refreshMoreData">
+                :pulldown-config="pulldownConfig" 
+                :pullup-config="pullupConfig"
+                ref="scrollerEvent" 
+                :use-pulldown=true 
+                :use-pullup="enablePullup"
+                @on-pulldown-loading="refreshDataList" 
+                @on-pullup-loading="refreshMoreData">
         <div>
           <flexbox :gutter="0" wrap="wrap">
             <flexbox-item :span="1/3" v-for="item in list" :key="item.id">
@@ -57,7 +57,8 @@ export default {
       pullupConfig,
       // topLoading: false,
       // bottomLoading: false,
-      list: []
+      list: [],
+      enablePullup: false
     };
   },
   computed: {
@@ -98,10 +99,15 @@ export default {
           }appweb/pointExchange/listItem?pageSize=15&pageNum=1`
         )
         .then(success => {
-          scope.list = (success &&
-            success.data &&
-            success.data.result &&
-            success.data.result.list) || [];
+          scope.list =
+            (success &&
+              success.data &&
+              success.data.result &&
+              success.data.result.list) ||
+            [];
+          if (scope.list.length === 15) {
+            scope.enablePullup = true;
+          }
           if (scope.$refs.scrollerEvent) {
             scope.$refs.scrollerEvent.donePulldown();
             scope.$refs.scrollerEvent.reset({ top: 0 });
