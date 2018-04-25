@@ -19,6 +19,8 @@ export default new Vuex.Store({ // 名字自己定义
         },
         updateTitle(state, payload) {
           state.title = payload;
+          const titleEl = document.head.getElementsByTagName('title')[0];
+          if(titleEl) titleEl.innerHTML = payload;
         }
       },
       getters: {

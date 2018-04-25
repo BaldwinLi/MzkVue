@@ -20,6 +20,7 @@
 <script>
 import { Loading, Card, dateFormat } from "vux";
 import { mapGetters, mapMutations } from "vuex";
+// import { announcementDetail } from "../../mock/mockData";
 
 export default {
   name: "AnnouncementDetail",
@@ -57,17 +58,28 @@ export default {
           this.$route.params.id
         }`
       )
-      .then(success => {
-        scope.detail = (success &&
-          success.data &&
-          success.data.result &&
-          success.data.result.detail &&
-          success.data.result.detail) || {
-          content: `<p style="text-align: center">暂无数据</p>`
-        };
-        this.isLoading = false;
-      });
-    this.updateTitle("公告详情");
+      .then(
+        success => {
+          scope.detail = (success &&
+            success.data &&
+            success.data.result &&
+            success.data.result.detail &&
+            success.data.result.detail) || {
+            content: `<p style="text-align: center">暂无数据</p>`
+          };
+          this.updateTitle(scope.detail.title);
+          this.isLoading = false;
+        }
+        // error => {
+        //   scope.detail = (announcementDetail &&
+        //     announcementDetail.result &&
+        //     announcementDetail.result.detail) || {
+        //     content: `<p style="text-align: center">暂无数据</p>`
+        //   };
+        //   this.updateTitle(scope.detail.title);
+        //   this.isLoading = false;
+        // }
+      );
   }
 };
 </script>

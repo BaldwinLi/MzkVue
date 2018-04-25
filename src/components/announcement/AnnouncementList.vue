@@ -43,6 +43,7 @@ import {
 } from "vux";
 import { mapGetters, mapMutations } from "vuex";
 import { pulldownConfig, pullupConfig } from "../config";
+// import { announcementlist } from "../../mock/mockData";
 
 export default {
   name: "AnnouncementList",
@@ -85,19 +86,33 @@ export default {
       const scope = this;
       this.$http
         .get(`${this.appContextPath}appweb/bulletin/list?pageSize=10&pageNum=1`)
-        .then(success => {
-          scope.list =
-            (success &&
-              success.data &&
-              success.data.result &&
-              success.data.result.list) ||
-            [];
-          if (scope.$refs.scrollerEvent) {
-            scope.$refs.scrollerEvent.donePulldown();
-            scope.$refs.scrollerEvent.reset({ top: 0 });
+        .then(
+          success => {
+            scope.list =
+              (success &&
+                success.data &&
+                success.data.result &&
+                success.data.result.list) ||
+              [];
+            if (scope.$refs.scrollerEvent) {
+              scope.$refs.scrollerEvent.donePulldown();
+              scope.$refs.scrollerEvent.reset({ top: 0 });
+            }
+            this.isLoading = false;
           }
-          this.isLoading = false;
-        });
+          // error => {
+          //   scope.list =
+          //     (announcementlist &&
+          //       announcementlist.result &&
+          //       announcementlist.result.list) ||
+          //     [];
+          //   if (scope.$refs.scrollerEvent) {
+          //     scope.$refs.scrollerEvent.donePulldown();
+          //     scope.$refs.scrollerEvent.reset({ top: 0 });
+          //   }
+          //   this.isLoading = false;
+          // }
+        );
     },
     refreshMoreData() {
       // this.bottomLoading = true;
@@ -134,8 +149,11 @@ export default {
 <style scoped>
 .card-padding {
   padding: 0.6rem;
-  margin: 0.6rem;
+  margin: 0.8rem;
   background-color: #eedfcc;
   border-radius: 2rem;
+  text-align: center;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 </style>
