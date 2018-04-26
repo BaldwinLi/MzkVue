@@ -109,17 +109,21 @@ export default {
             .get(
               `${
                 scope.appContextPath
-              }appweb/pointExchange/exchangeItem?id=${this.$route.params.id}&address=${
+              }appweb/pointExchange/exchangeItem?id=${scope.$route.params.id}&address=${
                 scope.detail.address
               }&receiver=${scope.detail.receiver}&tel=${scope.detail.tel}`
             )
             .then(success => {
-              if (success && success.data && success.data.status) {
+              if (success && success.data && success.data.status !== 'FAIL') {
                 scope.$vux.alert.show({
                   content: "下单成功"
                 });
+                scope.$router.push({ path: `/commodity_list` });
+              } else {
+                scope.$vux.alert.show({
+                  content: success.data.result
+                });
               }
-              scope.$router.push({ path: `/commodity_list` });
               scope.isLoading = false;
             });
         }
