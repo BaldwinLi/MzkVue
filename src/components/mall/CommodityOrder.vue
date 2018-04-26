@@ -98,7 +98,7 @@ export default {
         .get(
           `${
             this.appContextPath
-          }appweb/pointExchange/exchangeItem?id=10&address=${
+          }appweb/pointExchange/exchangeItem?id=${this.$route.params.id}&address=${
             this.detail.address
           }&receiver=${this.detail.receiver}&tel=${this.detail.tel}`
         )

@@ -4,14 +4,15 @@
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
       <p class="no-data" v-if="!isLoading && list.length === 0">暂无数据</p>
       <scroller v-if="list.length > 0"
-                :lock-x=true 
-                :pulldown-config="pulldownConfig" 
+                :lock-x=true
+                :scrollbar-y=true>
+                <!-- :pulldown-config="pulldownConfig" 
                 :pullup-config="pullupConfig"
                 ref="scrollerEvent" 
                 :use-pulldown=true 
                 :use-pullup=true 
                 @on-pulldown-loading="refreshDataList" 
-                @on-pullup-loading="refreshMoreData">
+                @on-pullup-loading="refreshMoreData" -->
         <div>
             <cell v-for="(item, index) in list" :key="index" @click.native="goBackOrder(item)" is-link>
                 <div slot="inline-desc" class="card-padding">
@@ -87,37 +88,37 @@ export default {
             success.data &&
             success.data.result &&
             success.data.result.list) || [];
-          if (scope.$refs.scrollerEvent) {
-            scope.$refs.scrollerEvent.donePulldown();
-            scope.$refs.scrollerEvent.reset({ top: 0 });
-          }
+          // if (scope.$refs.scrollerEvent) {
+          //   scope.$refs.scrollerEvent.donePulldown();
+          //   scope.$refs.scrollerEvent.reset({ top: 0 });
+          // }
           scope.updateLoadingStatus({ isLoading: false });
         });
     },
-    refreshMoreData() {
-      // this.bottomLoading = true;
-      const scope = this;
-      this.$http
-        .get(
-          `${
-            this.appContextPath
-          }appweb/pointExchange/listHisAdress?pageSize=10&pageNum=${++this
-            .pageNum}`
-        )
-        .then(success => {
-          scope.list = scope.list.concat(
-            (success &&
-              success.data &&
-              success.data.result &&
-              success.data.result.list) ||
-              []
-          );
-          if (scope.$refs.scrollerEvent) {
-            scope.$refs.scrollerEvent.donePullup();
-            scope.$refs.scrollerEvent.reset();
-          }
-        });
-    },
+    // refreshMoreData() {
+    //   // this.bottomLoading = true;
+    //   const scope = this;
+    //   this.$http
+    //     .get(
+    //       `${
+    //         this.appContextPath
+    //       }appweb/pointExchange/listHisAdress?pageSize=10&pageNum=${++this
+    //         .pageNum}`
+    //     )
+    //     .then(success => {
+    //       scope.list = scope.list.concat(
+    //         (success &&
+    //           success.data &&
+    //           success.data.result &&
+    //           success.data.result.list) ||
+    //           []
+    //       );
+    //       if (scope.$refs.scrollerEvent) {
+    //         scope.$refs.scrollerEvent.donePullup();
+    //         scope.$refs.scrollerEvent.reset();
+    //       }
+    //     });
+    // },
     ...mapMutations(["updateTitle", "updateLoadingStatus"])
   },
   mounted() {

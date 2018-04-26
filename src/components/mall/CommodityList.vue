@@ -5,7 +5,8 @@
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
       <p class="no-data" v-if="!isLoading && list.length === 0">暂无数据</p>
       <scroller v-if="list.length > 0"
-                :lock-x=true 
+                :lock-x=true
+                :scrollbar-y=true
                :pulldown-config="pulldownConfig" 
                :pullup-config="pullupConfig"
                ref="scrollerEvent" 
@@ -128,7 +129,7 @@ export default {
           );
           if (scope.$refs.scrollerEvent) {
             scope.$refs.scrollerEvent.donePullup();
-            scope.$refs.scrollerEvent.reset();
+            scope.$refs.scrollerEvent.reset({ bottom: 0 });
           }
         });
     },
