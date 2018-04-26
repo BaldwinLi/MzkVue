@@ -10,7 +10,7 @@ export const pullupConfig = {
   upContent: '上拉加载更多',
   downContent: '释放后加载',
   loadingContent: '正在加载...',
-  height: 2
+  height: 15
 }
 
 export const geolocationOptions = {

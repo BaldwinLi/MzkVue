@@ -11,18 +11,18 @@
                 :pullup-config="pullupConfig"
                 ref="scrollerEvent" 
                 :use-pulldown=true 
-                :use-pullup=true 
+                :use-pullup="enablePullup"
                 @on-pulldown-loading="refreshDataList" 
                 @on-pullup-loading="refreshMoreData">
         <div>
           <cell v-for="item in list" :key="item.id" primary="content" @click.native="goAnnouncementDetail($event, item)" is-link>
             <p slot="title" v-if="item.title" class="card-padding"><i class="fa fa-bullhorn" style="font-size: 1.6rem;" aria-hidden="true"></i></p>
             <div style="text-align: left;" slot>
-              <p class="header-text">
+              <p class="header-text" style="width: 85%;">
                 {{ item.title }}
-                <i style="font-size: 1.1rem; color: #999999; float: right; font-weight: normal;" aria-hidden="true">{{item.createTs | dateFormat}}</i>
+                <i style="font-size: 1.1rem; color: #999999; right: 0; top: 0; position: absolute; font-weight: normal;" aria-hidden="true">{{item.createTs | dateFormat}}</i>
               </p>
-              <p style="font-size: 1.2rem; height: 1.5rem; overflow: hidden;" v-html="item.content"></p>
+              <p class="apostrophe" style="font-size: 1.2rem; height: 1.5rem; overflow: hidden; width: 95%;" v-html="item.content"></p>
             </div>
           </cell>
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
@@ -63,7 +63,8 @@ export default {
       pageSize: 10,
       pulldownConfig,
       pullupConfig,
-      list: []
+      list: [],
+      enablePullup: false
     };
   },
   filters: {
@@ -99,6 +100,7 @@ export default {
               scope.$refs.scrollerEvent.donePulldown();
               scope.$refs.scrollerEvent.reset({ top: 0 });
             }
+            if (scope.list.length === 10) scope.enablePullup = true;
             this.isLoading = false;
           }
           // error => {
@@ -156,5 +158,10 @@ export default {
   text-align: center;
   width: 2.5rem;
   height: 2.5rem;
+}
+.apostrophe:before {
+  content: "...";
+  position: absolute;
+  right: 1.7rem;;
 }
 </style>

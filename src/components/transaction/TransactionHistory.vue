@@ -10,7 +10,7 @@
                 :pullup-config="pullupConfig"
                 ref="scrollerEvent" 
                 :use-pulldown=true 
-                :use-pullup=true 
+                :use-pullup="enablePullup" 
                 @on-pulldown-loading="refreshDataList" 
                 @on-pullup-loading="refreshMoreData">
         <div>
@@ -51,7 +51,8 @@ export default {
       pullupConfig,
       // topLoading: false,
       // bottomLoading: false,
-      list: []
+      list: [],
+      enablePullup: false
     };
   },
   filters: {
@@ -89,10 +90,14 @@ export default {
         )
         .then(success => {
           scope.list =
-            success &&
-            success.data &&
-            success.data.result &&
-            success.data.result.list || [];
+            (success &&
+              success.data &&
+              success.data.result &&
+              success.data.result.list) ||
+            [];
+          if (scope.list.length === 15) {
+            scope.enablePullup = true;
+          }
           if (scope.$refs.scrollerEvent) {
             scope.$refs.scrollerEvent.donePulldown();
             scope.$refs.scrollerEvent.reset({ top: 0 });

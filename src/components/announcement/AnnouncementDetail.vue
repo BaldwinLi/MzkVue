@@ -7,7 +7,7 @@
       </div>
       <div slot="content" style="padding: 0.6rem 0.55rem 0.4rem; font-size: 1.5rem; color: #999999;" v-html="detail.content"></div>
       <div slot="footer" style="padding: 0.6rem 0.55rem 0.4rem; font-size: 1.6rem;">
-        <div class="footer-inscribe">
+        <div class="footer-inscribe" style="color: #999999;">
           <p class="footer-text" style="margin-top: 3rem;">大连明珠卡公司</p>
           <p class="footer-text">{{detail.createTs | dateFormat}}</p>
         </div>
@@ -103,6 +103,6 @@ a {
 }
 
 .footer-text {
-  margin: 1rem 1rem 1rem 4rem;
+  margin: 0 1rem 0 4rem;;
 }
 </style>
