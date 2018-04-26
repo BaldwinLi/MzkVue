@@ -71,7 +71,8 @@ export default {
     dateFormat: function(value) {
       const date = parseInt(dateFormat(new Date(value), "YYYYMMDD"));
       const today = parseInt(dateFormat(Date.now(), "YYYYMMDD"));
-      if (date === today) return "今天 " + dateFormat(new Date(value), "hh:mm");
+      if (date === today) return "今天";
+      //  + dateFormat(new Date(value), "hh:mm");
       else return dateFormat(new Date(value), "YYYY-MM-DD");
     }
   },

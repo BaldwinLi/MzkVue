@@ -40,7 +40,7 @@ export default {
       // const today = parseInt(dateFormat(Date.now(), "YYYYMMDD"));
       // if (date === today) return "今天 " + dateFormat(new Date(value), "hh:mm");
       // else
-      return dateFormat(new Date(value), "YYYY/MM/DD hh:mm");
+      return dateFormat(new Date(value), "YYYY/MM/DD");
     }
   },
   computed: {
