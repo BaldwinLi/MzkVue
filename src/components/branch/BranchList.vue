@@ -59,6 +59,8 @@ export default {
       latitude: 0,
       longitude: 0,
       isLoading: false,
+      pulldownConfig,
+      pullupConfig,
       // topLoading: false,
       // bottomLoading: false,
       list: [],
