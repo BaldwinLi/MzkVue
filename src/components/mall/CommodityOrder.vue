@@ -23,9 +23,9 @@
                   <x-input title="收件人联系方式" ref="telNum" mask="999 9999 9999" v-model="detail.tel" :max="13" is-type="china-mobile"></x-input>
                 </div>
                 <p class="card-padding" style="font-size:1.8rem;">{{detail.name}}</p>
-                <p class="card-padding" style="font-size:1.4rem;line-height:1rem ;color:#999;">{{detail.description}}</p>
+                <p class="card-padding" style="font-size:1.4rem;line-height: 1.8rem;color:#999;">{{detail.description}}</p>
                 <p class="card-padding" style="font-size:1.6rem;color:#FF0000;">{{detail.pointCost}} 积分</p>
-                <p class="card-padding" style="font-size:1.2ren;color:#EEC900;">参考价格：¥ {{detail.price}}</p>
+                <p class="card-padding" style="font-size:1.2rem;color:#EEC900;">参考价格：¥ {{detail.price}}</p>
                 <!-- <x-address title="请选择地址" @on-hide="selectedAddress" v-model="detail.address" :list="addressData" placeholder="请选择地址">
                     <template slot="title" slot-scope="props">
                         <span style="vertical-align:middle;"><i class="fa fa-map-marker"></i> 邮寄地址</span>
@@ -85,7 +85,10 @@ export default {
   methods: {
     selectedAddress(str) {},
     submit() {
-      if (!(this.detail.address && this.detail.receiver && this.detail.tel)) {
+      if (
+        this.detail.needAddress &&
+        !(this.detail.address && this.detail.receiver && this.detail.tel)
+      ) {
         this.$vux.alert.show({
           title: "下单失败",
           content: "请填入您的邮寄地址、收件人、收件人联系方式"
@@ -101,20 +104,23 @@ export default {
       }
       const scope = this;
       this.$vux.confirm.show({
-        title: '确认',
-        content: '是否确认提交？',
+        title: "确认",
+        content: "是否确认提交？",
         onConfirm() {
           scope.isLoading = true;
+          const optionalCondition = scope.detail.needAddress
+            ? `&address=${scope.detail.address}&receiver=${
+                scope.detail.receiver
+              }&tel=${scope.detail.tel}`
+            : '';
           scope.$http
             .get(
-              `${
-                scope.appContextPath
-              }appweb/pointExchange/exchangeItem?id=${scope.$route.params.id}&address=${
-                scope.detail.address
-              }&receiver=${scope.detail.receiver}&tel=${scope.detail.tel}`
+              `${scope.appContextPath}appweb/pointExchange/exchangeItem?id=${
+                scope.$route.params.id + optionalCondition
+              }`
             )
             .then(success => {
-              if (success && success.data && success.data.status !== 'FAIL') {
+              if (success && success.data && success.data.status !== "FAIL") {
                 scope.$vux.alert.show({
                   content: "下单成功"
                 });

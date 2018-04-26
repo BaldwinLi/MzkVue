@@ -86,13 +86,14 @@ export default {
       this.longitude = (value && value.coords.longitude) || 0;
       this.latitude = (value && value.coords.latitude) || 0;
       const scope = this;
+      const coordsCondition = this.isLocal
+        ? ""
+        : `&lati=${this.latitude}&longi=${this.longitude}`;
       this.$http
         .get(
           `${
             this.appContextPath
-          }appweb/branch/list?pageSize=15&pageNum=1&lati=${
-            this.latitude
-          }&longi=${this.longitude}`
+          }appweb/branch/list?pageSize=15&pageNum=1${coordsCondition}`
           //
         )
         .then(success => {
@@ -116,13 +117,14 @@ export default {
       this.longitude = (value && value.coords.longitude) || 0;
       this.latitude = (value && value.coords.latitude) || 0;
       const scope = this;
+      const coordsCondition = this.isLocal
+        ? ""
+        : `&lati=${this.latitude}&longi=${this.longitude}`;
       this.$http
         .get(
           `${this.appContextPath}appweb/branch/list?pageSize=${
             this.pageSize
-          }&pageNum=${++this.pageNum}&lati=${this.latitude}&longi=${
-            this.longitude
-          }`
+          }&pageNum=${++this.pageNum}${coordsCondition}`
         )
         .then(success => {
           scope.list = scope.list.concat(
@@ -141,12 +143,25 @@ export default {
     },
     invokenavigator(func) {
       this.isLoading = true;
+      if (this.isLocal) {
+        func();
+        return;
+      }
       const scope = this;
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           func.bind(this),
           value => {
-            geolocationErrorCallback(value, scope.$vux.alert);
+            if (this.latitude && this.longitude) {
+              func({
+                coords: {
+                  longitude: this.longitude,
+                  latitude: this.latitude
+                }
+              });
+            } else {
+              geolocationErrorCallback(value, scope.$vux.alert);
+            }
             this.isLoading = false;
           },
           geolocationOptions

@@ -25,19 +25,22 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["appContextPath"])
+    ...mapGetters(["appContextPath", 'isLocal'])
   },
   methods: {
     refreshDataList(value) {
       this.longitude = (value && value.coords.longitude) || 0;
       this.latitude = (value && value.coords.latitude) || 0;
       this.isLoading = true;
+      const coordsCondition = this.isLocal
+        ? ""
+        : `&lati=${this.latitude}&longi=${this.longitude}`;
       const scope = this;
       this.$http
         .get(
           `${this.appContextPath}appweb/allianceBusi/detail?id=${
             this.$route.params.id
-          }&lati=${this.latitude}&longi=${this.longitude}`
+          }${coordsCondition}`
         )
         .then(success => {
           scope.detail =
@@ -68,19 +71,31 @@ export default {
     ...mapMutations(["updateTitle"])
   },
   mounted() {
+    this.updateTitle("商家位置");
+    if (this.isLocal) {
+      this.refreshDataList();
+      return;
+    }
     const scope = this;
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         this.refreshDataList,
         value => {
-          geolocationErrorCallback(value, scope.$vux.alert);
+          if (this.latitude && this.longitude) {
+            func({
+              coords: {
+                longitude: this.longitude,
+                latitude: this.latitude
+              }
+            });
+          } else {
+            geolocationErrorCallback(value, scope.$vux.alert);
+          }
           this.isLoading = false;
         },
         geolocationOptions
       );
     }
-    this.refreshDataList();
-    this.updateTitle("商家位置");
   }
 };
 </script>

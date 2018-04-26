@@ -16,10 +16,10 @@
                 @on-pullup-loading="invokenavigator(refreshMoreData)">
         <div>
           <cell v-for="item in list" :key="item.id" primary="content" @click.native="goBranchMap($event, item)" is-link>
-            <img slot="title" style="height: 50px" :src="item.logoUrl" class="card-padding">
+            <img slot="title" style="height: 5rem" :src="item.logoUrl" class="card-padding">
             <div slot>
               <p style="text-align: left;color: #000">{{item.name}}</p>
-              <p style="text-align: left;font-size:12px">{{item.description}}</p>
+              <p style="text-align: left;font-size:1.2rem">{{item.description}}</p>
               <p style="text-align: left;color: #008B8B">联系电话： {{ item.tel }}</p>
             </div>
           </cell>
@@ -87,13 +87,14 @@ export default {
       this.longitude = (value && value.coords.longitude) || 0;
       this.latitude = (value && value.coords.latitude) || 0;
       const scope = this;
+      const coordsCondition = this.isLocal
+        ? ""
+        : `&lati=${this.latitude}&longi=${this.longitude}`;
       this.$http
         .get(
           `${
             this.appContextPath
-          }appweb/allianceBusi/list?pageSize=15&pageNum=1&lati=${
-            this.latitude
-          }&longi=${this.longitude}`
+          }appweb/allianceBusi/list?pageSize=15&pageNum=1${coordsCondition}`
         )
         .then(success => {
           scope.list =
@@ -114,13 +115,14 @@ export default {
       this.longitude = (value && value.coords.longitude) || 0;
       this.latitude = (value && value.coords.latitude) || 0;
       const scope = this;
+      const coordsCondition = this.isLocal
+        ? ""
+        : `&lati=${this.latitude}&longi=${this.longitude}`;
       this.$http
         .get(
           `${this.appContextPath}appweb/allianceBusi/detail?pageSize=${
             this.pageSize
-          }&pageNum=${++this.pageNum}&lati=${this.latitude}&longi=${
-            this.longitude
-          }`
+          }&pageNum=${++this.pageNum}${coordsCondition}`
         )
         .then(success => {
           scope.list = scope.list.concat(
@@ -139,12 +141,25 @@ export default {
     },
     invokenavigator(func) {
       this.isLoading = true;
+      if (this.isLocal) {
+        func();
+        return;
+      }
       const scope = this;
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           func.bind(this),
           value => {
-            geolocationErrorCallback(value, scope.$vux.alert);
+            if (this.latitude && this.longitude) {
+              func({
+                coords: {
+                  longitude: this.longitude,
+                  latitude: this.latitude
+                }
+              });
+            } else {
+              geolocationErrorCallback(value, scope.$vux.alert);
+            }
             this.isLoading = false;
           },
           geolocationOptions
@@ -163,6 +178,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .card-padding {
-  padding: 15px;
+  padding: 1.5rem;
 }
 </style>
