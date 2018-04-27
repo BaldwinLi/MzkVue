@@ -1,19 +1,22 @@
 <template>
   <div>
       <loading v-model="isLoading"></loading>
-      <div id="branch-map-container"></div>
+      <card style="margin-bottom: 6rem;">
+        <div slot="footer" id="map-container"></div>
+      </card>
   </div>
 </template>
 
 <script>
-import { Loading } from "vux";
+import { Loading, Card } from "vux";
 import { mapGetters, mapMutations } from "vuex";
-import initBaiduMap from "@/initBaiduMap";
+import initAMap from "@/initAMap";
 
 export default {
   name: "BranchMap",
   components: {
-    Loading
+    Loading,
+    Card
   },
   data() {
     return {
@@ -26,21 +29,21 @@ export default {
   },
   methods: {
     ...mapMutations(["updateTitle"]),
-    renderBMap(distance, latitude, longitude) {
-      initBaiduMap().then(result => {
-        if (result) {
-          const map = new BMap.Map("branch-map-container");
-          // 创建地图实例
-          const point = new BMap.Point(latitude, longitude);
-          // 创建点坐标
-          map.centerAndZoom(point, distance);
-        }
+    renderAMap(distance, latitude, longitude) {
+      initAMap().then(result => {
+        // if (result) {
+        //   const map = new BMap.Map("branch-map-container");
+        //   // 创建地图实例
+        //   const point = new BMap.Point(latitude, longitude);
+        //   // 创建点坐标
+        //   map.centerAndZoom(point, distance);
+        // }
       });
     }
   },
   mounted() {
     const scope = this;
-    // this.renderBMap(11, 116.404, 39.915);
+    // this.renderAMap(11, 116.404, 39.915);
     this.isLoading = true;
     this.$http
       .get(
@@ -53,7 +56,7 @@ export default {
             success.data.result &&
             success.data.result.detail) ||
           {};
-        this.renderBMap(scope.detail.distance, scope.detail.latitude, scope.detail.longitude);
+        this.renderAMap(scope.detail.distance, scope.detail.latitude, scope.detail.longitude);
         this.isLoading = false;
       });
     this.updateTitle("网点位置");

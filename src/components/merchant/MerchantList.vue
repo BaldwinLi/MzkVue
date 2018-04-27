@@ -39,6 +39,7 @@ import {
   geolocationOptions,
   geolocationErrorCallback
 } from "../config";
+import initAMap from "@/initAMap";
 
 export default {
   name: "BranchList",
@@ -83,12 +84,10 @@ export default {
       this.$router.push({ path: `/merchant_map/${item.id}` });
     },
     refreshDataList(value) {
-      this.longitude = (value && value.coords.longitude) || 0;
-      this.latitude = (value && value.coords.latitude) || 0;
+      this.longitude = (value && value.position.lng) || 0;
+      this.latitude = (value && value.position.lat) || 0;
       const scope = this;
-      const coordsCondition = this.isLocal
-        ? ""
-        : `&lati=${this.latitude}&longi=${this.longitude}`;
+      const coordsCondition = `&lati=${this.latitude}&longi=${this.longitude}`;
       this.$http
         .get(
           `${
@@ -114,12 +113,10 @@ export default {
         });
     },
     refreshMoreData(value) {
-      this.longitude = (value && value.coords.longitude) || 0;
-      this.latitude = (value && value.coords.latitude) || 0;
+      this.longitude = (value && value.position.lng) || 0;
+      this.latitude = (value && value.position.lat) || 0;
       const scope = this;
-      const coordsCondition = this.isLocal
-        ? ""
-        : `&lati=${this.latitude}&longi=${this.longitude}`;
+      const coordsCondition = `&lati=${this.latitude}&longi=${this.longitude}`;
       this.$http
         .get(
           `${this.appContextPath}appweb/branch/list?pageSize=${
@@ -143,15 +140,11 @@ export default {
     },
     invokenavigator(func) {
       this.isLoading = true;
-      if (this.isLocal) {
-        func();
-        return;
-      }
-      const scope = this;
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          func.bind(this),
-          value => {
+      initAMap().then(result => {
+        if (result) {
+          geolocation.getCurrentPosition();
+          AMap.event.addListener(geolocation, "complete", func.bind(this)); //返回定位信息
+          AMap.event.addListener(geolocation, "error", value => {
             if (this.latitude && this.longitude) {
               func({
                 coords: {
@@ -163,15 +156,37 @@ export default {
               geolocationErrorCallback(value, scope.$vux.alert);
             }
             this.isLoading = false;
-          },
-          geolocationOptions
-        );
-      }
+          }); //返回定位出错信息
+        }
+      });
+      // if (this.isLocal) {
+      //   func();
+      //   return;
+      // }
+      // const scope = this;
+      // if (navigator.geolocation) {
+      //   navigator.geolocation.getCurrentPosition(
+      //     func.bind(this),
+      //     value => {
+      //       if (this.latitude && this.longitude) {
+      //         func({
+      //           coords: {
+      //             longitude: this.longitude,
+      //             latitude: this.latitude
+      //           }
+      //         });
+      //       } else {
+      //         geolocationErrorCallback(value, scope.$vux.alert);
+      //       }
+      //       this.isLoading = false;
+      //     },
+      //     geolocationOptions
+      //   );
+      // }
     },
     ...mapMutations(["updateTitle"])
   },
   mounted() {
-    // this.refreshDataList()
     this.invokenavigator(this.refreshDataList);
     this.updateTitle("附近联盟商家");
   }

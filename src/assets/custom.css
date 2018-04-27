@@ -20,3 +20,8 @@
   text-align: center;
   font-size: 1.1rem;
 }
+
+#map-container {
+  height: 15rem;
+  width: 100%;
+}

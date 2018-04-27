@@ -11,17 +11,20 @@
             <img slot="header" :src="detail.picUrl" style="width:100%;display:block;">
             <div slot="content" class="card-padding">
                 <div>
+                  <div v-if="detail.needAddress">
                     <i class="fa fa-map-marker" style="float: left;margin-top: 1.2rem;"></i>
                     <x-input title="邮寄地址" v-model="detail.address"></x-input>
+                  </div>
+                  <div>
+                    <i class="fa fa-user" style="float: left;margin-top: 1.2rem;"></i>
+                    <x-input title="收件人" v-model="detail.receiver"></x-input>
+                  </div>
+                  <div>
+                    <i class="fa fa-phone" style="float: left;margin-top: 1.2rem;"></i>
+                    <x-input title="收件人联系方式" ref="telNum" mask="999 9999 9999" v-model="detail.tel" :max="13" is-type="china-mobile"></x-input>
+                  </div>
                 </div>
-                <div>
-                  <i class="fa fa-user" style="float: left;margin-top: 1.2rem;"></i>
-                  <x-input title="收件人" v-model="detail.receiver"></x-input>
-                </div>
-                <div>
-                  <i class="fa fa-phone" style="float: left;margin-top: 1.2rem;"></i>
-                  <x-input title="收件人联系方式" ref="telNum" mask="999 9999 9999" v-model="detail.tel" :max="13" is-type="china-mobile"></x-input>
-                </div>
+                
                 <p class="card-padding" style="font-size:1.8rem;">{{detail.name}}</p>
                 <p class="card-padding" style="font-size:1.4rem;line-height: 1.8rem;color:#999;">{{detail.description}}</p>
                 <p class="card-padding" style="font-size:1.6rem;color:#FF0000;">{{detail.pointCost}} 积分</p>
@@ -112,12 +115,13 @@ export default {
             ? `&address=${scope.detail.address}&receiver=${
                 scope.detail.receiver
               }&tel=${scope.detail.tel}`
-            : '';
+            : "";
           scope.$http
             .get(
-              `${scope.appContextPath}appweb/pointExchange/exchangeItem?id=${
-                scope.$route.params.id + optionalCondition
-              }`
+              `${
+                scope.appContextPath
+              }appweb/pointExchange/exchangeItem?id=${scope.$route.params.id +
+                optionalCondition}`
             )
             .then(success => {
               if (success && success.data && success.data.status !== "FAIL") {
