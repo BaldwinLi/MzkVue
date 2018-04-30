@@ -1,9 +1,41 @@
 <template>
   <div>
-    <a class="sign-in" @click="signIn">签到</a>
-    <group title="积分兑换商品列表">
+    <search
+      style="position: static"
+      cancel-text="搜索"
+      v-model="searchValue"
+      position="relative"
+      auto-scroll-to-top
+      top="0"
+      @on-focus="onFocus"
+      @on-cancel="refreshDataList"
+      ref="search">
+      <i slot="left" @click="hideList" class="fa fa-angle-left" style="font-size: 2.5rem; margin-right: 1rem;" aria-hidden="true"></i>
+    </search>
+      <!-- :results="results"
+      @result-click="resultClick"
+      @on-change="getResult"
+      @on-submit="onSubmit" -->
+    <grid style="top: 4rem;width: 102%;" v-if="!isShowList">
+      <popup-picker class="type-block" title="商品分类" popup-title="商品分类" :data="commodityTypeList" :columns="1" v-model="selectTypeItem" @on-change="refreshDataList" show-name>
+        <!-- <i slot="footer" class="popup-footer"></i> -->
+      </popup-picker>
+      <!-- <popup-picker class="type-block" title="所在地区" popup-title="所在地区" :data="allianceBusiTypeList" :columns="1" v-model="selectTypeItem" @on-change="refreshDataList" show-name>
+      </popup-picker> -->
+      <!-- <i slot="footer" class="popup-footer"></i> -->
+      <popup-picker class="type-block" title="智能排序" popup-title="智能排序" :data="autoSortList" :columns="1" v-model="selectTypeItem" @on-change="refreshDataList" show-name>
+        <!-- <i slot="footer" class="popup-footer"></i> -->
+      </popup-picker>
+      <card v-for="(item, index) in recommodKeywordList" :key="index" :header="{ title: item.name}" class="key-words-panel">
+        <div slot="content">
+          <badge class="key-word" v-for="(item, index) in item.keywords" :key="index" :text="item" @click.native="selectKeyWord(item)"></badge>
+        </div>
+      </card>
+    </grid>
+    <a v-if="isShowList" class="sign-in" @click="signIn">签到</a>
+    <group style="top: 4rem;" v-if="isShowList" title="积分兑换商品列表">
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-      <p class="no-data" v-if="!isLoading && list.length === 0">暂无数据</p>
+      <p class="no-data" v-if="list.length === 0">暂无数据</p>
       <scroller v-if="list.length > 0"
                 :lock-x=true 
                 :scrollbar-y=true
@@ -36,7 +68,23 @@
 </template>
 
 <script>
-import { Flexbox, FlexboxItem, Card, LoadMore, Scroller, Group } from "vux";
+import {
+  Flexbox,
+  FlexboxItem,
+  Card,
+  LoadMore,
+  Scroller,
+  Group,
+  Grid,
+  Search,
+  PopupPicker,
+  Badge
+} from "vux";
+import {
+  commodityTypeList,
+  autoSortList,
+  recommodKeywordList
+} from "../../initKeyList";
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { pulldownConfig, pullupConfig } from "../config";
 
@@ -48,7 +96,11 @@ export default {
     Card,
     // LoadMore,
     Scroller,
-    Group
+    Group,
+    Grid,
+    Search,
+    PopupPicker,
+    Badge
   },
   data() {
     return {
@@ -58,7 +110,21 @@ export default {
       pullupConfig,
       // topLoading: false,
       // bottomLoading: false,
+      searchValue: "",
+      selectTypeItem: [],
+      // results: [],
+      isShowList: true,
+      // topLoading: false,
+      // bottomLoading: false,
       list: [],
+      recommodKeywordList: recommodKeywordList,
+      commodityTypeList: commodityTypeList.map(v => {
+        return {
+          name: v.className,
+          value: v.classId
+        };
+      }),
+      autoSortList,
       enablePullup: false
     };
   },
@@ -141,6 +207,16 @@ export default {
     },
     goCommodityOrder(id) {
       this.$router.push({ path: `/commodity_order/${id}` });
+    },
+    hideList() {
+      this.isShowList = true;
+    },
+    onFocus() {
+      this.isShowList = false;
+    },
+    selectKeyWord($event) {
+      this.searchValue = $event;
+      this.refreshDataList();
     }
   },
   mounted() {
@@ -157,10 +233,30 @@ export default {
 }
 .sign-in {
   float: right;
-  line-height: 2rem;
+  line-height: 3.5rem;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   color: #528b8b;
   font-size: 1.4rem;
+}
+.type-block {
+  width: 50%;
+  float: left;
+  font-size: 1.4rem;
+}
+.type-block:after {
+  content: "|";
+  float: right;
+  margin-top: -3.2rem;
+  color: #999999;
+}
+.key-words-panel {
+  display: inline-block;
+  width: 100%;
+}
+.key-word {
+  padding: 0.5rem;
+  margin: 0.5rem;
+  background: #999999;
 }
 </style>

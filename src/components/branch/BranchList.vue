@@ -1,7 +1,36 @@
 <template>
   <div>
     <loading v-model="isLoading"></loading>
-    <group>
+    <search
+      style="position: static"
+      cancel-text="搜索"
+      v-model="searchValue"
+      position="relative"
+      auto-scroll-to-top
+      top="0"
+      @on-focus="onFocus"
+      @on-cancel="refreshDataList"
+      ref="search">
+      <i slot="left" @click="hideList" class="fa fa-angle-left" style="font-size: 2.5rem; margin-right: 1rem;" aria-hidden="true"></i>
+    </search>
+      <!-- :results="results"
+      @result-click="resultClick"
+      @on-change="getResult"
+      @on-submit="onSubmit" -->
+    <grid style="top: 4rem;width: 102%;" v-if="!isShowList">
+      <popup-picker class="type-block" title="商户分类" popup-title="商户分类" :data="allianceBusiTypeList" :columns="1" v-model="selectTypeItem" @on-change="refreshDataList" show-name>
+      </popup-picker>
+      <popup-picker class="type-block" title="所在地区" popup-title="所在地区" :data="allianceBusiTypeList" :columns="1" v-model="selectTypeItem" @on-change="refreshDataList" show-name>
+      </popup-picker>
+      <popup-picker class="type-block" title="智能排序" popup-title="智能排序" :data="autoSortList" :columns="1" v-model="selectTypeItem" @on-change="refreshDataList" show-name>
+      </popup-picker>
+      <card v-for="(item, index) in recommodKeywordList" :key="index" :header="{ title: item.name}" class="key-words-panel">
+        <div slot="content">
+          <badge class="key-word" v-for="(item, index) in item.keywords" :key="index" :text="item" @click.native="selectKeyWord(item)"></badge>
+        </div>
+      </card>
+    </grid>
+    <group v-if="isShowList">
       <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
       <p class="no-data" v-if="!isLoading && list.length === 0">暂无数据</p>
       <scroller v-if="list.length > 0"
@@ -31,8 +60,24 @@
 </template>
 
 <script>
-import { Badge, Cell, Scroller, Loading, LoadMore, Group } from "vux";
+import {
+  Badge,
+  Cell,
+  Scroller,
+  Loading,
+  // LoadMore,
+  Group,
+  Card,
+  Grid,
+  Search,
+  PopupPicker
+} from "vux";
 import { mapGetters, mapMutations } from "vuex";
+import {
+  allianceBusiTypeList,
+  autoSortList,
+  recommodKeywordList
+} from "../../initKeyList";
 import {
   pulldownConfig,
   pullupConfig,
@@ -51,7 +96,12 @@ export default {
     pulldownConfig,
     pullupConfig,
     // LoadMore,
-    Group
+    Group,
+    Group,
+    Card,
+    Grid,
+    Search,
+    PopupPicker
   },
   data() {
     return {
@@ -61,10 +111,21 @@ export default {
       longitude: 0,
       isLoading: false,
       pulldownConfig,
-      pullupConfig,
+      searchValue: "",
+      selectTypeItem: [],
+      // results: [],
+      isShowList: true,
       // topLoading: false,
       // bottomLoading: false,
       list: [],
+      recommodKeywordList: recommodKeywordList,
+      autoSortList,
+      allianceBusiTypeList: allianceBusiTypeList.map(v => {
+        return {
+          name: v.className,
+          value: v.classId
+        };
+      }),
       enablePullup: false
     };
   },
@@ -87,15 +148,21 @@ export default {
       this.$router.push({ path: `/branch_map/${item.id}` });
     },
     refreshDataList(value) {
-      this.longitude = (value && value.position.lng) || 0;
-      this.latitude = (value && value.position.lat) || 0;
+      this.isShowList = true;
+      this.isLoading = true;
+      this.longitude =
+        (value && value.position && value.position.lng) || this.latitude;
+      this.latitude =
+        (value && value.position && value.position.lat) || this.latitude;
       const scope = this;
       const coordsCondition = `&lati=${this.latitude}&longi=${this.longitude}`;
       this.$http
         .get(
           `${
             this.appContextPath
-          }appweb/allianceBusi/list?pageSize=15&pageNum=1${coordsCondition}`
+          }appweb/allianceBusi/list?pageSize=15&pageNum=1&keyWord=${
+            this.searchValue
+          }&type=${this.selectTypeItem[0]}${coordsCondition}`
         )
         .then(success => {
           scope.list =
@@ -113,15 +180,19 @@ export default {
         });
     },
     refreshMoreData(value) {
-      this.longitude = (value && value.position.lng) || 0;
-      this.latitude = (value && value.position.lat) || 0;
+      this.longitude =
+        (value && value.position && value.position.lng) || this.latitude;
+      this.latitude =
+        (value && value.position && value.position.lat) || this.latitude;
       const scope = this;
       const coordsCondition = `&lati=${this.latitude}&longi=${this.longitude}`;
       this.$http
         .get(
           `${this.appContextPath}appweb/allianceBusi/detail?pageSize=${
             this.pageSize
-          }&pageNum=${++this.pageNum}${coordsCondition}`
+          }&pageNum=${++this.pageNum}&keyWord=${this.searchValue}&type=${
+            this.selectTypeItem[0]
+          }${coordsCondition}`
         )
         .then(success => {
           scope.list = scope.list.concat(
@@ -183,6 +254,16 @@ export default {
       //     geolocationOptions
       //   );
       // }
+    },
+    hideList() {
+      this.isShowList = true;
+    },
+    onFocus() {
+      this.isShowList = false;
+    },
+    selectKeyWord($event) {
+      this.searchValue = $event;
+      this.refreshDataList();
     }
   },
   mounted() {
@@ -196,5 +277,25 @@ export default {
 <style scoped>
 .card-padding {
   padding: 1.5rem;
+}
+.type-block {
+  width: 33.33%;
+  float: left;
+  font-size: 1.4rem;
+}
+.type-block:after {
+  content: "|";
+  float: right;
+  margin-top: -3.2rem;
+  color: #999999;
+}
+.key-words-panel {
+  display: inline-block;
+  width: 100%;
+}
+.key-word {
+  padding: 0.5rem;
+  margin: 0.5rem;
+  background: #999999;
 }
 </style>

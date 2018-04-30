@@ -14,7 +14,8 @@ import {
   ConfirmPlugin
 } from 'vux'
 import store from './vuex/store';
-import cordova from './initCordova'
+import cordova from './initCordova';
+import { initKeyList } from './initKeyList';
 
 // cordova(App);
 
@@ -35,6 +36,8 @@ router.afterEach(function (to) {
     isLoading: false
   });
 });
+
+initKeyList(store.getters.appContextPath);
 
 FastClick.attach(document.body)
 
