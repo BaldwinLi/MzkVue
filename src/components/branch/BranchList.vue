@@ -17,7 +17,7 @@
       @result-click="resultClick"
       @on-change="getResult"
       @on-submit="onSubmit" -->
-    <grid style="top: 4rem;width: 102%;" v-if="!isShowList">
+    <grid style="width: 102%;" v-if="!isShowList">
       <popup-picker class="type-block" title="商户分类" popup-title="商户分类" :data="allianceBusiTypeList" :columns="1" v-model="selectTypeItem" @on-change="refreshDataList" show-name>
       </popup-picker>
       <popup-picker class="type-block" title="所在地区" popup-title="所在地区" :data="allianceBusiTypeList" :columns="1" v-model="selectTypeItem" @on-change="refreshDataList" show-name>
@@ -30,11 +30,9 @@
         </div>
       </card>
     </grid>
-    <group v-if="isShowList">
-      <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-      <p class="no-data" v-if="!isLoading && list.length === 0">暂无数据</p>
-      <scroller v-if="list.length > 0"
-                :lock-x=true
+    <load-more v-if="!isLoading && list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
+    <group v-if="isShowList && list.length > 0">
+      <scroller :lock-x=true
                 :scrollbar-y=true
                 :pulldown-config="pulldownConfig" 
                 :pullup-config="pullupConfig"
@@ -65,7 +63,7 @@ import {
   Cell,
   Scroller,
   Loading,
-  // LoadMore,
+  LoadMore,
   Group,
   Card,
   Grid,
@@ -95,7 +93,7 @@ export default {
     Loading,
     pulldownConfig,
     pullupConfig,
-    // LoadMore,
+    LoadMore,
     Group,
     Group,
     Card,
@@ -177,6 +175,9 @@ export default {
             scope.$refs.scrollerEvent.reset({ top: 0 });
           }
           this.isLoading = false;
+        },
+        error => {
+          scope.isLoading = false;
         });
     },
     refreshMoreData(value) {
@@ -207,6 +208,9 @@ export default {
             scope.$refs.scrollerEvent.reset();
           }
           this.isLoading = false;
+        },
+        error => {
+          scope.isLoading = false;
         });
     },
     invokenavigator(func) {

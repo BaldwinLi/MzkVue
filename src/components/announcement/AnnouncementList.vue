@@ -1,11 +1,9 @@
 <template>
   <div>
     <loading v-model="isLoading"></loading>
-    <group>
-      <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-      <p class="no-data" v-if="!isLoading && list.length === 0">暂无数据</p>
-      <scroller v-if="list.length > 0"
-                :lock-x=true
+    <load-more v-if="!isLoading && list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
+    <group v-if="list.length > 0">
+      <scroller :lock-x=true
                 :scrollbar-y=true
                 :pulldown-config="pulldownConfig" 
                 :pullup-config="pullupConfig"
@@ -53,7 +51,7 @@ export default {
     Cell,
     Loading,
     Scroller,
-    // LoadMore,
+    LoadMore,
     Group
   },
   data() {
@@ -103,19 +101,11 @@ export default {
             }
             if (scope.list.length === 10) scope.enablePullup = true;
             this.isLoading = false;
+          },
+          error => {
+            
+            this.isLoading = false;
           }
-          // error => {
-          //   scope.list =
-          //     (announcementlist &&
-          //       announcementlist.result &&
-          //       announcementlist.result.list) ||
-          //     [];
-          //   if (scope.$refs.scrollerEvent) {
-          //     scope.$refs.scrollerEvent.donePulldown();
-          //     scope.$refs.scrollerEvent.reset({ top: 0 });
-          //   }
-          //   this.isLoading = false;
-          // }
         );
     },
     refreshMoreData() {

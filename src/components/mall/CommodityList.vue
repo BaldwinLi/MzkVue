@@ -16,7 +16,7 @@
       @result-click="resultClick"
       @on-change="getResult"
       @on-submit="onSubmit" -->
-    <grid style="top: 4rem;width: 102%;" v-if="!isShowList">
+    <grid style="width: 102%;" v-if="!isShowList">
       <popup-picker class="type-block" title="商品分类" popup-title="商品分类" :data="commodityTypeList" :columns="1" v-model="selectTypeItem" @on-change="refreshDataList" show-name>
         <!-- <i slot="footer" class="popup-footer"></i> -->
       </popup-picker>
@@ -32,12 +32,11 @@
         </div>
       </card>
     </grid>
-    <a v-if="isShowList" class="sign-in" @click="signIn">签到</a>
-    <group style="top: 4rem;" v-if="isShowList" title="积分兑换商品列表">
-      <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-      <p class="no-data" v-if="list.length === 0">暂无数据</p>
-      <scroller v-if="list.length > 0"
-                :lock-x=true 
+    
+    <load-more v-if="list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
+    <a v-if="isShowList && list.length > 0" class="sign-in" @click="signIn">签到</a>
+    <group style="top: 4rem;" v-if="isShowList && list.length > 0" title="积分兑换商品列表">
+      <scroller :lock-x=true 
                 :scrollbar-y=true
                 :pulldown-config="pulldownConfig" 
                 :pullup-config="pullupConfig"
@@ -94,7 +93,7 @@ export default {
     Flexbox,
     FlexboxItem,
     Card,
-    // LoadMore,
+    LoadMore,
     Scroller,
     Group,
     Grid,
@@ -179,6 +178,9 @@ export default {
             scope.$refs.scrollerEvent.donePulldown();
             scope.$refs.scrollerEvent.reset({ top: 0 });
           }
+          scope.updateLoadingStatus({ isLoading: false });
+        },
+        error => {
           scope.updateLoadingStatus({ isLoading: false });
         });
     },
