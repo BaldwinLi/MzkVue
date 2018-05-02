@@ -8,7 +8,7 @@
         </cell>
         <cell title="查看积分兑换历史记录" @click.native="goPointCostHistory" is-link></cell>
         <card style="margin-bottom: 6rem;">
-            <img slot="header" :src="detail.picUrl" style="width:100%;display:block;">
+            <img slot="header" :src="detail.picUrl" style="width:100%;display:block;" @error="setDefaultImg">
             <div slot="content" class="card-padding">
                 <div>
                   <div v-if="detail.needAddress">
@@ -83,7 +83,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["appContextPath"])
+    ...mapGetters(["appContextPath", "rootPath"])
   },
   methods: {
     selectedAddress(str) {},
@@ -160,6 +160,9 @@ export default {
             0;
           scope.isLoading = false;
         });
+    },
+    setDefaultImg(event) {
+      event.target.src = `${this.rootPath}static/default_img.jpg`;
     },
     ...mapMutations(["updateTitle"])
   },

@@ -15,7 +15,7 @@ import {
 } from 'vux'
 import store from './vuex/store';
 import cordova from './initCordova';
-import { initKeyList } from './initKeyList';
+// import { initKeyList } from './initKeyList';
 
 // cordova(App);
 
@@ -37,8 +37,6 @@ router.afterEach(function (to) {
   });
 });
 
-initKeyList(store.getters.appContextPath);
-
 FastClick.attach(document.body)
 
 Vue.config.productionTip = false
@@ -47,6 +45,7 @@ const auth_token = window.sessionStorage.getItem('token');
 
 if (auth_token && auth_token !== 'undefined') {
   Vue.http.defaults.headers.common['web-token'] = auth_token;
+  // initKeyList(store);
   new Vue({
     render: h => h(App),
     router,
@@ -61,6 +60,7 @@ if (auth_token && auth_token !== 'undefined') {
         window.sessionStorage.setItem('token', success.data.result.token);
         Vue.http.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8';
         Vue.http.defaults.headers.common['web-token'] = success.data.result.token;
+        // initKeyList(store);
         new Vue({
           router,
           store,
@@ -85,6 +85,7 @@ if (auth_token && auth_token !== 'undefined') {
     window.sessionStorage.setItem('token', _token);
     Vue.http.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8';
     Vue.http.defaults.headers.common['web-token'] = _token;
+    // initKeyList(store);
     new Vue({
       router,
       store,

@@ -6,6 +6,7 @@
       cancel-text="搜索"
       v-model="searchValue"
       position="relative"
+      placeholder="搜商户"
       auto-scroll-to-top
       top="0"
       @on-focus="onFocus"
@@ -41,17 +42,24 @@
                 :use-pullup="enablePullup" 
                 @on-pulldown-loading="invokenavigator(refreshDataList)" 
                 @on-pullup-loading="invokenavigator(refreshMoreData)">
-        <div>
           <cell v-for="item in list" :key="item.id" primary="content" @click.native="goBranchMap($event, item)" is-link>
-            <img slot="title" style="height: 5rem" :src="item.logoUrl" class="card-padding">
-            <div slot>
-              <p style="text-align: left;color: #000">{{item.name}}</p>
-              <p style="text-align: left;font-size:1.2rem">{{item.description}}</p>
-              <p style="text-align: left;color: #008B8B">联系电话： {{ item.tel }}</p>
+            <img slot="title"
+                 style="height: 8rem; width: 8rem; border: 1px solid #999999;"
+                 :src="item.logoUrl" class="card-padding"
+                 @error="setDefaultImg">
+            <div style="text-align: left;height: 10rem; margin: 1rem;" slot>
+              <p class="header-text" style="width: 85%;font-size:1.5rem;">
+                {{item.name}}
+              </p>
+              <p class="apostrophe content">
+                <i class="fa fa-phone icon-preffix" aria-hidden="true"></i>{{ item.tel }}
+              </p>
+              <p class="apostrophe content">
+                <i class="fa fa-map-marker icon-preffix" aria-hidden="true"></i>{{ item.address }}
+                <i style="font-size: 1.1rem; color: #999999; right: 0; bottom: 0; position: absolute; font-weight: normal;">{{item.distance/1000}}km</i>
+              </p>
             </div>
           </cell>
-          <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
-        </div>
       </scroller>
     </group>
   </div>
@@ -91,8 +99,6 @@ export default {
     Cell,
     Scroller,
     Loading,
-    pulldownConfig,
-    pullupConfig,
     LoadMore,
     Group,
     Group,
@@ -109,8 +115,9 @@ export default {
       longitude: 0,
       isLoading: false,
       pulldownConfig,
+      pullupConfig,
       searchValue: "",
-      selectTypeItem: [],
+      selectTypeItem: [""],
       // results: [],
       isShowList: true,
       // topLoading: false,
@@ -118,17 +125,12 @@ export default {
       list: [],
       recommodKeywordList: recommodKeywordList,
       autoSortList,
-      allianceBusiTypeList: allianceBusiTypeList.map(v => {
-        return {
-          name: v.className,
-          value: v.classId
-        };
-      }),
+      allianceBusiTypeList: [],
       enablePullup: false
     };
   },
   computed: {
-    ...mapGetters(["appContextPath", "isLocal"])
+    ...mapGetters(["appContextPath", "isLocal", "rootPath"])
   },
   methods: {
     // onCellsListScroll(event) {
@@ -162,23 +164,25 @@ export default {
             this.searchValue
           }&type=${this.selectTypeItem[0]}${coordsCondition}`
         )
-        .then(success => {
-          scope.list =
-            (success &&
-              success.data &&
-              success.data.result &&
-              success.data.result.list) ||
-            [];
-          if (scope.list.length === 15) scope.enablePullup = true;
-          if (scope.$refs.scrollerEvent) {
-            scope.$refs.scrollerEvent.donePulldown();
-            scope.$refs.scrollerEvent.reset({ top: 0 });
+        .then(
+          success => {
+            scope.list =
+              (success &&
+                success.data &&
+                success.data.result &&
+                success.data.result.list) ||
+              [];
+            if (scope.list.length === 15) scope.enablePullup = true;
+            if (scope.$refs.scrollerEvent) {
+              scope.$refs.scrollerEvent.donePulldown();
+              scope.$refs.scrollerEvent.reset({ top: 0 });
+            }
+            this.isLoading = false;
+          },
+          error => {
+            scope.isLoading = false;
           }
-          this.isLoading = false;
-        },
-        error => {
-          scope.isLoading = false;
-        });
+        );
     },
     refreshMoreData(value) {
       this.longitude =
@@ -195,23 +199,25 @@ export default {
             this.selectTypeItem[0]
           }${coordsCondition}`
         )
-        .then(success => {
-          scope.list = scope.list.concat(
-            (success &&
-              success.data &&
-              success.data.result &&
-              success.data.result.list) ||
-              []
-          );
-          if (scope.$refs.scrollerEvent) {
-            scope.$refs.scrollerEvent.donePullup();
-            scope.$refs.scrollerEvent.reset();
+        .then(
+          success => {
+            scope.list = scope.list.concat(
+              (success &&
+                success.data &&
+                success.data.result &&
+                success.data.result.list) ||
+                []
+            );
+            if (scope.$refs.scrollerEvent) {
+              scope.$refs.scrollerEvent.donePullup();
+              scope.$refs.scrollerEvent.reset();
+            }
+            this.isLoading = false;
+          },
+          error => {
+            scope.isLoading = false;
           }
-          this.isLoading = false;
-        },
-        error => {
-          scope.isLoading = false;
-        });
+        );
     },
     invokenavigator(func) {
       this.isLoading = true;
@@ -268,11 +274,22 @@ export default {
     selectKeyWord($event) {
       this.searchValue = $event;
       this.refreshDataList();
+    },
+    setDefaultImg(event) {
+      event.target.src = `${this.rootPath}static/default_img.jpg`;
     }
   },
   mounted() {
     this.invokenavigator(this.refreshDataList);
     this.updateTitle("附近网点");
+    allianceBusiTypeList.then(result => {
+      this.allianceBusiTypeList = result.map(v => {
+        return {
+          name: v.className,
+          value: v.classId
+        };
+      });
+    });
   }
 };
 </script>
@@ -301,5 +318,12 @@ export default {
   padding: 0.5rem;
   margin: 0.5rem;
   background: #999999;
+}
+p.content {
+  font-size: 1.2rem;
+  height: 2.5rem;
+  width: 95%;
+  margin-top: 0.5rem;
+  overflow: hidden;
 }
 </style>

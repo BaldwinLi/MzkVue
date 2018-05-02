@@ -5,6 +5,7 @@
       cancel-text="搜索"
       v-model="searchValue"
       position="relative"
+      placeholder="搜商品"
       auto-scroll-to-top
       top="0"
       @on-focus="onFocus"
@@ -49,7 +50,7 @@
           <flexbox :gutter="0" wrap="wrap">
             <flexbox-item :span="1/3" v-for="item in list" :key="item.id">
               <card @click.native="goCommodityOrder(item.id)">
-                <img slot="header" :src="item.picUrl" style="width:100%;display:block;">
+                <img slot="header" :src="item.picUrl" style="width:100%;display:block;" @error="setDefaultImg">
                 <div slot="content" class="card-padding">
                   <p style="font-size:1.1rem;">{{item.name}}</p>
                   <!-- <p style="font-size:10px;line-height:1 ;color:#999;">{{item.description}}</p> -->
@@ -110,25 +111,20 @@ export default {
       // topLoading: false,
       // bottomLoading: false,
       searchValue: "",
-      selectTypeItem: [],
+      selectTypeItem: [""],
       // results: [],
       isShowList: true,
       // topLoading: false,
       // bottomLoading: false,
       list: [],
       recommodKeywordList: recommodKeywordList,
-      commodityTypeList: commodityTypeList.map(v => {
-        return {
-          name: v.className,
-          value: v.classId
-        };
-      }),
-      autoSortList,
+      commodityTypeList: [],
+      autoSortList: autoSortList.filter(e => e.value !== 2),
       enablePullup: false
     };
   },
   computed: {
-    ...mapGetters(["appContextPath"]),
+    ...mapGetters(["appContextPath", "rootPath"]),
     ...mapState(["isLoading"])
   },
   methods: {
@@ -157,32 +153,37 @@ export default {
     },
     refreshDataList() {
       this.updateLoadingStatus({ isLoading: true });
+      this.isShowList = true;
       const scope = this;
       this.$http
         .get(
           `${
             this.appContextPath
-          }appweb/pointExchange/listItem?pageSize=15&pageNum=1`
+          }appweb/pointExchange/listItem?pageSize=15&pageNum=1&keyWord=${
+            this.searchValue
+          }&type=${this.selectTypeItem[0]}`
         )
-        .then(success => {
-          scope.list =
-            (success &&
-              success.data &&
-              success.data.result &&
-              success.data.result.list) ||
-            [];
-          if (scope.list.length === 15) {
-            scope.enablePullup = true;
+        .then(
+          success => {
+            scope.list =
+              (success &&
+                success.data &&
+                success.data.result &&
+                success.data.result.list) ||
+              [];
+            if (scope.list.length === 15) {
+              scope.enablePullup = true;
+            }
+            if (scope.$refs.scrollerEvent) {
+              scope.$refs.scrollerEvent.donePulldown();
+              scope.$refs.scrollerEvent.reset({ top: 0 });
+            }
+            scope.updateLoadingStatus({ isLoading: false });
+          },
+          error => {
+            scope.updateLoadingStatus({ isLoading: false });
           }
-          if (scope.$refs.scrollerEvent) {
-            scope.$refs.scrollerEvent.donePulldown();
-            scope.$refs.scrollerEvent.reset({ top: 0 });
-          }
-          scope.updateLoadingStatus({ isLoading: false });
-        },
-        error => {
-          scope.updateLoadingStatus({ isLoading: false });
-        });
+        );
     },
     refreshMoreData() {
       // this.bottomLoading = true;
@@ -191,7 +192,10 @@ export default {
         .get(
           `${
             this.appContextPath
-          }appweb/pointExchange/listItem?pageSize=15&pageNum=${++this.pageNum}`
+          }appweb/pointExchange/listItem?pageSize=15&pageNum=${++this
+            .pageNum}&keyWord=${this.searchValue}&type=${
+            this.selectTypeItem[0]
+          }`
         )
         .then(success => {
           scope.list = scope.list.concat(
@@ -219,11 +223,22 @@ export default {
     selectKeyWord($event) {
       this.searchValue = $event;
       this.refreshDataList();
+    },
+    setDefaultImg(event) {
+      event.target.src = `${this.rootPath}static/default_img.jpg`;
     }
   },
   mounted() {
     this.refreshDataList();
     this.updateTitle("积分兑换商城");
+    commodityTypeList.then(result => {
+      this.commodityTypeList = result.map(v => {
+        return {
+          name: v.className,
+          value: v.classId
+        };
+      });
+    });
   }
 };
 </script>
