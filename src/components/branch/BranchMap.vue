@@ -22,7 +22,7 @@
           </cell>
           <cell primary="content">
             <div class="tel-phone-block" style="text-align: left;height: 2rem; width: 85%; margin: 1rem;overflow: hidden;" slot="title">
-              <p class="apostrophe" style="width: 95%;font-size:1.5rem; color: #999999">
+              <p class="apostrophe" style="width: 28rem;font-size:1.5rem; color: #999999">
                 商户电话： {{detail.tel}}
               </p>
             </div>
@@ -67,7 +67,12 @@ export default {
   data() {
     return {
       detail: {},
-      isLoading: false
+      isLoading: false,
+      descrbStyle: {
+        "max-height": "6.5rem",
+        overflow: "hidden"
+      },
+      showOpenDescrb: true
     };
   },
   computed: {
@@ -85,6 +90,10 @@ export default {
         //   map.centerAndZoom(point, distance);
         // }
       });
+    },
+    toggleDescription(event) {
+      this.descrbStyle["max-height"] = event ? "100%" : "6.5rem";
+      this.showOpenDescrb = !event;
     },
     setDefaultImg(event) {
       event.target.src = `${this.rootPath}static/default_img.jpg`;

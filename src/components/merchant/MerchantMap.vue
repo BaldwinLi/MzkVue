@@ -21,8 +21,8 @@
             </div>
           </cell>
           <cell primary="content">
-            <div class="tel-phone-block" style="text-align: left;height: 2rem; width: 85%; margin: 1rem;overflow: hidden;" slot="title">
-              <p class="apostrophe" style="width: 95%;font-size:1.5rem; color: #999999">
+            <div class="tel-phone-block" style="text-align: left;height: 2rem; margin: 1rem;overflow: hidden;" slot="title">
+              <p class="apostrophe" style="width: 28rem;font-size:1.5rem; color: #999999">
                 商户电话： {{detail.tel}}
               </p>
             </div>
