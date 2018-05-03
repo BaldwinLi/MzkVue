@@ -162,7 +162,7 @@ export default {
         .get(
           `${
             this.appContextPath
-          }appweb/branch/list?pageSize=15&pageNum=1&keyWord=${
+          }appweb/allianceBusi/list?pageSize=15&pageNum=1&keyWord=${
             this.searchValue
           }&type=${this.selectTypeItem[0]}${coordsCondition}`
           //
@@ -196,7 +196,7 @@ export default {
       const coordsCondition = `&lati=${this.latitude}&longi=${this.longitude}`;
       this.$http
         .get(
-          `${this.appContextPath}appweb/branch/list?pageSize=${
+          `${this.appContextPath}appweb/allianceBusi/list?pageSize=${
             this.pageSize
           }&pageNum=${++this.pageNum}&keyWord=${this.searchValue}&type=${
             this.selectTypeItem[0]
@@ -224,6 +224,7 @@ export default {
     },
     invokenavigator(func) {
       this.isLoading = true;
+      const scope = this;
       initAMap().then(result => {
         if (result) {
           geolocation.getCurrentPosition();
