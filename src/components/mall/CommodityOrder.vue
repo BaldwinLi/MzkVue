@@ -10,7 +10,7 @@
         <card style="margin-bottom: 6rem;">
             <img slot="header" :src="detail.picUrl" style="width:100%;display:block;" @error="setDefaultImg">
             <div slot="content" class="card-padding">
-                <div>
+                <div style="font-size:1.5rem;">
                   <div v-if="detail.needAddress">
                     <i class="fa fa-map-marker" style="float: left;margin-top: 1.2rem;"></i>
                     <x-input title="邮寄地址" v-model="detail.address"></x-input>
@@ -36,7 +36,7 @@
                 </x-address> -->
             </div>
         </card>
-        <div slot="footer" style="position: absolute; bottom: 0; width: 100%;">
+        <div slot="footer" style="position: fixed; bottom: 0; width: 100%;">
             <x-button @click.native="queryReceiveHistory" style="background: #4682B4; color: #fff; width: 60%; float: left; margin-top: 1.5rem;">查看历史收货信息</x-button>
             <x-button @click.native="submit" style="background: #FF6347; color: #fff; width: 40%; float: left; margin-top: 1.5rem;">确认下单</x-button>
         </div>

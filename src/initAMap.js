@@ -1,7 +1,16 @@
+import store from './vuex/store';
+import {
+  geolocationErrorCallback
+} from "./components/config";
+import {
+  AlertModule
+} from 'vux'
+
+
 export default () => {
   const mapContainer = document.getElementById('map-container');
   if (!window['AMap']) {
-    const amapKey = window.location.hostname === "app.dlmzk.com" ? 'f69ddd4d557dfb18205003a019e59035' : 'd4db416574e2ca922626865111063378'
+    const amapKey = store.getters.isLocal ? 'd4db416574e2ca922626865111063378' : 'f69ddd4d557dfb18205003a019e59035'
     const scriptEl = document.createElement('script');
     scriptEl.setAttribute('type', 'text/javascript');
     scriptEl.setAttribute('src', `http://webapi.amap.com/maps?v=1.4.6&key=${amapKey}`);
@@ -51,3 +60,50 @@ export default () => {
     });
   }
 };
+
+
+export const markerMap = (title, longitude, latitude) => {
+  // geolocation.getCurrentPosition();
+  // AMap.event.addListener(geolocation, "complete", value => {
+  //   new AMap.Marker({
+  //     position: [value.position.lng, value.position.lat],
+  //     title: '当前位置',
+  //     map: IMap
+  //   });
+  const distance = Math.sqrt(
+    Math.pow(
+      longitude - store.state.currentPosition.longitude,
+      2) -
+    Math.pow(
+      latitude - store.state.currentPosition.latitude,
+      2)
+  )
+  IMap.setZoom(31/Math.pow(distance*1000, 0.4));
+  let cLongitude, cLatitude;
+  if (longitude > store.state.currentPosition.longitude) {
+    cLongitude = store.state.currentPosition.longitude + (longitude - store.state.currentPosition.longitude) / 2
+  } else {
+    cLongitude = longitude + (store.state.currentPosition.longitude - longitude) / 2
+  }
+  if (latitude > store.state.currentPosition.latitude) {
+    cLatitude = store.state.currentPosition.latitude + (latitude - store.state.currentPosition.latitude) / 2
+  } else {
+    cLatitude = latitude + (store.state.currentPosition.latitude - latitude) / 2
+  }
+  IMap.setCenter([cLongitude, cLatitude]);
+  // });
+  // IMap.setZoom(10);
+
+  new AMap.Marker({
+    position: [store.state.currentPosition.longitude, store.state.currentPosition.latitude],
+    title: '当前位置',
+    map: IMap
+  });
+  new AMap.Marker({
+    position: [longitude, latitude],
+    title,
+    content: `<i class="fa fa-map-marker map-mark" aria-hidden="true"></i>`,
+    // offset: new AMap.Pixel(-12, -12),
+    map: IMap
+  });
+}

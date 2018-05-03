@@ -15,7 +15,7 @@
                 @on-pullup-loading="refreshMoreData">
         <div>
           <cell v-for="item in list" :key="item.id" primary="content">
-            <img slot="title" style="height: 5rem" :src="item.picUrl" class="card-padding">
+            <img slot="title" style="height: 5rem" :src="item.picUrl" class="card-padding" @error="setDefaultImg">
             <div slot>
               <p style="text-align: left;color: #000">{{item.name}}</p>
               <p style="text-align: left;font-size:1.2rem">{{item.description}}</p>
@@ -68,7 +68,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["appContextPath", "isLocal"])
+    ...mapGetters(["appContextPath", "isLocal", "rootPath"])
   },
   filters: {
     dateFormat: function(value) {
@@ -134,6 +134,9 @@ export default {
           }
           this.isLoading = false;
         });
+    },
+    setDefaultImg(event) {
+      event.target.src = `${this.rootPath}static/default_img.jpg`;
     },
     ...mapMutations(["updateTitle"])
   },

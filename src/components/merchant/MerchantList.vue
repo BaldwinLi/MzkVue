@@ -85,7 +85,7 @@ import {
   Search,
   PopupPicker
 } from "vux";
-import { mapGetters, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 import {
   allianceBusiTypeList,
   autoSortList,
@@ -117,8 +117,6 @@ export default {
     return {
       pageNum: 1,
       pageSize: 15,
-      latitude: 0,
-      longitude: 0,
       isLoading: false,
       pulldownConfig,
       pullupConfig,
@@ -136,6 +134,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(["currentPosition"]),
     ...mapGetters(["appContextPath", "isLocal", "rootPath"])
   },
   methods: {
@@ -155,12 +154,16 @@ export default {
     refreshDataList(value) {
       this.isShowList = true;
       this.isLoading = true;
-      this.longitude =
-        (value && value.position && value.position.lng) || this.longitude;
-      this.latitude =
-        (value && value.position && value.position.lat) || this.latitude;
+      this.updateCurrentPosition({
+        longitude:
+          (value && value.position && value.position.lng) ||
+          this.currentPosition.longitude,
+        latitude:
+          (value && value.position && value.position.lat) ||
+          this.currentPosition.latitude
+      });
       const scope = this;
-      const coordsCondition = `&lati=${this.latitude}&longi=${this.longitude}`;
+      const coordsCondition = `&lati=${this.currentPosition.latitude}&longi=${this.currentPosition.longitude}`;
       this.$http
         .get(
           `${
@@ -191,12 +194,16 @@ export default {
         );
     },
     refreshMoreData(value) {
-      this.longitude =
-        (value && value.position && value.position.lng) || this.longitude;
-      this.latitude =
-        (value && value.position && value.position.lat) || this.latitude;
+      this.updateCurrentPosition({
+        longitude:
+          (value && value.position && value.position.lng) ||
+          this.currentPosition.longitude,
+        latitude:
+          (value && value.position && value.position.lat) ||
+          this.currentPosition.latitude
+      });
       const scope = this;
-      const coordsCondition = `&lati=${this.latitude}&longi=${this.longitude}`;
+      const coordsCondition = `&lati=${this.currentPosition.latitude}&longi=${this.currentPosition.longitude}`;
       this.$http
         .get(
           `${this.appContextPath}appweb/allianceBusi/list?pageSize=${
@@ -233,11 +240,11 @@ export default {
           geolocation.getCurrentPosition();
           AMap.event.addListener(geolocation, "complete", func.bind(this)); //返回定位信息
           AMap.event.addListener(geolocation, "error", value => {
-            if (this.latitude && this.longitude) {
+            if (this.currentPosition.latitude && this.currentPosition.longitude) {
               func({
                 coords: {
-                  longitude: this.longitude,
-                  latitude: this.latitude
+                  longitude: this.currentPosition.longitude,
+                  latitude: this.currentPosition.latitude
                 }
               });
             } else {
@@ -277,7 +284,7 @@ export default {
     setDefaultImg(event) {
       event.target.src = `${this.rootPath}static/default_img.jpg`;
     },
-    ...mapMutations(["updateTitle"])
+    ...mapMutations(["updateTitle", "updateCurrentPosition"])
   },
   mounted() {
     this.invokenavigator(this.refreshDataList);

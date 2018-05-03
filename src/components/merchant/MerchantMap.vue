@@ -55,6 +55,7 @@
 import { Loading, Card, Cell, LoadMore } from "vux";
 import { mapGetters, mapMutations } from "vuex";
 import initAMap from "@/initAMap";
+import { markerMap } from "@/initAMap";
 import { geolocationOptions, geolocationErrorCallback } from "../config";
 
 export default {
@@ -67,8 +68,6 @@ export default {
   },
   data() {
     return {
-      longitude: 0,
-      latitude: 0,
       detail: {},
       isLoading: false,
       descrbStyle: {
@@ -110,13 +109,7 @@ export default {
     },
     renderAMap(distance, latitude, longitude) {
       initAMap().then(result => {
-        // if (result) {
-        //   const map = new BMap.Map("merchant-map-container");
-        //   // 创建地图实例
-        //   const point = new BMap.Point(latitude, longitude);
-        //   // 创建点坐标
-        //   map.centerAndZoom(point, distance);
-        // }
+        markerMap(this.detail.name, longitude, latitude);
       });
     },
     toggleDescription(event) {

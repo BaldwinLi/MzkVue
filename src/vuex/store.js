@@ -11,7 +11,11 @@ const proxyedHostNames = [
 export default new Vuex.Store({ // 名字自己定义
       state: {
         isLoading: false,
-        title: '首页'
+        title: '首页',
+        currentPosition: {
+          longitude: 0,
+          latitude: 0
+        }
       },
       mutations: {
         updateLoadingStatus(state, payload) {
@@ -21,6 +25,10 @@ export default new Vuex.Store({ // 名字自己定义
           state.title = payload;
           const titleEl = document.head.getElementsByTagName('title')[0];
           if(titleEl) titleEl.innerHTML = payload;
+        },
+        updateCurrentPosition(state, payload) {
+          state.currentPosition.longitude = payload.longitude;
+          state.currentPosition.latitude = payload.latitude;
         }
       },
       getters: {

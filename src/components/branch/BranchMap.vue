@@ -55,6 +55,7 @@
 import { Loading, Card, Cell, LoadMore } from "vux";
 import { mapGetters, mapMutations } from "vuex";
 import initAMap from "@/initAMap";
+import { markerMap } from "@/initAMap";
 
 export default {
   name: "BranchMap",
@@ -82,13 +83,7 @@ export default {
     ...mapMutations(["updateTitle"]),
     renderAMap(distance, latitude, longitude) {
       initAMap().then(result => {
-        // if (result) {
-        //   const map = new BMap.Map("branch-map-container");
-        //   // 创建地图实例
-        //   const point = new BMap.Point(latitude, longitude);
-        //   // 创建点坐标
-        //   map.centerAndZoom(point, distance);
-        // }
+        markerMap(this.detail.name, longitude, latitude);
       });
     },
     toggleDescription(event) {
@@ -99,7 +94,7 @@ export default {
       event.target.src = `${this.rootPath}static/default_img.jpg`;
     },
     callPhone(event) {
-      window.location.href = 'tel:' + event;
+      window.location.href = "tel:" + event;
     }
   },
   mounted() {
