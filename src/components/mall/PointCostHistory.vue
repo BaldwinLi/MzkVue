@@ -2,8 +2,7 @@
   <div>
     <loading v-model="isLoading"></loading>
     <group>
-      <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-      <p class="no-data" v-if="!isLoading && list.length === 0">暂无数据</p>
+      <load-more v-if="!isLoading && list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
       <scroller v-if="list.length > 0"
                 :lock-x=true
                 :scrollbar-y=true
@@ -52,7 +51,7 @@ export default {
     Cell,
     Scroller,
     Loading,
-    // LoadMore,
+    LoadMore,
     Group
   },
   data() {

@@ -41,7 +41,8 @@
                 :scrollbar-y=true
                 :pulldown-config="pulldownConfig" 
                 :pullup-config="pullupConfig"
-                ref="scrollerEvent" 
+                ref="scrollerEvent"
+                height="-60"
                 :use-pulldown=true 
                 :use-pullup="enablePullup"
                 @on-pulldown-loading="refreshDataList" 

@@ -37,11 +37,13 @@
                 :scrollbar-y=true
                 :pulldown-config="pulldownConfig" 
                 :pullup-config="pullupConfig"
-                ref="scrollerEvent" 
+                ref="scrollerEvent"
+                height="-60"
                 :use-pulldown=true 
                 :use-pullup="enablePullup" 
                 @on-pulldown-loading="invokenavigator(refreshDataList)" 
                 @on-pullup-loading="invokenavigator(refreshMoreData)">
+        <div>
           <cell v-for="item in list" :key="item.id" primary="content" @click.native="goBranchMap($event, item)" is-link>
             <img slot="title"
                  style="height: 8rem; width: 8rem; border: 1px solid #999999;"
@@ -59,7 +61,8 @@
                 <i style="font-size: 1.1rem; color: #999999; right: 0; bottom: 0; position: absolute; font-weight: normal;">{{item.distance/1000}}km</i>
               </p>
             </div>
-          </cell>
+          </cell> 
+        </div>
       </scroller>
     </group>
   </div>

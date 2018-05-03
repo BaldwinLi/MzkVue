@@ -20,13 +20,13 @@
               </p>
             </div>
           </cell>
-          <cell primary="content">
+          <cell primary="content" @click.native="callPhone(detail.tel)">
             <div class="tel-phone-block" style="text-align: left;height: 2rem; margin: 1rem;overflow: hidden;" slot="title">
               <p class="apostrophe" style="width: 28rem;font-size:1.5rem; color: #999999">
                 商户电话： {{detail.tel}}
               </p>
             </div>
-            <a :href="'tel:' + detail.tel"><i class="fa fa-phone icon-preffix" style="font-size: 2rem;" aria-hidden="true" slot></i></a>
+            <i class="fa fa-phone icon-preffix" style="font-size: 2rem;" aria-hidden="true" slot></i>
           </cell>
           <cell primary="content">
             <load-more :show-loading="false" :tip="'商家详情'" background-color="#fbf9fe"></load-more>
@@ -125,6 +125,9 @@ export default {
     },
     setDefaultImg(event) {
       event.target.src = `${this.rootPath}static/default_img.jpg`;
+    },
+    callPhone(event) {
+      window.location.href = 'tel:' + event;
     },
     ...mapMutations(["updateTitle"])
   },

@@ -40,29 +40,32 @@
                 :scrollbar-y=true
                 :pulldown-config="pulldownConfig" 
                 :pullup-config="pullupConfig"
-                ref="scrollerEvent" 
+                ref="scrollerEvent"
+                height="-60"
                 :use-pulldown=true 
-                :use-pullup="enablePullup" 
+                :use-pullup="enablePullup"
                 @on-pulldown-loading="invokenavigator(refreshDataList)" 
                 @on-pullup-loading="invokenavigator(refreshMoreData)">
-          <cell v-for="item in list" :key="item.id" primary="content" @click.native="goMerchantMap($event, item)" is-link>
-            <img slot="title"
-                 style="height: 8rem; width: 8rem; border: 1px solid #999999;"
-                 :src="item.logoUrl" class="card-padding"
-                 @error="setDefaultImg">
-            <div style="text-align: left;height: 10rem; margin: 1rem;" slot>
-              <p class="header-text" style="width: 85%;font-size:1.5rem;">
-                {{item.name}}
-              </p>
-              <p class="apostrophe content">
-                <i class="fa fa-phone icon-preffix" aria-hidden="true"></i>{{ item.tel }}
-              </p>
-              <p class="apostrophe content">
-                <i class="fa fa-map-marker icon-preffix" aria-hidden="true"></i>{{ item.address }}
-                <i style="font-size: 1.1rem; color: #999999; right: 0; bottom: 0; position: absolute; font-weight: normal;">{{item.distance/1000}}km</i>
-              </p>
-            </div>
-          </cell>
+          <div>
+             <cell v-for="item in list" :key="item.id" primary="content" @click.native="goMerchantMap($event, item)" is-link>
+              <img slot="title"
+                  style="height: 8rem; width: 8rem; border: 1px solid #999999;"
+                  :src="item.logoUrl" class="card-padding"
+                  @error="setDefaultImg">
+              <div style="text-align: left;height: 10rem; margin: 1rem;" slot>
+                <p class="header-text" style="width: 85%;font-size:1.5rem;">
+                  {{item.name}}
+                </p>
+                <p class="apostrophe content">
+                  <i class="fa fa-phone icon-preffix" aria-hidden="true"></i>{{ item.tel }}
+                </p>
+                <p class="apostrophe content">
+                  <i class="fa fa-map-marker icon-preffix" aria-hidden="true"></i>{{ item.address }}
+                  <i style="font-size: 1.1rem; color: #999999; right: 0; bottom: 0; position: absolute; font-weight: normal;">{{item.distance/1000}}km</i>
+                </p>
+              </div>
+             </cell>
+          </div>
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
       </scroller>
     </group>

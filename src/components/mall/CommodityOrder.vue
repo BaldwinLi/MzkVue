@@ -36,7 +36,7 @@
                 </x-address> -->
             </div>
         </card>
-        <div slot="footer" style="position: fixed; bottom: 0; width: 100%;">
+        <div slot="footer" style="position: absolute; bottom: 0; width: 100%;">
             <x-button @click.native="queryReceiveHistory" style="background: #4682B4; color: #fff; width: 60%; float: left; margin-top: 1.5rem;">查看历史收货信息</x-button>
             <x-button @click.native="submit" style="background: #FF6347; color: #fff; width: 40%; float: left; margin-top: 1.5rem;">确认下单</x-button>
         </div>

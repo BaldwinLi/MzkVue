@@ -20,31 +20,35 @@ export const geolocationOptions = {
 }
 
 export const geolocationErrorCallback = (value, alert) => {
-  const title = "地图加载失败";
-  switch (value.code) {
-    case 1:
-      alert.show({
-        title,
-        content: "您的网络协议不允许使用定位服务"
-      });
-      break;
-    case 2:
-      alert.show({
-        title,
-        content: "暂时获取不到位置信息"
-      });
-      break;
-    case 3:
-      alert.show({
-        title,
-        content: "获取信息超时"
-      });
-      break;
-    case 4:
-      alert.show({
-        title,
-        content: "未知错误"
-      });
-      break;
-  }
+  const title = "定位失败";
+  alert.show({
+          title,
+          content: "请重新加载页面"
+        });
+  // switch (value.code) {
+  //   case 1:
+  //     alert.show({
+  //       title,
+  //       content: "您的网络协议不允许使用定位服务"
+  //     });
+  //     break;
+  //   case 2:
+  //     alert.show({
+  //       title,
+  //       content: "暂时获取不到位置信息, 重新"
+  //     });
+  //     break;
+  //   case 3:
+  //     alert.show({
+  //       title,
+  //       content: "获取信息超时"
+  //     });
+  //     break;
+  //   case 4:
+  //     alert.show({
+  //       title,
+  //       content: "未知错误"
+  //     });
+  //     break;
+  // }
 }
