@@ -16,7 +16,7 @@
                 {{ detail.address }}
               </p>
               <p class="apostrophe content">
-                距您{{detail.distance/1000}}km
+                距您{{detail.distance}}km
               </p>
             </div>
           </cell>
@@ -83,7 +83,7 @@ export default {
     ...mapMutations(["updateTitle"]),
     renderAMap(distance, latitude, longitude) {
       initAMap().then(result => {
-        markerMap(this.detail.name, longitude, latitude);
+        this.detail.distance = markerMap(this.detail.name, longitude, latitude);
       });
     },
     toggleDescription(event) {

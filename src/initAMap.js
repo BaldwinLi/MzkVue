@@ -70,14 +70,14 @@ export const markerMap = (title, longitude, latitude) => {
   //     title: '当前位置',
   //     map: IMap
   //   });
-  // const distance = Math.sqrt(
-  //   Math.pow(
-  //     longitude - store.state.currentPosition.longitude,
-  //     2) +
-  //   Math.pow(
-  //     latitude - store.state.currentPosition.latitude,
-  //     2)
-  // )
+  const distance = Math.sqrt(
+    Math.pow(
+      longitude - store.state.currentPosition.longitude,
+      2) +
+    Math.pow(
+      latitude - store.state.currentPosition.latitude,
+      2)
+  ) * 111.320;
   // 48000/(distance*111320)
   IMap.setZoom(11);
   let cLongitude, cLatitude;
@@ -107,4 +107,5 @@ export const markerMap = (title, longitude, latitude) => {
     // offset: new AMap.Pixel(-12, -12),
     map: IMap
   });
+  return Math.round(distance*100)/100;
 }
