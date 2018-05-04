@@ -6,7 +6,7 @@
       cancel-text="搜索"
       v-model="searchValue"
       position="relative"
-      placeholder="搜商户"
+      placeholder="搜网点"
       auto-scroll-to-top
       top="0"
       @on-focus="onFocus"
