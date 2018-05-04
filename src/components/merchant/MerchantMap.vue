@@ -72,7 +72,8 @@ export default {
       isLoading: false,
       descrbStyle: {
         "max-height": "6.5rem",
-        overflow: "hidden"
+        overflow: "hidden",
+        "text-align": "left"
       },
       showOpenDescrb: true
     };

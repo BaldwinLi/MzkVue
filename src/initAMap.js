@@ -61,6 +61,13 @@ export default () => {
   }
 };
 
+const getZoom = (distance) => {
+  const zoom = [50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 25000, 50000, 100000, 200000, 500000, 1000000, 2000000] //级别18到3
+  return 18 - zoom.findIndex(e => {
+    return e - distance > 0
+  }) + 1;
+}
+
 
 export const markerMap = (title, longitude, latitude) => {
   // geolocation.getCurrentPosition();
@@ -70,16 +77,19 @@ export const markerMap = (title, longitude, latitude) => {
   //     title: '当前位置',
   //     map: IMap
   //   });
-  const distance = Math.sqrt(
-    Math.pow(
-      longitude - store.state.currentPosition.longitude,
-      2) +
-    Math.pow(
-      latitude - store.state.currentPosition.latitude,
-      2)
-  ) * 111.320;
+  // const distance = Math.sqrt(
+  //   Math.pow(
+  //     longitude - store.state.currentPosition.longitude,
+  //     2) +
+  //   Math.pow(
+  //     latitude - store.state.currentPosition.latitude,
+  //     2)
+  // ) * 111320;
+  const currentPosition = new AMap.LngLat(store.state.currentPosition.longitude, store.state.currentPosition.latitude);
+  const targetPosition = new AMap.LngLat(longitude, latitude);
+  const distance = currentPosition.distance(targetPosition);
   // 48000/(distance*111320)
-  IMap.setZoom(11);
+  IMap.setZoom(getZoom(distance));
   let cLongitude, cLatitude;
   if (longitude > store.state.currentPosition.longitude) {
     cLongitude = store.state.currentPosition.longitude + (longitude - store.state.currentPosition.longitude) / 2
@@ -107,5 +117,5 @@ export const markerMap = (title, longitude, latitude) => {
     // offset: new AMap.Pixel(-12, -12),
     map: IMap
   });
-  return Math.round(distance*100)/100;
+  return (distance / 1000).toFixed(1);
 }
