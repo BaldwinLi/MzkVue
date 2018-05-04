@@ -70,15 +70,16 @@ export const markerMap = (title, longitude, latitude) => {
   //     title: '当前位置',
   //     map: IMap
   //   });
-  const distance = Math.sqrt(
-    Math.pow(
-      longitude - store.state.currentPosition.longitude,
-      2) -
-    Math.pow(
-      latitude - store.state.currentPosition.latitude,
-      2)
-  )
-  IMap.setZoom(31/Math.pow(distance*1000, 0.4));
+  // const distance = Math.sqrt(
+  //   Math.pow(
+  //     longitude - store.state.currentPosition.longitude,
+  //     2) +
+  //   Math.pow(
+  //     latitude - store.state.currentPosition.latitude,
+  //     2)
+  // )
+  // 48000/(distance*111320)
+  IMap.setZoom(11);
   let cLongitude, cLatitude;
   if (longitude > store.state.currentPosition.longitude) {
     cLongitude = store.state.currentPosition.longitude + (longitude - store.state.currentPosition.longitude) / 2
