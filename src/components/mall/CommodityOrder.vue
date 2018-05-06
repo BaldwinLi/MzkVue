@@ -1,16 +1,16 @@
 <template>
     <div>
         <loading v-model="isLoading"></loading>
-        <cell title="当前可用积分">
+        <cell style="font-size:1.3rem;padding: 10px 15px 0;" is-link @click.native="goPointCostHistory">
+          <span slot="title">当前可用积分：<i style="color: #DC143C">{{ pointBalance }}</i></span>
           <div>
-            <span style="color: #DC143C">{{ pointBalance }}</span>
+            <i class="fa fa-history" style="color: #00BFFF" aria-hidden="true"></i>查看积分兑换历史记录
           </div>
         </cell>
-        <cell title="查看积分兑换历史记录" @click.native="goPointCostHistory" is-link></cell>
         <card style="margin-bottom: 6rem;">
             <img slot="header" :src="detail.picUrl" style="width:100%;display:block;" @error="setDefaultImg">
             <div slot="content" class="card-padding">
-                <div style="font-size:1.5rem;">
+                <!-- <div style="font-size:1.5rem;">
                   <div v-if="detail.needAddress">
                     <i class="fa fa-map-marker" style="float: left;margin-top: 1.2rem;"></i>
                     <x-input title="邮寄地址" v-model="detail.address"></x-input>
@@ -23,22 +23,30 @@
                     <i class="fa fa-phone" style="float: left;margin-top: 1.2rem;"></i>
                     <x-input title="收件人联系方式" ref="telNum" mask="999 9999 9999" v-model="detail.tel" :max="13" is-type="china-mobile"></x-input>
                   </div>
+                </div> -->
+                <p class="card-padding" style="font-size: 1.8rem;line-height: 2.2rem;">{{detail.name}}</p>
+                <!-- <p class="card-padding" style="font-size:1.4rem;line-height: 1.8rem;color:#999;">{{detail.description}}</p> -->
+                <div class="card-padding"  style="color:#FF0000;font-size: 1.8rem;height: 2.2rem;">
+                    {{detail.pointCost}}<i style="font-size:1.05rem;color: #999999">积分</i>
                 </div>
-                
-                <p class="card-padding" style="font-size:1.8rem;">{{detail.name}}</p>
-                <p class="card-padding" style="font-size:1.4rem;line-height: 1.8rem;color:#999;">{{detail.description}}</p>
-                <p class="card-padding" style="font-size:1.6rem;color:#FF0000;">{{detail.pointCost}} 积分</p>
-                <p class="card-padding" style="font-size:1.2rem;color:#EEC900;">参考价格：¥ {{detail.price}}</p>
+                <p class="card-padding" style="font-size:1.2rem;">参考价格：¥ {{detail.price}}</p>
+                <p style="background-color: #F5F5F5; text-align: center;font-size: 1.3rem;">商品详情</p>
+                <p style="color: #999999; text-align: left;margin:1rem" v-html="detail.description"></p>
                 <!-- <x-address title="请选择地址" @on-hide="selectedAddress" v-model="detail.address" :list="addressData" placeholder="请选择地址">
                     <template slot="title" slot-scope="props">
                         <span style="vertical-align:middle;"><i class="fa fa-map-marker"></i> 邮寄地址</span>
                     </template>
                 </x-address> -->
+                <cell title="选择收货地址" style="font-size:1.6rem" is-link @click.native="queryReceiveHistory"></cell>
+                <x-number style="font-size:1.6rem" :title="'兑换数量'" :min="1" :value="1" v-model="detail.count"></x-number>
             </div>
         </card>
         <div slot="footer" style="position: fixed; bottom: 0; width: 100%;">
-            <x-button @click.native="queryReceiveHistory" style="background: #4682B4; color: #fff; width: 60%; float: left; margin-top: 1.5rem;">查看历史收货信息</x-button>
-            <x-button @click.native="submit" style="background: #FF6347; color: #fff; width: 40%; float: left; margin-top: 1.5rem;">确认下单</x-button>
+          <cell class="card-footer">
+            <span slot="title">所需积分：<i style="color:#FF0000;font-size: 1.8rem;">{{ pointBalance }}</i>积分</span>
+            <x-button @click.native="submit" class="confirm-submit">确认兑换</x-button>
+          </cell>
+            <!-- <x-button @click.native="queryReceiveHistory" style="background: ; color: #fff; width: 60%; float: left; margin-top: 1.5rem;">查看历史收货信息</x-button> -->
         </div>
         <!-- <div v-transfer-dom>
             <alert v-model="show2" :title="$t('Congratulations')" :content="$t('Your Message is sent successfully~')"></alert>
@@ -52,6 +60,7 @@ import {
   Card,
   XButton,
   XInput,
+  XNumber,
   Cell,
   ChinaAddressV4Data
   //   AlertModule,
@@ -71,7 +80,8 @@ export default {
     Cell,
     XButton,
     // XAddress
-    XInput
+    XInput,
+    XNumber
     // Alert
   },
   data() {
@@ -197,5 +207,17 @@ export default {
 <style scoped>
 .card-padding {
   padding: 0.4rem;
+}
+.card-footer {
+  background-color: rgb(255, 255, 255);
+  border-top: 1px solid #999999;
+  height: 2.4rem;
+  font-size: 1.6rem;
+}
+.confirm-submit {
+  background: #ff6347;
+  color: #fff;
+  width: 115%;
+  border-radius: 0;
 }
 </style>
