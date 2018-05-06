@@ -215,7 +215,7 @@ export default {
   font-size: 1.6rem;
 }
 .confirm-submit {
-  background: #ff6347;
+  background: #0181ca;;
   color: #fff;
   width: 115%;
   border-radius: 0;
