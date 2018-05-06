@@ -35,7 +35,8 @@
     </grid>
     
     <load-more v-if="list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
-    <a v-if="isShowList && list.length > 0" class="sign-in" @click="signIn">签到</a>
+    <x-button v-if="isShowList && list.length > 0" class="sign-in"  @click.native="signIn">签到</x-button>
+    <!-- <a v-if="isShowList && list.length > 0" class="sign-in" @click="signIn">签到</a> -->
     <group style="top: 4rem;" v-if="isShowList && list.length > 0" title="积分兑换商品列表">
       <scroller :lock-x=true 
                 :scrollbar-y=true
@@ -49,14 +50,22 @@
                 @on-pullup-loading="refreshMoreData">
         <div>
           <flexbox :gutter="0" wrap="wrap">
-            <flexbox-item :span="1/3" v-for="item in list" :key="item.id">
+            <flexbox-item :span="1/2" v-for="item in list" :key="item.id">
               <card @click.native="goCommodityOrder(item.id)">
-                <img slot="header" :src="item.picUrl" style="width:100%;display:block;" @error="setDefaultImg">
+                <div slot="header">
+                  <img :src="item.picUrl" style="width: 90%;height: 11rem;display:block;margin: 5%;border: 1px solid #999999;" @error="setDefaultImg">
+                </div>
                 <div slot="content" class="card-padding">
-                  <p style="font-size:1.1rem;">{{item.name}}</p>
+                  <span>
+                    <div style="width: 55%;float: left;font-size: 1.5rem;height: 2rem;overflow: hidden">{{item.name}}</div>
+                    <div style="color:#FF0000; width: 45%; display: inline-block; text-align: right;">
+                      {{item.pointCost}}
+                      <i style="font-size:1.05rem;color: #999999">积分</i>
+                    </div>
+                  </span>
                   <!-- <p style="font-size:10px;line-height:1 ;color:#999;">{{item.description}}</p> -->
-                  <p style="font-size:1.05rem;color:#FF0000;">{{item.pointCost}} 积分</p>
-                  <p style="font-size:1rem;color:#EEC900;">参考价格：¥ {{item.price}}</p>
+                  
+                  <p style="float: left;font-size:1rem;color:#999999;">参考价格：¥ {{item.price}}</p>
                 </div>
               </card>
             </flexbox-item>
@@ -76,6 +85,7 @@ import {
   LoadMore,
   Scroller,
   Group,
+  XButton,
   Grid,
   Search,
   PopupPicker,
@@ -95,6 +105,7 @@ export default {
     Flexbox,
     FlexboxItem,
     Card,
+    XButton,
     LoadMore,
     Scroller,
     Group,
@@ -248,14 +259,18 @@ export default {
 <style scoped>
 .card-padding {
   padding: 1.5rem;
+  height: 4rem;
 }
 .sign-in {
   float: right;
-  line-height: 3.5rem;
+  line-height: 2.5rem;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-  color: #528b8b;
+  color: #fff;
+  background-color: #00BFFF;
   font-size: 1.4rem;
+  width: 6rem;
+  margin: 0.55rem;
 }
 .type-block {
   width: 50%;
