@@ -15,13 +15,20 @@
                 @on-pullup-loading="refreshMoreData">
         <div>
           <cell v-for="item in list" :key="item.id" primary="content">
-            <img slot="title" style="height: 5rem" :src="item.picUrl" class="card-padding" @error="setDefaultImg">
-            <div slot>
-              <p style="text-align: left;color: #000">{{item.name}}</p>
-              <p style="text-align: left;font-size:1.2rem">{{item.description}}</p>
-              <p style="font-size:1.6rem;color:#FF0000;">{{item.pointCost}} 积分</p>
-              <p style="font-size:1.2rem;color:#EEC900;">参考价格：¥ {{item.price}}</p>
-              <p style="font-size:1.2rem; color:#999;">下单时间: {{item.orderTs | dateFormat}}</p>
+            <img slot="title"
+                 style="height: 4rem;width: 6rem;display:block;border: 1px solid #999999;"
+                 :src="item.picUrl" class="card-padding" @error="setDefaultImg">
+            <div style="margin-left:1rem;" slot>
+              <span class="line-margin">
+                <div style="text-align: left; width: 55%; float: left;color: #000">{{item.name}}</div>
+                <div style="color:#FF0000; width: 45%; display: inline-block; text-align: right;">
+                  {{item.pointCost}}<i style="font-size:1.05rem;color: #999999">积分</i>
+                </div>
+              </span>
+              <span class="line-margin">
+                <div style="text-align: left; font-size:1.2rem; width: 55%;float: left;color:#999;">{{item.orderTs | dateFormat}}</div>
+                <div style="text-align: right; display: inline-block;float: left;width: 45%;font-size:1.2rem;color:#999999;">参考价格：¥ {{item.price}}</div>
+              </span>
             </div>
           </cell>
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
@@ -151,5 +158,9 @@ export default {
 <style scoped>
 .card-padding {
   padding: 1.5rem;
+}
+.line-margin {
+  margin-top: 1.5rem;
+  display: block;
 }
 </style>
