@@ -126,7 +126,7 @@ export default {
     ...mapMutations(["updateTitle"])
   },
   mounted() {
-    this.updateTitle("商家位置");
+    this.updateTitle("商家详情");
     this.refreshDataDetail();
   }
 };

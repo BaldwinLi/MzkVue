@@ -120,7 +120,7 @@ export default {
         );
         this.isLoading = false;
       });
-    this.updateTitle("网点位置");
+    this.updateTitle("网点详情");
   }
 };
 </script>

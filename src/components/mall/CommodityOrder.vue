@@ -1,7 +1,8 @@
 <template>
     <div>
-        <loading v-model="isLoading"></loading>
-        <cell style="font-size:1.3rem;padding: 10px 15px 0;" is-link @click.native="goPointCostHistory">
+      <loading v-model="isLoading"></loading>
+      <div v-if="!isDone">
+          <cell style="font-size:1.3rem;padding: 10px 15px 0;" is-link @click.native="goPointCostHistory">
           <span slot="title">当前可用积分：<i style="color: #DC143C">{{ pointBalance }}</i></span>
           <div>
             <i class="fa fa-history" style="color: #00BFFF" aria-hidden="true"></i>查看积分兑换历史记录
@@ -43,14 +44,43 @@
         </card>
         <div slot="footer" style="position: fixed; bottom: 0; width: 100%;">
           <cell class="card-footer">
-            <span slot="title">所需积分：<i style="color:#FF0000;font-size: 1.8rem;">{{ pointBalance }}</i>积分</span>
+            <span slot="title">所需积分：<i style="color:#FF0000;font-size: 1.8rem;">{{ detail.pointCost*detail.count }}</i>积分</span>
             <x-button @click.native="submit" class="confirm-submit">确认兑换</x-button>
           </cell>
             <!-- <x-button @click.native="queryReceiveHistory" style="background: ; color: #fff; width: 60%; float: left; margin-top: 1.5rem;">查看历史收货信息</x-button> -->
         </div>
-        <!-- <div v-transfer-dom>
-            <alert v-model="show2" :title="$t('Congratulations')" :content="$t('Your Message is sent successfully~')"></alert>
-        </div> -->
+      </div>
+      <div v-if="isDone">
+        <div :class="exchangeResultClass">
+          <div class="exchange-result">
+            <p v-if="exchangeResultClass === 'exchange-success'">兑换码：0</p>
+            <p>剩余积分：{{pointBalance}}</p>
+          </div>
+        </div>
+        <cell primary="content">
+            <img slot="title"
+                 style="height: 6rem;width: 8rem;display:block;border: 1px solid #999999;"
+                 :src="detail.picUrl" class="card-padding" @error="setDefaultImg">
+            <div style="margin-left:1rem;" slot>
+              <span class="line-margin">
+                <div style="font-size:1.5rem; text-align: left; width: 55%; float: left;color: #000; overflow: hidden;height: 5rem;">{{detail.name}}</div>
+                <div style="font-size:1.5rem; color:#FF0000; width: 45%; display: inline-block; text-align: right;">
+                  {{detail.pointCost}}<i style="font-size:1.05rem;color: #999999">积分 ✖️ {{detail.count}}</i>
+                </div>
+              </span>
+              <span class="line-margin">
+                <div style="text-align: right; display: inline-block;float: right;width: 45%;font-size:1.2rem;color:#999999;">参考价格：¥ {{detail.price}}</div>
+              </span>
+            </div>
+        </cell>
+        <div>
+              <x-button @click.native="isDone=false" class="continue-exchange-btn">继续换购</x-button>
+              <x-button @click.native="goHome" class="back-to-home-btn" style="margin-top: 5%;">返回首页</x-button>
+            <!-- <x-button @click.native="queryReceiveHistory" style="background: ; color: #fff; width: 60%; float: left; margin-top: 1.5rem;">查看历史收货信息</x-button> -->
+            </div>
+            <!-- <x-button @click.native="submit" class="confirm-submit">确认兑换</x-button> -->
+            <!-- <x-button @click.native="queryReceiveHistory" style="background: ; color: #fff; width: 60%; float: left; margin-top: 1.5rem;">查看历史收货信息</x-button> -->
+      </div>
   </div>
 </template>
 
@@ -86,10 +116,14 @@ export default {
   },
   data() {
     return {
-      detail: {},
+      detail: {
+        count: 1
+      },
+      exchangeResultClass: "",
       isLoading: false,
       addressData: ChinaAddressV4Data,
-      pointBalance: 0
+      pointBalance: 0,
+      isDone: false
     };
   },
   computed: {
@@ -98,27 +132,31 @@ export default {
   methods: {
     selectedAddress(str) {},
     submit() {
-      if (
-        this.detail.needAddress &&
-        !(this.detail.address && this.detail.receiver && this.detail.tel)
-      ) {
+      if (!this.detail.receiver || !this.detail.tel) {
         this.$vux.alert.show({
           title: "下单失败",
-          content: "请填入您的邮寄地址、收件人、收件人联系方式"
+          content: "请填入您的收件人、收件人联系方式"
         });
         return;
       }
-      if (this.$refs.telNum.hasErrors) {
+      if(this.detail.needAddress && !this.detail.address) {
         this.$vux.alert.show({
           title: "下单失败",
-          content: this.$refs.telNum.errors.format
+          content: "请填入您的邮寄地址"
         });
         return;
       }
+      // if (this.$refs.telNum.hasErrors) {
+      //   this.$vux.alert.show({
+      //     title: "下单失败",
+      //     content: this.$refs.telNum.errors.format
+      //   });
+      //   return;
+      // }
       const scope = this;
       this.$vux.confirm.show({
         title: "确认",
-        content: "是否确认提交？",
+        content: "是否确认兑换？",
         onConfirm() {
           scope.isLoading = true;
           const optionalCondition = scope.detail.needAddress
@@ -134,15 +172,21 @@ export default {
                 optionalCondition}`
             )
             .then(success => {
+              scope.isDone = true;
+              scope.getPointBalance();
               if (success && success.data && success.data.status !== "FAIL") {
-                scope.$vux.alert.show({
-                  content: "下单成功"
-                });
-                scope.$router.push({ path: `/commodity_list` });
+                // scope.$vux.alert.show({
+                //   content: "下单成功"
+                // });
+                // scope.$router.push({ path: `/commodity_list` });
+                scope.exchangeResultClass = "exchange-success";
+                scope.updateTitle("积分兑换成功");
               } else {
-                scope.$vux.alert.show({
-                  content: success.data.result
-                });
+                // scope.$vux.alert.show({
+                //   content: success.data.result
+                // });
+                scope.exchangeResultClass = "exchange-fail";
+                scope.updateTitle("积分兑换失败");
               }
               scope.isLoading = false;
             });
@@ -171,6 +215,9 @@ export default {
           scope.isLoading = false;
         });
     },
+    goHome() {
+      this.$router.push({ path: `/commodity_list` });
+    },
     setDefaultImg(event) {
       event.target.src = `${this.rootPath}static/default_img.jpg`;
     },
@@ -195,6 +242,7 @@ export default {
         scope.detail.receiver = scope.$route.query.receiver || "";
         scope.detail.tel = scope.$route.query.tel || "";
         scope.detail.address = scope.$route.query.address || "";
+        scope.detail.count = 1;
         scope.isLoading = false;
       });
     this.getPointBalance();
@@ -215,9 +263,52 @@ export default {
   font-size: 1.6rem;
 }
 .confirm-submit {
-  background: #0181ca;;
+  background: #0181ca;
   color: #fff;
   width: 115%;
   border-radius: 0;
+}
+div.exchange-success {
+  background-image: url("/static/exchange_success.jpeg");
+  background-size: 100%;
+  height: 20rem;
+  background-repeat: no-repeat;
+}
+div.exchange-fail {
+  background-image: url("/static/exchange_fail.jpeg");
+  background-size: 100%;
+  height: 20rem;
+  background-repeat: no-repeat;
+}
+/* .card-padding {
+  padding: 1.5rem;
+} */
+.line-margin {
+  margin-top: 1.5rem;
+  display: block;
+}
+.exchange-result {
+  top: 16%;
+  left: 39%;
+  position: absolute;
+  text-align: center;
+  font-size: 1.5rem;
+  color: #0181ca;
+}
+.continue-exchange-btn {
+  width: 40%;
+  margin: 5%;
+  float: left;
+  background-color: #0181ca;
+  color: #fff;
+  /* display: inline-block; */
+}
+.back-to-home-btn {
+  width: 40%;
+  margin: 5%;
+  display: inline-block;
+  border: 1px solid #0181ca;
+  background-color: #fff;
+  color: #0181ca;
 }
 </style>
