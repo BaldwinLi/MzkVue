@@ -269,13 +269,13 @@ export default {
   border-radius: 0;
 }
 div.exchange-success {
-  background-image: url("/static/exchange_success.jpeg");
+  background-image: url("../../../static/exchange_success.jpeg");
   background-size: 100%;
   height: 20rem;
   background-repeat: no-repeat;
 }
 div.exchange-fail {
-  background-image: url("/static/exchange_fail.jpeg");
+  background-image: url("../../../static/exchange_fail.jpeg");
   background-size: 100%;
   height: 20rem;
   background-repeat: no-repeat;
