@@ -120,20 +120,7 @@ export default {
           scope.list = (success &&
             success.data &&
             success.data.result &&
-            success.data.result.list) || [
-            {
-              description: "变动描述2",
-              amount: -77.31,
-              balance: 26.36,
-              ts: 1517143513284
-            },
-            {
-              description: "变动描述3",
-              amount: 60.65,
-              balance: 26.36,
-              ts: 1517143513284
-            }
-          ];
+            success.data.result.list) || [];
           if (scope.list.length === 15) {
             scope.enablePullup = true;
           }
