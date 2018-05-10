@@ -117,5 +117,5 @@ export const markerMap = (title, longitude, latitude) => {
     // offset: new AMap.Pixel(-12, -12),
     map: IMap
   });
-  return (distance / 1000).toFixed(1);
+  return (distance / 1000).toFixed(3);
 }
