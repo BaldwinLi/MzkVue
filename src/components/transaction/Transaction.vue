@@ -2,14 +2,14 @@
   <div>
     <group>
       <cell-box @click.native="queryBalance" is-link>
-        明珠卡余额查询
+        <i class="mzk mzk-bag" style="color: #0181ca;"></i>&nbsp;明珠卡余额查询
       </cell-box>
       <cell-box @click.native="queryTransactionHistory" is-link>
-        交易明细查询
+        <i class="mzk mzk-searchforfiles" style="color: #0181ca;"></i>&nbsp;交易明细查询
       </cell-box>
-      <cell-box @click.native="queryReconciliation" is-link>
+      <!-- <cell-box @click.native="queryReconciliation" is-link>
         交易对账
-      </cell-box>
+      </cell-box> -->
     </group>
   </div>
 </template>

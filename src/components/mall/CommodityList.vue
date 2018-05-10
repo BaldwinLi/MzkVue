@@ -2,7 +2,6 @@
   <div>
     <search
       style="position: static"
-      
       v-model="searchValue"
       position="relative"
       placeholder="搜商品"
