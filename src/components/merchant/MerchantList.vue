@@ -3,17 +3,17 @@
     <loading v-model="isLoading"></loading>
     <search
       style="position: static"
-      cancel-text="搜索"
       v-model="searchValue"
       position="relative"
       placeholder="搜商户"
       auto-scroll-to-top
       top="0"
       @on-focus="onFocus"
-      @on-cancel="refreshDataList"
+      @on-cancel="hideList"
       @on-submit="refreshDataList"
       ref="search">
-      <i slot="left" v-if="!isShowList" @click="hideList" class="fa fa-angle-left" style="font-size: 2.5rem; margin-right: 1rem;" aria-hidden="true"></i>
+      <!-- cancel-text="搜索" -->
+      <!-- <i slot="left" v-if="!isShowList" @click="hideList" class="fa fa-angle-left" style="font-size: 2.5rem; margin-right: 1rem;" aria-hidden="true"></i> -->
     </search>
       <!-- :results="results"
       @result-click="resultClick"

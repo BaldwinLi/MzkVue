@@ -30,7 +30,12 @@
                 <div class="card-padding"  style="color:#FF0000;font-size: 1.8rem;height: 2.2rem;">
                     {{detail.pointCost}}<i style="font-size:1.05rem;color: #999999">积分</i>
                 </div>
-                <p class="card-padding" style="font-size:1.2rem;">参考价格：¥ {{detail.price}}</p>
+                <span style="displfont-size:1rem;color:#999999; display: flex; margin: 1rem;">
+                    <div style="width: 70%;float: left;">参考价格：¥ {{detail.price}}</div>
+                    <div style="width: 30%; float: left; text-align: right;">
+                     库存：{{detail.stockCount}}
+                    </div>
+                </span>
                 <p style="background-color: #F5F5F5; text-align: center;font-size: 1.3rem;">商品详情</p>
                 <p style="color: #999999; text-align: left;margin:1rem" v-html="detail.description"></p>
                 <!-- <x-address title="请选择地址" @on-hide="selectedAddress" v-model="detail.address" :list="addressData" placeholder="请选择地址">
@@ -38,13 +43,15 @@
                         <span style="vertical-align:middle;"><i class="fa fa-map-marker"></i> 邮寄地址</span>
                     </template>
                 </x-address> -->
-                <cell title="选择收货地址" style="font-size:1.6rem" is-link @click.native="queryReceiveHistory"></cell>
+                <cell title="收货地址" style="font-size:1.6rem" is-link @click.native="queryReceiveHistory">
+                  <div style="font-size:1.2rem; color: #999999; width: 25rem; overflow: hidden;">{{detail.address}}</div>
+                </cell>
                 <x-number style="font-size:1.6rem" :title="'兑换数量'" :min="1" :value="1" v-model="detail.count"></x-number>
             </div>
         </card>
         <div slot="footer" style="position: fixed; bottom: 0; width: 100%;">
           <cell class="card-footer">
-            <span slot="title">所需积分：<i style="color:#FF0000;font-size: 1.8rem;">{{ detail.pointCost*detail.count }}</i>积分</span>
+            <span slot="title">所需积分：<i style="color:#FF0000;font-size: 1.8rem;">{{ detail.pointCost * detail.count }}</i>积分</span>
             <x-button @click.native="submit" class="confirm-submit">确认兑换</x-button>
           </cell>
             <!-- <x-button @click.native="queryReceiveHistory" style="background: ; color: #fff; width: 60%; float: left; margin-top: 1.5rem;">查看历史收货信息</x-button> -->
@@ -132,17 +139,10 @@ export default {
   methods: {
     selectedAddress(str) {},
     submit() {
-      if (!this.detail.receiver || !this.detail.tel) {
+      if(this.detail.needAddress && (!this.detail.receiver || !this.detail.tel || !this.detail.address)) {
         this.$vux.alert.show({
           title: "下单失败",
-          content: "请填入您的收件人、收件人联系方式"
-        });
-        return;
-      }
-      if(this.detail.needAddress && !this.detail.address) {
-        this.$vux.alert.show({
-          title: "下单失败",
-          content: "请填入您的邮寄地址"
+          content: "请填入收件人、收件人联系方式、邮寄地址"
         });
         return;
       }
@@ -162,7 +162,7 @@ export default {
           const optionalCondition = scope.detail.needAddress
             ? `&address=${scope.detail.address}&receiver=${
                 scope.detail.receiver
-              }&tel=${scope.detail.tel}`
+              }&tel=${scope.detail.tel}&count=${detail.count}`
             : "";
           scope.$http
             .get(

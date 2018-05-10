@@ -2,16 +2,18 @@
   <div>
     <search
       style="position: static"
-      cancel-text="搜索"
+      
       v-model="searchValue"
       position="relative"
       placeholder="搜商品"
       auto-scroll-to-top
       top="0"
       @on-focus="onFocus"
-      @on-cancel="refreshDataList"
+      @on-cancel="hideList"
+      @on-submit="refreshDataList"
       ref="search">
-      <i slot="left" @click="hideList" class="fa fa-angle-left" style="font-size: 2.5rem; margin-right: 1rem;" aria-hidden="true"></i>
+      <!-- cancel-text="搜索" -->
+      <!-- <i slot="left" @click="hideList" class="fa fa-angle-left" style="font-size: 2.5rem; margin-right: 1rem;" aria-hidden="true"></i> -->
     </search>
       <!-- :results="results"
       @result-click="resultClick"
@@ -64,8 +66,12 @@
                     </div>
                   </span>
                   <!-- <p style="font-size:10px;line-height:1 ;color:#999;">{{item.description}}</p> -->
-                  
-                  <p style="float: left;font-size:1rem;color:#999999;">参考价格：¥ {{item.price}}</p>
+                  <span style="font-size:1rem;color:#999999;">
+                    <div style="width: 70%;float: left;">参考价格：¥ {{item.price}}</div>
+                    <div style="width: 30%; float: left; text-align: right;">
+                     库存：{{item.stockCount}}
+                    </div>
+                  </span>
                 </div>
               </card>
             </flexbox-item>

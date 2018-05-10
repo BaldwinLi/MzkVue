@@ -86,7 +86,14 @@ export default {
           scope.list = (success &&
             success.data &&
             success.data.result &&
-            success.data.result.list) || [];
+            success.data.result.list.map(v => {
+              return {
+                receiver: v.recName,
+                tel: v.recPhone,
+                address: v.cityName + v.commName + v.recAddr,
+                isDefault: v.ifDefault
+              }
+            })) || [];
           // if (scope.$refs.scrollerEvent) {
           //   scope.$refs.scrollerEvent.donePulldown();
           //   scope.$refs.scrollerEvent.reset({ top: 0 });
