@@ -1,8 +1,16 @@
 <template>
   <div>
     <group>
-      <!-- <load-more  v-if="topLoading" :show-loading="topLoading" tip="加载中" background-color="#fbf9fe"></load-more> -->
-      <p class="no-data" v-if="!isLoading && list.length === 0">暂无数据</p>
+      <x-input title="卡号" ref="cardNo" placeholder="请输入明珠卡号" type="number" :min="12" :max="12" text-align="right" v-model="cardNo"></x-input>
+      <div style="height: 9rem; background-color: rgb(251, 249, 254)">
+        <box gap="2rem 2rem">
+          <divider style="color: #999; font-size: 1rem;">
+            <i style="color:#FF0000;">注：</i>请输入12位卡号后点击查询，请不要输入空格或其他符号
+          </divider>
+          <x-button @click.native="refreshDataList" class="search-details">明细查询</x-button>
+        </box>
+      </div>
+      <load-more v-if="list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
       <scroller v-if="list.length > 0"
                 :lock-x=true
                 :scrollbar-y=true
@@ -16,10 +24,19 @@
         <div>
             <card v-for="(item, index) in list" :key="index">
                 <div slot="content" class="card-padding">
-                  <p style="padding: 0.5rem; font-size:1.4rem;">{{item.description}}</p>
-                  <p style="padding: 0.5rem; font-size:1.2rem; color:#0000EE;">明珠卡余额: ¥ {{item.balance}}</p>
-                  <p style="padding: 0.5rem; font-size:1.2rem;color:#FF0000;">明珠卡消费金额: ¥ {{item.amount}}</p>
-                  <p style="padding: 0.5rem; font-size:1.2rem; color:#999;">交易时间: {{item.ts | dateFormat}}</p>
+                  <span>
+                    <div style="width: 55%;float: left;font-size: 1.5rem;height: 2rem;overflow: hidden">{{item.description}}</div>
+                    <div style="color:#FF0000; width: 45%; display: inline-block; text-align: right;">
+                      <i style="font-size:1.2rem;color: #999999">交易：</i>{{item.amount}}
+                    </div>
+                  </span>
+                  <!-- <p style="font-size:10px;line-height:1 ;color:#999;">{{item.description}}</p> -->
+                  <span>
+                    <div style="width: 55%; font-size: 1.3rem; padding-top: 6px;color: #999; float: left;">{{item.ts | dateFormat}}</div>
+                    <div style="color:#0181ca; width: 45%; display: inline-block; text-align: right;">
+                      <i style="font-size:1.2rem;color: #999999">余额：</i>{{item.balance}}
+                    </div>
+                  </span>
                 </div>
             </card>
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
@@ -30,21 +47,35 @@
 </template>
 
 <script>
-import { Badge, Card, Scroller, LoadMore, Group, dateFormat } from "vux";
+import {
+  XInput,
+  XButton,
+  Box,
+  Divider,
+  Card,
+  Scroller,
+  LoadMore,
+  Group,
+  dateFormat
+} from "vux";
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { pulldownConfig, pullupConfig } from "../config";
 
 export default {
   name: "TransactionHistory",
   components: {
-    Badge,
+    XInput,
+    XButton,
+    Box,
+    Divider,
     Card,
     Scroller,
-    // LoadMore,
+    LoadMore,
     Group
   },
   data() {
     return {
+      cardNo: "",
       pageNum: 1,
       pageSize: 10,
       pulldownConfig,
@@ -75,26 +106,34 @@ export default {
     //   const scope = this;
     //   this.refreshMoreData();
     // },
-    goAnnouncementDetail(event, item) {
-      this.$router.push({ path: `/announcementDetail/${item.id}` });
-    },
     refreshDataList() {
       // this.topLoading = true;
       this.updateLoadingStatus({ isLoading: true });
       const scope = this;
       this.$http
         .get(
-          `${
-            this.appContextPath
-          }appweb/cardQuery/listChange?cardNo=10&pageSize=15&pageNum=1`
+          `${this.appContextPath}appweb/cardQuery/listChange?cardNo=${
+            this.cardNo
+          }&pageSize=15&pageNum=1`
         )
         .then(success => {
-          scope.list =
-            (success &&
-              success.data &&
-              success.data.result &&
-              success.data.result.list) ||
-            [];
+          scope.list = (success &&
+            success.data &&
+            success.data.result &&
+            success.data.result.list) || [
+            {
+              description: "变动描述2",
+              amount: -77.31,
+              balance: 26.36,
+              ts: 1517143513284
+            },
+            {
+              description: "变动描述3",
+              amount: 60.65,
+              balance: 26.36,
+              ts: 1517143513284
+            }
+          ];
           if (scope.list.length === 15) {
             scope.enablePullup = true;
           }
@@ -110,10 +149,9 @@ export default {
       const scope = this;
       this.$http
         .get(
-          `${
-            this.appContextPath
-          }appweb/cardQuery/listChange?cardNo=10&pageSize=2&pageNum=${++this
-            .pageNum}`
+          `${this.appContextPath}appweb/cardQuery/listChange?cardNo=${
+            this.cardNo
+          }&pageSize=2&pageNum=${++this.pageNum}`
         )
         .then(success => {
           scope.list = scope.list.concat(
@@ -132,8 +170,9 @@ export default {
     ...mapMutations(["updateTitle", "updateLoadingStatus"])
   },
   mounted() {
+    this.cardNo = this.$route.query.cardNo;
     this.refreshDataList();
-    this.updateTitle("明珠卡缴费记录");
+    this.updateTitle("交易明细");
   }
 };
 </script>
@@ -142,5 +181,9 @@ export default {
 <style scoped>
 .card-padding {
   padding: 1.5rem;
+}
+.search-details {
+  background-color: #0181ca;
+  color: #fff;
 }
 </style>

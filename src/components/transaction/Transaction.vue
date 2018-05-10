@@ -40,7 +40,7 @@ export default {
     ...mapMutations(["updateTitle"])
   },
   mounted() {
-    this.updateTitle("明珠卡");
+    this.updateTitle("明珠卡查询");
   }
 }
 </script>
