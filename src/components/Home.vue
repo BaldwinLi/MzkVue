@@ -13,6 +13,9 @@
       <router-link to="/transaction">
         <x-button plain :gradients="['#6F1BFE', '#9479DF']" type="primary" class="x-button-style">明珠卡余额、交易明细查询</x-button>
       </router-link>
+      <router-link to="/reconciliation">
+        <x-button plain :gradients="['#6F1BFE', '#9479DF']" type="primary" class="x-button-style">对账查询</x-button>
+      </router-link>
       <router-link to="/branch_list">
         <x-button plain :gradients="['#FF5E3A', '#FF9500']" type="primary" class="x-button-style">查询服务</x-button>
       </router-link>
@@ -39,6 +42,7 @@ export default {
 
 <style scoped>
 .home-content {
+  display: inline;
   text-align: center;
   margin-top: 35%;
 }
