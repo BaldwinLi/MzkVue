@@ -20,12 +20,18 @@
       @on-change="getResult"
       @on-submit="onSubmit" -->
     <grid style="width: 102%;" v-if="!isShowList">
-      <popup-picker class="type-block" title="商户分类" popup-title="商户分类" :data="allianceBusiTypeList" :columns="1" v-model="selectTypeItem" @on-change="refreshDataList" show-name>
-      </popup-picker>
-      <popup-picker class="type-block" title="所在地区" popup-title="所在地区" :data="allianceBusiTypeList" :columns="1" v-model="selectTypeItem" @on-change="refreshDataList" show-name>
-      </popup-picker>
-      <popup-picker class="type-block" title="智能排序" popup-title="智能排序" :data="autoSortList" :columns="1" v-model="selectTypeItem" @on-change="refreshDataList" show-name>
-      </popup-picker>
+      <cell class="type-block" @click.native="openGroupRadio(0)">
+        <div slot="title">商户分类&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
+      </cell>
+      <cell class="type-block" @click.native="openGroupRadio(1)">
+        <div slot="title">所在地区&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
+      </cell>
+      <cell class="type-block" @click.native="openGroupRadio(2)">
+        <div slot="title">智能排序&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
+      </cell>
+      <!--<popup-radio class="type-block" title="智能排序" :options="autoSortList.map(v=>v.value)" v-model="selectTypeItem" @on-hide="refreshDataList(selectTypeItem)">
+        <p style="font-size: 1.5rem;" slot-scope="props" slot="each-item">{{autoSortList.map(v=>v.name)[props.index]}}</p>
+      </popup-radio> -->
       <card v-for="(item, index) in recommodKeywordList" :key="index" :header="{ title: item.name}" class="key-words-panel">
         <div slot="content">
           <badge class="key-word" v-for="(item, index) in item.keywords" :key="index" :text="item" @click.native="selectKeyWord(item)"></badge>
@@ -66,6 +72,11 @@
         </div>
       </scroller>
     </group>
+    <group v-show="showRadioGroup" :style="groupRadioStyle" class="search-type-radio" gutter="0">
+      <radio :options="radioOptions.map(v=>v.value)" @on-change="refreshDataList" v-model="selectTypeItem">
+        <p style="font-size: 1.5rem;" slot-scope="props" slot="each-item">{{radioOptions.map(v=>v.name)[props.index]}}</p>
+      </radio>
+    </group>
   </div>
 </template>
 
@@ -80,7 +91,7 @@ import {
   Card,
   Grid,
   Search,
-  PopupPicker
+  Radio
 } from "vux";
 import { mapGetters, mapMutations, mapState } from "vuex";
 import {
@@ -105,11 +116,10 @@ export default {
     Loading,
     LoadMore,
     Group,
-    Group,
     Card,
     Grid,
     Search,
-    PopupPicker
+    Radio
   },
   data() {
     return {
@@ -119,7 +129,11 @@ export default {
       pulldownConfig,
       pullupConfig,
       searchValue: "",
-      selectTypeItem: [""],
+      selectTypeItem: "",
+      showRadioGroup: false,
+      groupRadioStyle: {
+        left: 0
+      },
       // results: [],
       isShowList: true,
       // topLoading: false,
@@ -128,6 +142,7 @@ export default {
       recommodKeywordList: recommodKeywordList,
       autoSortList,
       allianceBusiTypeList: [],
+      radioOptions: [],
       enablePullup: false
     };
   },
@@ -151,6 +166,7 @@ export default {
       this.$router.push({ path: `/branch_map/${item.id}` });
     },
     refreshDataList(value) {
+      this.showRadioGroup = false;
       this.isShowList = true;
       this.isLoading = true;
       this.updateCurrentPosition({
@@ -162,14 +178,16 @@ export default {
           this.currentPosition.latitude
       });
       const scope = this;
-      const coordsCondition = `&lati=${this.currentPosition.latitude}&longi=${this.currentPosition.longitude}`;
+      const coordsCondition = `&lati=${this.currentPosition.latitude}&longi=${
+        this.currentPosition.longitude
+      }`;
       this.$http
         .get(
           `${
             this.appContextPath
           }appweb/branch/list?pageSize=15&pageNum=1&keyWord=${
             this.searchValue
-          }&type=${this.selectTypeItem[0]}${coordsCondition}`
+          }&type=${this.selectTypeItem}${coordsCondition}`
         )
         .then(
           success => {
@@ -201,13 +219,15 @@ export default {
           this.currentPosition.latitude
       });
       const scope = this;
-      const coordsCondition = `&lati=${this.currentPosition.latitude}&longi=${this.currentPosition.longitude}`;
+      const coordsCondition = `&lati=${this.currentPosition.latitude}&longi=${
+        this.currentPosition.longitude
+      }`;
       this.$http
         .get(
           `${this.appContextPath}appweb/branch/detail?pageSize=${
             this.pageSize
           }&pageNum=${++this.pageNum}&keyWord=${this.searchValue}&type=${
-            this.selectTypeItem[0]
+            this.selectTypeItem
           }${coordsCondition}`
         )
         .then(
@@ -242,7 +262,10 @@ export default {
           geolocation.getCurrentPosition();
           AMap.event.addListener(geolocation, "complete", func.bind(this)); //返回定位信息
           AMap.event.addListener(geolocation, "error", value => {
-            if (this.currentPosition.latitude && this.currentPosition.longitude) {
+            if (
+              this.currentPosition.latitude &&
+              this.currentPosition.longitude
+            ) {
               func({
                 coords: {
                   longitude: this.currentPosition.longitude,
@@ -289,13 +312,28 @@ export default {
     },
     setDefaultImg(event) {
       event.target.src = `${this.rootPath}static/default_img.jpg`;
+    },
+    openGroupRadio(type) {
+      this.groupRadioStyle.left = (33.33*type).toFixed(2) + '%';
+      switch(type) {
+        case 0:
+          this.radioOptions = this.allianceBusiTypeList;
+          break;
+        case 1:
+          this.radioOptions = this.allianceBusiTypeList
+          break;
+        case 2: 
+          this.radioOptions = this.autoSortList;
+          break;
+      }
+      this.showRadioGroup = !this.showRadioGroup;
     }
   },
   mounted() {
     this.invokenavigator(this.refreshDataList);
     this.updateTitle("附近网点");
     allianceBusiTypeList.then(result => {
-      this.allianceBusiTypeList = result.map(v => {
+      this.radioOptions = this.allianceBusiTypeList = result.map(v => {
         return {
           name: v.className,
           value: v.classId
@@ -315,11 +353,14 @@ export default {
   width: 33.33%;
   float: left;
   font-size: 1.4rem;
+  padding: 10px 0;
+  text-align: center;
+  background-color: #FFFFFF;
 }
 .type-block:after {
   content: "|";
   float: right;
-  margin-top: -3.2rem;
+  /* margin-top: -3.2rem; */
   color: #999999;
 }
 .key-words-panel {
@@ -337,5 +378,12 @@ p.content {
   width: 95%;
   margin-top: 0.5rem;
   overflow: hidden;
+}
+.search-type-radio {
+  position: absolute;
+  width: 30%;
+  top: 80px;
+  border: 1px solid #d3d3d3;
+  border-top: 0;
 }
 </style>
