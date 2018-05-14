@@ -64,8 +64,8 @@
                   </span>
                   <!-- <p style="font-size:10px;line-height:1 ;color:#999;">{{item.description}}</p> -->
                   <span style="font-size:1rem;color:#999999;">
-                    <div style="width: 70%;float: left;">参考价格：¥ {{item.price}}</div>
-                    <div style="width: 30%; float: left; text-align: right;">
+                    <div style="width: 65%;float: left;">参考价格：¥ {{item.price}}</div>
+                    <div style="width: 35%; float: left; text-align: right;">
                      库存：{{item.stockCount}}
                     </div>
                   </span>
