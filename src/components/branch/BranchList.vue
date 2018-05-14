@@ -39,7 +39,7 @@
       </card>
     </grid>
     <load-more v-if="!isLoading && list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
-    <group v-if="isShowList && list.length > 0">
+    <group style="height: -webkit-fill-available;" v-if="isShowList && list.length > 0">
       <scroller :lock-x=true
                 :scrollbar-y=true
                 :pulldown-config="pulldownConfig" 
@@ -47,7 +47,8 @@
                 ref="scrollerEvent"
                 height="-60"
                 :use-pulldown=true 
-                :use-pullup="enablePullup" 
+                :use-pullup="enablePullup"
+                style="height: -webkit-fill-available;"
                 @on-pulldown-loading="invokenavigator(refreshDataList)" 
                 @on-pullup-loading="invokenavigator(refreshMoreData)">
         <div>
@@ -72,8 +73,8 @@
         </div>
       </scroller>
     </group>
-    <group v-show="showRadioGroup" :style="groupRadioStyle" class="search-type-radio" gutter="0">
-      <radio :options="radioOptions.map(v=>v.value)" @on-change="refreshDataList" v-model="selectTypeItem">
+    <group v-show="showRadioGroup" :style="groupRadioStyle" class="search-type-radio" gutter="5px">
+      <radio style="border:1px solid #d3d3d3;" :options="radioOptions.map(v=>v.value)" @on-change="refreshDataList" v-model="selectTypeItem">
         <p style="font-size: 1.5rem;" slot-scope="props" slot="each-item">{{radioOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
     </group>
@@ -301,6 +302,7 @@ export default {
       // }
     },
     hideList() {
+      this.showRadioGroup = false;
       this.isShowList = true;
     },
     onFocus() {
@@ -381,9 +383,14 @@ p.content {
 }
 .search-type-radio {
   position: absolute;
-  width: 30%;
-  top: 80px;
-  border: 1px solid #d3d3d3;
+  width: 33.33%;
+  top: 70px;
   border-top: 0;
+}
+.search-type-radio:before {
+  content: "";
+  border-right: 60px solid transparent;
+  border-bottom: 20px solid #999;
+  border-left: 60px solid transparent;
 }
 </style>

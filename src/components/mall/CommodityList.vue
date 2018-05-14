@@ -35,7 +35,7 @@
     <load-more v-if="list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
     <x-button v-if="isShowList && list.length > 0" class="sign-in"  @click.native="signIn">签到</x-button>
     <!-- <a v-if="isShowList && list.length > 0" class="sign-in" @click="signIn">签到</a> -->
-    <group style="top: 4rem;" v-if="isShowList && list.length > 0" title="积分兑换商品列表">
+    <group style="top: 4rem;height: -webkit-fill-available;" v-if="isShowList && list.length > 0" title="积分兑换商品列表">
       <scroller :lock-x=true 
                 :scrollbar-y=true
                 :pulldown-config="pulldownConfig" 
@@ -44,6 +44,7 @@
                 height="-60"
                 :use-pulldown=true 
                 :use-pullup="enablePullup"
+                style="height: -webkit-fill-available;"
                 @on-pulldown-loading="refreshDataList" 
                 @on-pullup-loading="refreshMoreData">
         <div>
@@ -76,8 +77,8 @@
         </div>
       </scroller>
     </group>
-    <group v-show="showRadioGroup" :style="groupRadioStyle" class="search-type-radio" gutter="0">
-      <radio :options="radioOptions.map(v=>v.value)" @on-change="refreshDataList" v-model="selectTypeItem">
+    <group v-show="showRadioGroup" :style="groupRadioStyle" class="search-type-radio" gutter="5px">
+      <radio style="border:1px solid #d3d3d3;" :options="radioOptions.map(v=>v.value)" @on-change="refreshDataList" v-model="selectTypeItem">
         <p style="font-size: 1.5rem;" slot-scope="props" slot="each-item">{{radioOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
     </group>
@@ -220,9 +221,7 @@ export default {
           `${
             this.appContextPath
           }appweb/pointExchange/listItem?pageSize=15&pageNum=${++this
-            .pageNum}&keyWord=${this.searchValue}&type=${
-            this.selectTypeItem
-          }`
+            .pageNum}&keyWord=${this.searchValue}&type=${this.selectTypeItem}`
         )
         .then(success => {
           scope.list = scope.list.concat(
@@ -242,6 +241,7 @@ export default {
       this.$router.push({ path: `/commodity_order/${id}` });
     },
     hideList() {
+      this.showRadioGroup = false;
       this.isShowList = true;
     },
     onFocus() {
@@ -255,8 +255,8 @@ export default {
       event.target.src = `${this.rootPath}static/default_img.jpg`;
     },
     openGroupRadio(type) {
-      this.groupRadioStyle.left = (50*type).toFixed(2) + '%';
-      switch(type) {
+      this.groupRadioStyle.left = (50 * type).toFixed(2) + "%";
+      switch (type) {
         case 0:
           this.radioOptions = this.commodityTypeList;
           break;
@@ -294,7 +294,7 @@ export default {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   color: #fff;
-  background-color: #00BFFF;
+  background-color: #00bfff;
   font-size: 1.4rem;
   width: 6rem;
   margin: 0.55rem;
@@ -305,7 +305,7 @@ export default {
   font-size: 1.4rem;
   padding: 10px 0;
   text-align: center;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 .type-block:after {
   content: "|";
@@ -324,9 +324,14 @@ export default {
 }
 .search-type-radio {
   position: absolute;
-  width: 30%;
-  top: 80px;
-  border: 1px solid #d3d3d3;
+  width: 50%;
+  top: 70px;
   border-top: 0;
+}
+.search-type-radio:before {
+  content: "";
+  border-right: 90px solid transparent;
+  border-bottom: 70px solid #999;
+  border-left: 90px solid transparent;
 }
 </style>

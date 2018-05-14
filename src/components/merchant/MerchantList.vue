@@ -36,7 +36,7 @@
       </card>
     </grid>
     <load-more v-if="!isLoading && list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
-    <group v-if="isShowList && list.length > 0">
+    <group style="height: -webkit-fill-available;" v-if="isShowList && list.length > 0">
       <scroller :lock-x=true
                 :scrollbar-y=true
                 :pulldown-config="pulldownConfig" 
@@ -45,6 +45,7 @@
                 height="-60"
                 :use-pulldown=true 
                 :use-pullup="enablePullup"
+                style="height: -webkit-fill-available;"
                 @on-pulldown-loading="invokenavigator(refreshDataList)" 
                 @on-pullup-loading="invokenavigator(refreshMoreData)">
           <div>
@@ -70,8 +71,8 @@
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
       </scroller>
     </group>
-    <group v-show="showRadioGroup" :style="groupRadioStyle" class="search-type-radio" gutter="0">
-      <radio :options="radioOptions.map(v=>v.value)" @on-change="refreshDataList" v-model="selectTypeItem">
+    <group v-show="showRadioGroup" :style="groupRadioStyle" class="search-type-radio" gutter="5px">
+      <radio style="border:1px solid #d3d3d3;" :options="radioOptions.map(v=>v.value)" @on-change="refreshDataList" v-model="selectTypeItem">
         <p style="font-size: 1.5rem;" slot-scope="props" slot="each-item">{{radioOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
     </group>
@@ -175,7 +176,9 @@ export default {
           this.currentPosition.latitude
       });
       const scope = this;
-      const coordsCondition = `&lati=${this.currentPosition.latitude}&longi=${this.currentPosition.longitude}`;
+      const coordsCondition = `&lati=${this.currentPosition.latitude}&longi=${
+        this.currentPosition.longitude
+      }`;
       this.$http
         .get(
           `${
@@ -215,7 +218,9 @@ export default {
           this.currentPosition.latitude
       });
       const scope = this;
-      const coordsCondition = `&lati=${this.currentPosition.latitude}&longi=${this.currentPosition.longitude}`;
+      const coordsCondition = `&lati=${this.currentPosition.latitude}&longi=${
+        this.currentPosition.longitude
+      }`;
       this.$http
         .get(
           `${this.appContextPath}appweb/allianceBusi/list?pageSize=${
@@ -252,7 +257,10 @@ export default {
           geolocation.getCurrentPosition();
           AMap.event.addListener(geolocation, "complete", func.bind(this)); //返回定位信息
           AMap.event.addListener(geolocation, "error", value => {
-            if (this.currentPosition.latitude && this.currentPosition.longitude) {
+            if (
+              this.currentPosition.latitude &&
+              this.currentPosition.longitude
+            ) {
               func({
                 coords: {
                   longitude: this.currentPosition.longitude,
@@ -268,6 +276,7 @@ export default {
       });
     },
     hideList() {
+      this.showRadioGroup = false;
       this.isShowList = true;
     },
     onFocus() {
@@ -297,15 +306,15 @@ export default {
       event.target.src = `${this.rootPath}static/default_img.jpg`;
     },
     openGroupRadio(type) {
-      this.groupRadioStyle.left = (33.33*type).toFixed(2) + '%';
-      switch(type) {
+      this.groupRadioStyle.left = (33.33 * type).toFixed(2) + "%";
+      switch (type) {
         case 0:
           this.radioOptions = this.allianceBusiTypeList;
           break;
         case 1:
-          this.radioOptions = this.allianceBusiTypeList
+          this.radioOptions = this.allianceBusiTypeList;
           break;
-        case 2: 
+        case 2:
           this.radioOptions = this.autoSortList;
           break;
       }
@@ -339,7 +348,7 @@ export default {
   font-size: 1.4rem;
   padding: 10px 0;
   text-align: center;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
 }
 .type-block:after {
   content: "|";
@@ -368,9 +377,14 @@ p.content {
 }
 .search-type-radio {
   position: absolute;
-  width: 30%;
-  top: 80px;
-  border: 1px solid #d3d3d3;
+  width: 33.33%;
+  top: 70px;
   border-top: 0;
+}
+.search-type-radio:before {
+  content: "";
+  border-right: 60px solid transparent;
+  border-bottom: 20px solid #999;
+  border-left: 60px solid transparent;
 }
 </style>

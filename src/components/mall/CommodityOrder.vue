@@ -44,7 +44,7 @@
                     </template>
                 </x-address> -->
                 <cell title="收货地址" style="font-size:1.6rem" is-link @click.native="queryReceiveHistory">
-                  <div style="font-size:1.2rem; color: #999999; width: 25rem; overflow: hidden;">{{detail.address}}</div>
+                  <div style="font-size:1.2rem; color: #999999; width: 20rem; overflow: hidden;">{{detail.address}}</div>
                 </cell>
                 <x-number style="font-size:1.6rem" :title="'兑换数量'" :min="1" :value="1" v-model="detail.count"></x-number>
             </div>
@@ -139,10 +139,13 @@ export default {
   methods: {
     selectedAddress(str) {},
     submit() {
-      if(this.detail.needAddress && (!this.detail.receiver || !this.detail.tel || !this.detail.address)) {
+      if (
+        this.detail.needAddress &&
+        (!this.detail.receiver || !this.detail.tel || !this.detail.address)
+      ) {
         this.$vux.alert.show({
           title: "下单失败",
-          content: "请填入收件人、收件人联系方式、邮寄地址"
+          content: "收货地址不能为空，请输入收货地址相关信息"
         });
         return;
       }
@@ -171,25 +174,32 @@ export default {
               }appweb/pointExchange/exchangeItem?id=${scope.$route.params.id +
                 optionalCondition}`
             )
-            .then(success => {
-              scope.isDone = true;
-              scope.getPointBalance();
-              if (success && success.data && success.data.status !== "FAIL") {
-                // scope.$vux.alert.show({
-                //   content: "下单成功"
-                // });
-                // scope.$router.push({ path: `/commodity_list` });
-                scope.exchangeResultClass = "exchange-success";
-                scope.updateTitle("积分兑换成功");
-              } else {
-                // scope.$vux.alert.show({
-                //   content: success.data.result
-                // });
+            .then(
+              success => {
+                scope.isDone = true;
+                scope.getPointBalance();
+                if (success && success.data && success.data.status !== "FAIL") {
+                  // scope.$vux.alert.show({
+                  //   content: "下单成功"
+                  // });
+                  // scope.$router.push({ path: `/commodity_list` });
+                  scope.exchangeResultClass = "exchange-success";
+                  scope.updateTitle("积分兑换成功");
+                } else {
+                  // scope.$vux.alert.show({
+                  //   content: success.data.result
+                  // });
+                  scope.exchangeResultClass = "exchange-fail";
+                  scope.updateTitle("积分兑换失败");
+                }
+                scope.isLoading = false;
+              },
+              error => {
                 scope.exchangeResultClass = "exchange-fail";
                 scope.updateTitle("积分兑换失败");
+                scope.isLoading = false;
               }
-              scope.isLoading = false;
-            });
+            );
         }
       });
     },

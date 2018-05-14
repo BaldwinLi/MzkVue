@@ -20,14 +20,14 @@
                  :src="item.picUrl" class="card-padding" @error="setDefaultImg">
             <div style="margin-left:1rem;" slot>
               <span class="line-margin">
-                <div style="text-align: left; width: 55%; float: left;color: #000">{{item.name}}</div>
+                <div style="text-align: left; width: 55%; float: left;color: #000;height: 2.5rem;overflow: hidden;">{{item.name}}</div>
                 <div style="color:#FF0000; width: 45%; display: inline-block; text-align: right;">
                   {{item.pointCost}}<i style="font-size:1.05rem;color: #999999">积分</i>
                 </div>
               </span>
               <span class="line-margin">
-                <div style="text-align: left; font-size:1.2rem; width: 55%;float: left;color:#999;">{{item.orderTs | dateFormat}}</div>
-                <div style="text-align: right; display: inline-block;float: left;width: 45%;font-size:1.2rem;color:#999999;">参考价格：¥ {{item.price}}</div>
+                <div style="text-align: left; font-size:1.2rem; width: 40%;float: left;color:#999;">{{item.orderTs | dateFormat}}</div>
+                <div style="text-align: right; display: inline-block;float: right;width: 60%;font-size:1.2rem;color:#999999;">参考价格：¥ {{item.price}}</div>
               </span>
             </div>
           </cell>
