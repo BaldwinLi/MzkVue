@@ -46,12 +46,12 @@
                 <cell title="收货地址" style="font-size:1.6rem" is-link @click.native="queryReceiveHistory">
                   <div style="font-size:1.2rem; color: #999999; width: 20rem; overflow: hidden;">{{detail.address}}</div>
                 </cell>
-                <x-number style="font-size:1.6rem" :title="'兑换数量'" :min="1" :value="1" v-model="detail.count"></x-number>
+                <x-number style="font-size:1.6rem" :title="'兑换数量'" :min="1" :value="1" v-model="count"></x-number>
             </div>
         </card>
         <div slot="footer" style="position: fixed; bottom: 0; width: 100%;">
           <cell class="card-footer">
-            <span slot="title">所需积分：<i style="color:#FF0000;font-size: 1.8rem;">{{ detail.pointCost * detail.count }}</i>积分</span>
+            <span slot="title">所需积分：<i style="color:#FF0000;font-size: 1.8rem;">{{ total }}</i>积分</span>
             <x-button @click.native="submit" class="confirm-submit">确认兑换</x-button>
           </cell>
             <!-- <x-button @click.native="queryReceiveHistory" style="background: ; color: #fff; width: 60%; float: left; margin-top: 1.5rem;">查看历史收货信息</x-button> -->
@@ -72,7 +72,7 @@
               <span class="line-margin">
                 <div style="font-size:1.5rem; text-align: left; width: 55%; float: left;color: #000; overflow: hidden;height: 5rem;">{{detail.name}}</div>
                 <div style="font-size:1.5rem; color:#FF0000; width: 45%; display: inline-block; text-align: right;">
-                  {{detail.pointCost}}<i style="font-size:1.05rem;color: #999999">积分 ✖️ {{detail.count}}</i>
+                  {{detail.pointCost}}<i style="font-size:1.05rem;color: #999999">积分 ✖️ {{count}}</i>
                 </div>
               </span>
               <span class="line-margin">
@@ -123,9 +123,9 @@ export default {
   },
   data() {
     return {
-      detail: {
-        count: 1
-      },
+      detail: {},
+      count: 1,
+      total: 0,
       exchangeResultClass: "",
       isLoading: false,
       addressData: ChinaAddressV4Data,
@@ -135,6 +135,11 @@ export default {
   },
   computed: {
     ...mapGetters(["appContextPath", "rootPath"])
+  },
+  watch: {
+    count(count) {
+      this.total = parseInt(this.detail.pointCost || 0) * parseInt(count || 0);
+    }
   },
   methods: {
     selectedAddress(str) {},
@@ -165,7 +170,7 @@ export default {
           const optionalCondition = scope.detail.needAddress
             ? `&address=${scope.detail.address}&receiver=${
                 scope.detail.receiver
-              }&tel=${scope.detail.tel}&count=${detail.count}`
+              }&tel=${scope.detail.tel}&count=${count}`
             : "";
           scope.$http
             .get(
@@ -231,6 +236,9 @@ export default {
     setDefaultImg(event) {
       event.target.src = `${this.rootPath}static/default_img.jpg`;
     },
+    // getTotalCount() {
+    //   return parseInt(this.detail.pointCost || 0) * parseInt(this.detail.count || 0);
+    // },
     ...mapMutations(["updateTitle"])
   },
   mounted() {
@@ -248,11 +256,11 @@ export default {
             success.data &&
             success.data.result &&
             success.data.result.detail) ||
-          "无数据";
+          {};
         scope.detail.receiver = scope.$route.query.receiver || "";
         scope.detail.tel = scope.$route.query.tel || "";
         scope.detail.address = scope.$route.query.address || "";
-        scope.detail.count = 1;
+        scope.total = parseInt(scope.detail.pointCost || 0) * parseInt(scope.count || 0);
         scope.isLoading = false;
       });
     this.getPointBalance();
