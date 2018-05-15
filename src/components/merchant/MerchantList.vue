@@ -20,6 +20,13 @@
       @on-change="getResult"
       @on-submit="onSubmit" -->
     <grid style="width: 102%;" v-if="!isShowList">
+      <card v-for="(item, index) in recommodKeywordList" :key="index" :header="{ title: item.name}" class="key-words-panel">
+        <div slot="content">
+          <badge class="key-word" v-for="(item, index) in item.keywords" :key="index" :text="item" @click.native="selectKeyWord(item)"></badge>
+        </div>
+      </card>
+    </grid>
+    <grid style="width: 102%;" v-if="isShowList">
       <cell class="type-block" @click.native="openGroupRadio(0)">
         <div slot="title">商户分类&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
       </cell>
@@ -29,11 +36,6 @@
       <cell class="type-block" @click.native="openGroupRadio(2)">
         <div slot="title">智能排序&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
       </cell>
-      <card v-for="(item, index) in recommodKeywordList" :key="index" :header="{ title: item.name}" class="key-words-panel">
-        <div slot="content">
-          <badge class="key-word" v-for="(item, index) in item.keywords" :key="index" :text="item" @click.native="selectKeyWord(item)"></badge>
-        </div>
-      </card>
     </grid>
     <load-more v-if="!isLoading && list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
     <group style="height: -webkit-fill-available;" v-if="isShowList && list.length > 0">
@@ -42,10 +44,9 @@
                 :pulldown-config="pulldownConfig" 
                 :pullup-config="pullupConfig"
                 ref="scrollerEvent"
-                height="-60"
+                height="-120"
                 :use-pulldown=true 
                 :use-pullup="enablePullup"
-                style="height: -webkit-fill-available;"
                 @on-pulldown-loading="invokenavigator(refreshDataList)" 
                 @on-pullup-loading="invokenavigator(refreshMoreData)">
           <div>

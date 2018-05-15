@@ -43,7 +43,7 @@
                         <span style="vertical-align:middle;"><i class="fa fa-map-marker"></i> 邮寄地址</span>
                     </template>
                 </x-address> -->
-                <cell title="收货地址" style="font-size:1.6rem" is-link @click.native="queryReceiveHistory">
+                <cell v-if="detail.needAddress" title="收货地址" style="font-size:1.6rem" is-link @click.native="queryReceiveHistory">
                   <div style="font-size:1.2rem; color: #999999; width: 20rem; overflow: hidden;">{{detail.address}}</div>
                 </cell>
                 <x-number style="font-size:1.6rem" :title="'兑换数量'" :min="1" :value="1" v-model="count"></x-number>
@@ -149,7 +149,7 @@ export default {
         (!this.detail.receiver || !this.detail.tel || !this.detail.address)
       ) {
         this.$vux.alert.show({
-          title: "下单失败",
+          title: "",
           content: "收货地址不能为空，请输入收货地址相关信息"
         });
         return;
@@ -170,8 +170,8 @@ export default {
           const optionalCondition = scope.detail.needAddress
             ? `&address=${scope.detail.address}&receiver=${
                 scope.detail.receiver
-              }&tel=${scope.detail.tel}&count=${count}`
-            : "";
+              }&tel=${scope.detail.tel}&count=${scope.count}`
+            : `&count=${scope.count}`;
           scope.$http
             .get(
               `${
@@ -189,6 +189,7 @@ export default {
                   // });
                   // scope.$router.push({ path: `/commodity_list` });
                   scope.exchangeResultClass = "exchange-success";
+                  scope.refreshData();
                   scope.updateTitle("积分兑换成功");
                 } else {
                   // scope.$vux.alert.show({
@@ -239,31 +240,58 @@ export default {
     // getTotalCount() {
     //   return parseInt(this.detail.pointCost || 0) * parseInt(this.detail.count || 0);
     // },
+    refreshData() {
+      this.isLoading = true;
+      const scope = this;
+      this.$http
+        .get(
+          `${this.appContextPath}appweb/pointExchange/detailItem?id=${
+            this.$route.params.id
+          }`
+        )
+        .then(success => {
+          scope.detail =
+            (success &&
+              success.data &&
+              success.data.result &&
+              success.data.result.detail) ||
+            {};
+          scope.total =
+            parseInt(scope.detail.pointCost || 0) * parseInt(scope.count || 0);
+          if (Object.keys(scope.$route.query).length > 0) {
+            scope.detail.receiver = scope.$route.query.receiver || "";
+            scope.detail.tel = scope.$route.query.tel || "";
+            scope.detail.address = scope.$route.query.address || "";
+          } else {
+            scope.$http
+              .get(`${scope.appContextPath}appweb/pointExchange/listHisAdress`)
+              .then(
+                result => {
+                  const detail =
+                    result &&
+                    result.data &&
+                    result.data.result &&
+                    result.data.result.list.find(v => v.ifDefault === 1);
+                  if (detail) {
+                    scope.detail.receiver = detail.recName;
+                    scope.detail.tel = detail.recPhone;
+                    scope.detail.address =
+                      detail.cityName + detail.commName + detail.recAddr;
+                  }
+                  scope.isLoading = false;
+                },
+                error => {
+                  scope.isLoading = false;
+                }
+              );
+          }
+        });
+      this.getPointBalance();
+    },
     ...mapMutations(["updateTitle"])
   },
   mounted() {
-    const scope = this;
-    this.isLoading = true;
-    this.$http
-      .get(
-        `${this.appContextPath}appweb/pointExchange/detailItem?id=${
-          this.$route.params.id
-        }`
-      )
-      .then(success => {
-        scope.detail =
-          (success &&
-            success.data &&
-            success.data.result &&
-            success.data.result.detail) ||
-          {};
-        scope.detail.receiver = scope.$route.query.receiver || "";
-        scope.detail.tel = scope.$route.query.tel || "";
-        scope.detail.address = scope.$route.query.address || "";
-        scope.total = parseInt(scope.detail.pointCost || 0) * parseInt(scope.count || 0);
-        scope.isLoading = false;
-      });
-    this.getPointBalance();
+    this.refreshData();
     this.updateTitle("商品详情");
   }
 };

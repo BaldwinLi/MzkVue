@@ -14,24 +14,25 @@
       <!-- cancel-text="搜索" -->
       <!-- <i slot="left" @click="hideList" class="fa fa-angle-left" style="font-size: 2.5rem; margin-right: 1rem;" aria-hidden="true"></i> -->
     </search>
-      <!-- :results="results"
-      @result-click="resultClick"
-      @on-change="getResult"
-      @on-submit="onSubmit" -->
     <grid style="width: 102%;" v-if="!isShowList">
-      <cell class="type-block" @click.native="openGroupRadio(0)">
-        <div slot="title">商户分类&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
-      </cell>
-      <cell class="type-block" @click.native="openGroupRadio(1)">
-        <div slot="title">智能排序&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
-      </cell>
       <card v-for="(item, index) in recommodKeywordList" :key="index" :header="{ title: item.name}" class="key-words-panel">
         <div slot="content">
           <badge class="key-word" v-for="(item, index) in item.keywords" :key="index" :text="item" @click.native="selectKeyWord(item)"></badge>
         </div>
       </card>
     </grid>
-    
+      <!-- :results="results"
+      @result-click="resultClick"
+      @on-change="getResult"
+      @on-submit="onSubmit" -->
+    <grid style="width: 102%;" v-if="isShowList">
+      <cell class="type-block" @click.native="openGroupRadio(0)">
+        <div slot="title">商户分类&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
+      </cell>
+      <cell class="type-block" @click.native="openGroupRadio(1)">
+        <div slot="title">智能排序&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
+      </cell>
+    </grid>
     <load-more v-if="list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
     <x-button v-if="isShowList && list.length > 0" class="sign-in"  @click.native="signIn">签到</x-button>
     <!-- <a v-if="isShowList && list.length > 0" class="sign-in" @click="signIn">签到</a> -->
@@ -41,10 +42,9 @@
                 :pulldown-config="pulldownConfig" 
                 :pullup-config="pullupConfig"
                 ref="scrollerEvent"
-                height="-60"
+                height="-120"
                 :use-pulldown=true 
                 :use-pullup="enablePullup"
-                style="height: -webkit-fill-available;"
                 @on-pulldown-loading="refreshDataList" 
                 @on-pullup-loading="refreshMoreData">
         <div>
