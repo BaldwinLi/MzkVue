@@ -72,9 +72,19 @@
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
       </scroller>
     </group>
-    <group v-show="showRadioGroup" :style="groupRadioStyle" class="search-type-radio" gutter="5px">
-      <radio style="border:1px solid #d3d3d3;" :options="radioOptions.map(v=>v.value)" @on-change="refreshDataList" v-model="selectTypeItem">
-        <p style="font-size: 1.5rem;" slot-scope="props" slot="each-item">{{radioOptions.map(v=>v.name)[props.index]}}</p>
+    <group v-show="showMerchantGroup" style="left: 0" class="search-type-radio" gutter="5px">
+      <radio style="border:1px solid #d3d3d3;" :options="merchantOptions.map(v=>v.value)" @on-change="queryMerchant" v-model="selectMerchantItem">
+        <p style="font-size: 1.5rem;" slot-scope="props" slot="each-item">{{merchantOptions.map(v=>v.name)[props.index]}}</p>
+      </radio>
+    </group>
+    <group v-show="showRegionGroup" style="left: 33.33%" class="search-type-radio" gutter="5px">
+      <radio style="border:1px solid #d3d3d3;" :options="regionOptions.map(v=>v.value)" @on-change="queryRegion" v-model="selectRegionItem">
+        <p style="font-size: 1.5rem;" slot-scope="props" slot="each-item">{{regionOptions.map(v=>v.name)[props.index]}}</p>
+      </radio>
+    </group>
+    <group v-show="showSortGroup" style="left: 66.66%" class="search-type-radio" gutter="5px">
+      <radio style="border:1px solid #d3d3d3;" :options="sortOptions.map(v=>v.value)" @on-change="querySort" v-model="selectSortItem">
+        <p style="font-size: 1.5rem;" slot-scope="props" slot="each-item">{{sortOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
     </group>
   </div>
@@ -129,11 +139,15 @@ export default {
       pulldownConfig,
       pullupConfig,
       searchValue: "",
-      selectTypeItem: "",
-      showRadioGroup: false,
-      groupRadioStyle: {
-        left: 0
-      },
+      selectMerchantItem: "",
+      selectRegionItem: "",
+      selectSortItem: "",
+      showMerchantGroup: false,
+      showRegionGroup: false,
+      showSortGroup: false,
+      // groupRadioStyle: {
+      //   left: 0
+      // },
       // results: [],
       isShowList: true,
       // topLoading: false,
@@ -141,8 +155,9 @@ export default {
       list: [],
       recommodKeywordList: recommodKeywordList,
       allianceBusiTypeList: [],
-      autoSortList,
-      radioOptions: [],
+      merchantOptions: [],
+      regionOptions: [],
+      sortOptions: autoSortList,
       enablePullup: false
     };
   },
@@ -165,7 +180,9 @@ export default {
       this.$router.push({ path: `/merchant_map/${item.id}` });
     },
     refreshDataList(value) {
-      this.showRadioGroup = false;
+      this.showMerchantGroup = false;
+      this.showRegionGroup = false;
+      this.showSortGroup = false;
       this.isShowList = true;
       this.isLoading = true;
       this.updateCurrentPosition({
@@ -186,7 +203,7 @@ export default {
             this.appContextPath
           }appweb/allianceBusi/list?pageSize=15&pageNum=1&keyWord=${
             this.searchValue
-          }&type=${this.selectTypeItem}${coordsCondition}`
+          }&type=${this.selectMerchantItem}${coordsCondition}`
           //
         )
         .then(
@@ -227,7 +244,7 @@ export default {
           `${this.appContextPath}appweb/allianceBusi/list?pageSize=${
             this.pageSize
           }&pageNum=${++this.pageNum}&keyWord=${this.searchValue}&type=${
-            this.selectTypeItem
+            this.selectMerchantItem
           }${coordsCondition}`
         )
         .then(
@@ -307,19 +324,36 @@ export default {
       event.target.src = `${this.rootPath}static/default_img.jpg`;
     },
     openGroupRadio(type) {
-      this.groupRadioStyle.left = (33.33 * type).toFixed(2) + "%";
+      // this.groupRadioStyle.left = (33.33*type).toFixed(2) + '%';
       switch (type) {
         case 0:
-          this.radioOptions = this.allianceBusiTypeList;
+          this.showMerchantGroup = !this.showMerchantGroup;
+          this.showRegionGroup = false;
+          this.showSortGroup = false;
           break;
         case 1:
-          this.radioOptions = this.allianceBusiTypeList;
+          this.showRegionGroup = !this.showRegionGroup;
+          this.showMerchantGroup = false;
+          this.showSortGroup = false;
           break;
         case 2:
-          this.radioOptions = this.autoSortList;
+          this.showSortGroup = !this.showSortGroup;
+          this.showMerchantGroup = false;
+          this.showRegionGroup = false;
           break;
       }
-      this.showRadioGroup = !this.showRadioGroup;
+    },
+    queryMerchant(value) {
+      this.selectMerchantItem = value;
+      this.refreshDataList();
+    },
+    queryRegion(value) {
+      this.selectRegionItem = value;
+      this.refreshDataList();
+    },
+    querySort(value) {
+      this.selectSortItem = value;
+      this.refreshDataList();
     },
     ...mapMutations(["updateTitle", "updateCurrentPosition"])
   },
@@ -327,7 +361,7 @@ export default {
     this.invokenavigator(this.refreshDataList);
     this.updateTitle("附近联盟商家");
     allianceBusiTypeList.then(result => {
-      this.radioOptions = this.allianceBusiTypeList = result.map(v => {
+      this.merchantOptions = this.regionOptions = this.allianceBusiTypeList = result.map(v => {
         return {
           name: v.className,
           value: v.classId

@@ -44,7 +44,7 @@
                     </template>
                 </x-address> -->
                 <cell v-if="detail.needAddress" title="收货地址" style="font-size:1.6rem" is-link @click.native="queryReceiveHistory">
-                  <div style="font-size:1.2rem; color: #999999; width: 20rem; overflow: hidden;">{{detail.address}}</div>
+                  <div style="font-size:1.2rem; color: #999999; width: 20rem; overflow: hidden;">{{address}}</div>
                 </cell>
                 <x-number style="font-size:1.6rem" :title="'兑换数量'" :min="1" :value="1" v-model="count"></x-number>
             </div>
@@ -61,6 +61,7 @@
         <div :class="exchangeResultClass">
           <div class="exchange-result">
             <p v-if="exchangeResultClass === 'exchange-success'">兑换码：0</p>
+            <p v-if="exchangeResultClass === 'exchange-fail'">{{ orderResult }}</p>
             <p>剩余积分：{{pointBalance}}</p>
           </div>
         </div>
@@ -104,6 +105,7 @@ import {
   //   Alert
   //   TransferDomDirective as TransferDom
 } from "vux";
+import { assign } from "lodash";
 import { mapGetters, mapMutations } from "vuex";
 
 export default {
@@ -130,7 +132,9 @@ export default {
       isLoading: false,
       addressData: ChinaAddressV4Data,
       pointBalance: 0,
-      isDone: false
+      isDone: false,
+      orderResult: "",
+      address: ""
     };
   },
   computed: {
@@ -195,6 +199,9 @@ export default {
                   // scope.$vux.alert.show({
                   //   content: success.data.result
                   // });
+                  scope.orderResult =
+                    (success && success.data && success.data.result) ||
+                    "未知原因";
                   scope.exchangeResultClass = "exchange-fail";
                   scope.updateTitle("积分兑换失败");
                 }
@@ -259,9 +266,11 @@ export default {
           scope.total =
             parseInt(scope.detail.pointCost || 0) * parseInt(scope.count || 0);
           if (Object.keys(scope.$route.query).length > 0) {
-            scope.detail.receiver = scope.$route.query.receiver || "";
-            scope.detail.tel = scope.$route.query.tel || "";
-            scope.detail.address = scope.$route.query.address || "";
+            scope.detail = assign(scope.detail, {
+              receiver: scope.$route.query.receiver || "",
+              tel: scope.$route.query.tel || "",
+              address: this.address = (scope.$route.query.address || "")
+            });
           } else {
             scope.$http
               .get(`${scope.appContextPath}appweb/pointExchange/listHisAdress`)
@@ -273,11 +282,19 @@ export default {
                     result.data.result &&
                     result.data.result.list.find(v => v.ifDefault === 1);
                   if (detail) {
-                    scope.detail.receiver = detail.recName;
-                    scope.detail.tel = detail.recPhone;
-                    scope.detail.address =
-                      detail.cityName + detail.commName + detail.recAddr;
+                    scope.detail = assign(scope.detail, {
+                      receiver: detail.recName,
+                      tel: detail.recPhone,
+                      address: this.address = (detail.cityName + detail.commName + detail.recAddr)
+                    });
                   }
+                  // else {
+                  //   scope.detail = assign(scope.detail, {
+                  //     receiver: "",
+                  //     tel: "",
+                  //     address: this.address = "shsajhfgsjhfdsf"
+                  //   });
+                  // }
                   scope.isLoading = false;
                 },
                 error => {
@@ -334,9 +351,8 @@ div.exchange-fail {
   display: block;
 }
 .exchange-result {
-  top: 16%;
-  left: 39%;
-  position: absolute;
+  top: 55%;
+  position: relative;
   text-align: center;
   font-size: 1.5rem;
   color: #0181ca;

@@ -27,7 +27,7 @@
       @on-submit="onSubmit" -->
     <grid style="width: 102%;" v-if="isShowList">
       <cell class="type-block" @click.native="openGroupRadio(0)">
-        <div slot="title">商户分类&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
+        <div slot="title">商品分类&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
       </cell>
       <cell class="type-block" @click.native="openGroupRadio(1)">
         <div slot="title">智能排序&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
@@ -77,9 +77,14 @@
         </div>
       </scroller>
     </group>
-    <group v-show="showRadioGroup" :style="groupRadioStyle" class="search-type-radio" gutter="5px">
-      <radio style="border:1px solid #d3d3d3;" :options="radioOptions.map(v=>v.value)" @on-change="refreshDataList" v-model="selectTypeItem">
-        <p style="font-size: 1.5rem;" slot-scope="props" slot="each-item">{{radioOptions.map(v=>v.name)[props.index]}}</p>
+    <group v-show="showTradeGroup" style="left: 0" class="search-type-radio" gutter="5px">
+      <radio style="border:1px solid #d3d3d3;" :options="tradeOptions.map(v=>v.value)" @on-change="queryTrade" v-model="selectTradeItem">
+        <p style="font-size: 1.5rem;" slot-scope="props" slot="each-item">{{tradeOptions.map(v=>v.name)[props.index]}}</p>
+      </radio>
+    </group>
+    <group v-show="showSortGroup" style="left: 50%" class="search-type-radio" gutter="5px">
+      <radio style="border:1px solid #d3d3d3;" :options="sortOptions.map(v=>v.value)" @on-change="querySort" v-model="selectSortItem">
+        <p style="font-size: 1.5rem;" slot-scope="props" slot="each-item">{{sortOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
     </group>
   </div>
@@ -133,11 +138,13 @@ export default {
       // topLoading: false,
       // bottomLoading: false,
       searchValue: "",
-      selectTypeItem: "",
-      showRadioGroup: false,
-      groupRadioStyle: {
-        left: 0
-      },
+      selectTradeItem: "",
+      selectSortItem: "",
+      showTradeGroup: false,
+      showSortGroup: false,
+      // groupRadioStyle: {
+      //   left: 0
+      // },
       // results: [],
       isShowList: true,
       // topLoading: false,
@@ -146,7 +153,8 @@ export default {
       recommodKeywordList: recommodKeywordList,
       commodityTypeList: [],
       autoSortList: autoSortList.filter(e => e.value !== 2),
-      radioOptions: [],
+      tradeOptions: [],
+      sortOptions: autoSortList.filter(e => e.value !== 2),
       enablePullup: false
     };
   },
@@ -178,8 +186,9 @@ export default {
         }
       );
     },
-    refreshDataList() {
-      this.showRadioGroup = false;
+    refreshDataList(value) {
+      this.showTradeGroup = false;
+      this.showSortGroup = false;
       this.updateLoadingStatus({ isLoading: true });
       this.isShowList = true;
       const scope = this;
@@ -189,7 +198,7 @@ export default {
             this.appContextPath
           }appweb/pointExchange/listItem?pageSize=15&pageNum=1&keyWord=${
             this.searchValue
-          }&type=${this.selectTypeItem}`
+          }&type=${value || this.selectTradeItem}`
         )
         .then(
           success => {
@@ -221,7 +230,7 @@ export default {
           `${
             this.appContextPath
           }appweb/pointExchange/listItem?pageSize=15&pageNum=${++this
-            .pageNum}&keyWord=${this.searchValue}&type=${this.selectTypeItem}`
+            .pageNum}&keyWord=${this.searchValue}&type=${this.selectTradeItem}`
         )
         .then(success => {
           scope.list = scope.list.concat(
@@ -255,23 +264,32 @@ export default {
       event.target.src = `${this.rootPath}static/default_img.jpg`;
     },
     openGroupRadio(type) {
-      this.groupRadioStyle.left = (50 * type).toFixed(2) + "%";
+      // this.groupRadioStyle.left = (50 * type).toFixed(2) + "%";
       switch (type) {
         case 0:
-          this.radioOptions = this.commodityTypeList;
+          this.showTradeGroup = !this.showTradeGroup;
+          this.showSortGroup = false;
           break;
         case 1:
-          this.radioOptions = this.autoSortList;
+          this.showSortGroup = !this.showSortGroup;
+          this.showTradeGroup = false;
           break;
       }
-      this.showRadioGroup = !this.showRadioGroup;
-    }
+    },
+    queryTrade(value) {
+      this.selectTradeItem = value;
+      this.refreshDataList();
+    },
+    querySort(value) {
+      this.selectSortItem = value;
+      this.refreshDataList();
+    },
   },
   mounted() {
     this.refreshDataList();
     this.updateTitle("积分兑换商城");
     commodityTypeList.then(result => {
-      this.radioOptions = this.commodityTypeList = result.map(v => {
+      this.tradeOptions = this.commodityTypeList = result.map(v => {
         return {
           name: v.className,
           value: v.classId
