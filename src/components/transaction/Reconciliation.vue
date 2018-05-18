@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="blank-page">
     <loading v-model="isLoading"></loading>
         <group title="对账区间">
             <datetime

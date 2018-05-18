@@ -45,6 +45,8 @@ export default {
   display: inline;
   text-align: center;
   margin-top: 35%;
+  height: inherit;
+  width: inherit;
 }
 .x-button-style {
   border-radius: 10rem !important;

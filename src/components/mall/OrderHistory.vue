@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="blank-page">
     <group>
       <load-more v-if="!isLoading && list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
       <scroller v-if="list.length > 0"
@@ -83,21 +83,32 @@ export default {
           }appweb/pointExchange/listHisAdress?pageSize=10&pageNum=1`
         )
         .then(success => {
-          scope.list = (success &&
-            success.data &&
-            success.data.result &&
-            success.data.result.list.map(v => {
-              return {
-                receiver: v.recName,
-                tel: v.recPhone,
-                address: v.cityName + v.commName + v.recAddr,
-                isDefault: v.ifDefault
-              }
-            })) || [];
+          scope.list =
+            (success &&
+              success.data &&
+              success.data.result &&
+              success.data.result.list.map(v => {
+                return {
+                  receiver: v.recName,
+                  tel: v.recPhone,
+                  address: v.cityName + v.commName + v.recAddr,
+                  isDefault: v.ifDefault
+                };
+              })) ||
+            [];
           // if (scope.$refs.scrollerEvent) {
           //   scope.$refs.scrollerEvent.donePulldown();
           //   scope.$refs.scrollerEvent.reset({ top: 0 });
           // }
+          if (scope.list.length === 0) {
+            scope.$vux.confirm.show({
+              title: "您还没有添加地址信息",
+              content: "是否到个人中心通过地址管理功能添加地址信息？",
+              onConfirm() {
+                
+              }
+            });
+          }
           scope.updateLoadingStatus({ isLoading: false });
         });
     },

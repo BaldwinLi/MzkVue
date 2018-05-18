@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="blank-page">
     <loading v-model="isLoading"></loading>
     <group>
       <load-more v-if="!isLoading && list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>

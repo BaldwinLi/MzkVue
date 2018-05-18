@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="blank-page">
     <group>
       <cell-box @click.native="queryBalance" is-link>
         <i class="mzk mzk-bag" style="color: #0181ca;"></i>&nbsp;明珠卡余额查询

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="blank-page">
       <loading v-model="isLoading"></loading>
       <div v-if="!isDone">
           <cell style="font-size:1.3rem;padding: 10px 15px 0;" is-link @click.native="goPointCostHistory">
@@ -57,7 +57,7 @@
             <!-- <x-button @click.native="queryReceiveHistory" style="background: ; color: #fff; width: 60%; float: left; margin-top: 1.5rem;">查看历史收货信息</x-button> -->
         </div>
       </div>
-      <div v-if="isDone">
+      <div class="result-blank-page" v-if="isDone">
         <div :class="exchangeResultClass">
           <div class="exchange-result">
             <p v-if="exchangeResultClass === 'exchange-success'">兑换码：0</p>
@@ -208,6 +208,7 @@ export default {
                 scope.isLoading = false;
               },
               error => {
+                scope.orderResult = "服务器异常";
                 scope.exchangeResultClass = "exchange-fail";
                 scope.updateTitle("积分兑换失败");
                 scope.isLoading = false;
@@ -269,7 +270,7 @@ export default {
             scope.detail = assign(scope.detail, {
               receiver: scope.$route.query.receiver || "",
               tel: scope.$route.query.tel || "",
-              address: this.address = (scope.$route.query.address || "")
+              address: (this.address = scope.$route.query.address || "")
             });
           } else {
             scope.$http
@@ -285,7 +286,8 @@ export default {
                     scope.detail = assign(scope.detail, {
                       receiver: detail.recName,
                       tel: detail.recPhone,
-                      address: this.address = (detail.cityName + detail.commName + detail.recAddr)
+                      address: (this.address =
+                        detail.cityName + detail.commName + detail.recAddr)
                     });
                   }
                   // else {
@@ -333,14 +335,14 @@ export default {
 }
 div.exchange-success {
   background-image: url("../../../static/exchange_success.jpeg");
-  background-size: 100%;
-  height: 20rem;
+  background-size: 100% 100%;
+  height: 50%;
   background-repeat: no-repeat;
 }
 div.exchange-fail {
   background-image: url("../../../static/exchange_fail.jpeg");
-  background-size: 100%;
-  height: 20rem;
+  background-size: 100% 100%;
+  height: 50%;
   background-repeat: no-repeat;
 }
 /* .card-padding {
@@ -372,5 +374,9 @@ div.exchange-fail {
   border: 1px solid #0181ca;
   background-color: #fff;
   color: #0181ca;
+}
+div.result-blank-page {
+  height: inherit;
+  width: inherit;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="blank-page">
       <loading v-model="isLoading"></loading>
       <card style="margin-bottom: 6rem;">
         <div slot="header">

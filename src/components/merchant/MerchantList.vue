@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="blank-page">
     <loading v-model="isLoading"></loading>
     <search
       style="position: static"
@@ -203,7 +203,7 @@ export default {
             this.appContextPath
           }appweb/allianceBusi/list?pageSize=15&pageNum=1&keyWord=${
             this.searchValue
-          }&type=${this.selectMerchantItem}${coordsCondition}`
+          }&type=${this.selectMerchantItem || ""}${coordsCondition}`
           //
         )
         .then(
@@ -361,12 +361,14 @@ export default {
     this.invokenavigator(this.refreshDataList);
     this.updateTitle("附近联盟商家");
     allianceBusiTypeList.then(result => {
-      this.merchantOptions = this.regionOptions = this.allianceBusiTypeList = result.map(v => {
-        return {
-          name: v.className,
-          value: v.classId
-        };
-      });
+      this.merchantOptions = this.regionOptions = this.allianceBusiTypeList = result.map(
+        v => {
+          return {
+            name: v.className,
+            value: v.classId
+          };
+        }
+      );
     });
   }
 };

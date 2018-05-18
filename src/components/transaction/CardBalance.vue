@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="blank-page">
     <group>
       <x-input title="卡号" ref="cardNo" placeholder="请输入明珠卡号" type="number" :min="12" :max="12" text-align="right" v-model="cardNo"></x-input>
       <div style="height: 16rem; background-color: rgb(251, 249, 254)">

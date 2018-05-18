@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="blank-page">
     <search
       style="position: static"
       v-model="searchValue"
@@ -186,7 +186,7 @@ export default {
         }
       );
     },
-    refreshDataList(value) {
+    refreshDataList() {
       this.showTradeGroup = false;
       this.showSortGroup = false;
       this.updateLoadingStatus({ isLoading: true });
@@ -198,7 +198,7 @@ export default {
             this.appContextPath
           }appweb/pointExchange/listItem?pageSize=15&pageNum=1&keyWord=${
             this.searchValue
-          }&type=${value || this.selectTradeItem}`
+          }&type=${this.selectTradeItem || ""}`
         )
         .then(
           success => {
@@ -283,7 +283,7 @@ export default {
     querySort(value) {
       this.selectSortItem = value;
       this.refreshDataList();
-    },
+    }
   },
   mounted() {
     this.refreshDataList();

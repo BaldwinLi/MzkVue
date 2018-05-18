@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="blank-page">
     <card>
       <div slot="header" class="weui-panel__hd" style="padding: 0.55rem 0.6rem 0.4rem;">
         <p class="header-text" style="text-align: center;">{{detail.title}}</p>
