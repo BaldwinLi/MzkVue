@@ -4,24 +4,33 @@ import store from './vuex/store';
 const appContextPath = store.getters.appContextPath;
 
 export const commodityTypeList = Vue.http.get(`${appContextPath}appweb/pointExchange/listType`).then(success => {
-  return (success &&
+  return [{
+    className: "全部类别",
+    classId: ""
+  }].concat((success &&
     success.data &&
     success.data.result &&
-    success.data.result.list) || [];
+    success.data.result.list) || []);
 });
 
 export const allianceBusiTypeList = Vue.http.get(`${appContextPath}appweb/allianceBusi/listType`).then(success => {
-  return (success &&
+  return [{
+    className: "全部类别",
+    classId: ""
+  }].concat((success &&
     success.data &&
     success.data.result &&
-    success.data.result.list) || [];
+    success.data.result.list) || []);
 });
 
 export const branchTypeList = Vue.http.get(`${appContextPath}appweb/branch/listType`).then(success => {
-  return (success &&
+  return [{
+    className: "全部类别",
+    classId: ""
+  }].concat((success &&
     success.data &&
     success.data.result &&
-    success.data.result.list) || [];
+    success.data.result.list) || []);
 });
 
 export const autoSortList = [{

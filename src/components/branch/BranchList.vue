@@ -28,7 +28,7 @@
     </grid>
     <grid style="width: 102%;" v-if="isShowList">
       <cell class="type-block" @click.native="openGroupRadio(0)">
-        <div slot="title">商户分类&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
+        <div slot="title">网点分类&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
       </cell>
       <cell class="type-block" @click.native="openGroupRadio(1)">
         <div slot="title">所在地区&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>

@@ -22,7 +22,7 @@
               <span class="line-margin">
                 <div style="text-align: left; width: 55%; float: left;color: #000;height: 2.5rem;overflow: hidden;">{{item.name}}</div>
                 <div style="color:#FF0000; width: 45%; display: inline-block; text-align: right;">
-                  {{item.pointCost}}<i style="font-size:1.05rem;color: #999999">积分</i>
+                  {{item.pointCost}}<i style="font-size:1.05rem;color: #999999">积分 ✖️ {{item.exchangeCount}}</i>
                 </div>
               </span>
               <span class="line-margin">
