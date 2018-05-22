@@ -38,9 +38,9 @@ export default new Vuex.Store({ // 名字自己定义
           `${window.location.origin}/dev_api/` : `${window.location.origin}/MzkAppService/`)
           // (window.location.origin + (window.location.protocol==='https:' ? '/MzkAppServiceTest/' : '/MzkAppService/'))),
           }
-      }); // 这里你可能已经有其他 module
+      });
 
-    // store.registerModule('vux', { // 名字自己定义
+    // store.registerModule('vux', {
     //   state: {
     //     isLoading: false
     //   },

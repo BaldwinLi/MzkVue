@@ -36,7 +36,7 @@
     <load-more v-if="list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
     <x-button v-if="isShowList && list.length > 0" class="sign-in"  @click.native="signIn">签到</x-button>
     <!-- <a v-if="isShowList && list.length > 0" class="sign-in" @click="signIn">签到</a> -->
-    <group style="top: 4rem;height: -webkit-fill-available;" v-if="isShowList && list.length > 0" title="积分兑换商品列表">
+    <group style="top: 4rem;" v-if="isShowList && list.length > 0" title="积分兑换商品列表">
       <scroller :lock-x=true 
                 :scrollbar-y=true
                 :pulldown-config="pulldownConfig" 

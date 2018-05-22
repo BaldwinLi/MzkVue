@@ -1,11 +1,13 @@
 <template>
   <div class="blank-page">
     <group>
-      <x-input title="卡号" ref="cardNo" placeholder="请输入明珠卡号" type="number" :min="12" :max="12" text-align="right" v-model="cardNo"></x-input>
+      <x-input title="卡号" ref="cardNo" placeholder="请输入明珠卡号" type="number" :min="12" :max="12"
+               @on-change="onInputNo"
+               text-align="right" v-model="cardNo"></x-input>
       <div style="height: 9rem; background-color: rgb(251, 249, 254)">
         <box gap="2rem 2rem">
-          <divider style="color: #999; font-size: 1rem;">
-            <i style="color:#FF0000;">注：</i>请输入12位卡号后点击查询，请不要输入空格或其他符号
+          <divider style="color: #999; font-size: 1.4rem;">
+            <i style="color:#FF0000;">注：</i>请输入12位数字卡号后点击查询
           </divider>
           <x-button @click.native="refreshDataList" class="search-details">明细查询</x-button>
         </box>
@@ -117,10 +119,12 @@ export default {
           }&pageSize=15&pageNum=1`
         )
         .then(success => {
-          scope.list = (success &&
-            success.data &&
-            success.data.result &&
-            success.data.result.list) || [];
+          scope.list =
+            (success &&
+              success.data &&
+              success.data.result &&
+              success.data.result.list) ||
+            [];
           if (scope.list.length === 15) {
             scope.enablePullup = true;
           }
@@ -153,6 +157,14 @@ export default {
             scope.$refs.scrollerEvent.reset();
           }
         });
+    },
+    onInputNo(value, event) {
+      if (value && value.length > 12) {
+        const scope = this;
+        setTimeout(() => {
+          scope.cardNo = value = value.slice(0, 12);
+        });
+      }
     },
     ...mapMutations(["updateTitle", "updateLoadingStatus"])
   },

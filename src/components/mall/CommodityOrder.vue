@@ -60,7 +60,7 @@
       <div class="result-blank-page" v-if="isDone">
         <div :class="exchangeResultClass">
           <div class="exchange-result">
-            <p v-if="exchangeResultClass === 'exchange-success'">兑换码：0</p>
+            <!-- <p v-if="exchangeResultClass === 'exchange-success'">兑换码：0</p> -->
             <p v-if="exchangeResultClass === 'exchange-fail'">{{ orderResult }}</p>
             <p>剩余积分：{{pointBalance}}</p>
           </div>

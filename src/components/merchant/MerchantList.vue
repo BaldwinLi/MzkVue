@@ -38,7 +38,7 @@
       </cell>
     </grid>
     <load-more v-if="!isLoading && list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
-    <group style="height: -webkit-fill-available;" v-if="isShowList && list.length > 0">
+    <group v-if="isShowList && list.length > 0">
       <scroller :lock-x=true
                 :scrollbar-y=true
                 :pulldown-config="pulldownConfig" 
