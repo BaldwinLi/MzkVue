@@ -79,12 +79,12 @@
     </group>
     <group v-show="showTradeGroup" style="left: 0" class="search-type-radio" gutter="5px">
       <radio style="border:1px solid #d3d3d3;" :options="tradeOptions.map(v=>v.value)" @on-change="queryTrade" v-model="selectTradeItem">
-        <p style="font-size: 1.5rem;" slot-scope="props" slot="each-item">{{tradeOptions.map(v=>v.name)[props.index]}}</p>
+        <p style="font-size: 1.3rem;" slot-scope="props" slot="each-item">{{tradeOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
     </group>
     <group v-show="showSortGroup" style="left: 50%" class="search-type-radio" gutter="5px">
       <radio style="border:1px solid #d3d3d3;" :options="sortOptions.map(v=>v.value)" @on-change="querySort" v-model="selectSortItem">
-        <p style="font-size: 1.5rem;" slot-scope="props" slot="each-item">{{sortOptions.map(v=>v.name)[props.index]}}</p>
+        <p style="font-size: 1.3rem;" slot-scope="props" slot="each-item">{{sortOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
     </group>
   </div>
@@ -250,10 +250,12 @@ export default {
       this.$router.push({ path: `/commodity_order/${id}` });
     },
     hideList() {
-      this.showRadioGroup = false;
+      // this.showRadioGroup = false;
       this.isShowList = true;
     },
     onFocus() {
+      this.showTradeGroup = false;
+      this.showSortGroup = false;
       this.isShowList = false;
     },
     selectKeyWord($event) {
