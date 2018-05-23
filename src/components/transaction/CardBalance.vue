@@ -10,12 +10,46 @@
             <i style="color:#FF0000;">注：</i>请输入12位数字卡号后点击查询
           </divider>
           <x-button @click.native="searchBalance" class="search-balance">余额查询</x-button>
-          <x-button @click.native="goToDetail" class="search-details">明细查询</x-button>
+          <x-button @click.native="refreshDataList" class="search-details">明细查询</x-button>
         </box>
       </div>
-      <cell title="账户余额（元）">
+      <cell v-if="showBalance" title="账户余额（元）">
         <div style="color: #FF0000; font-size: 2rem;">{{balance | moneyFormat}}</div>
       </cell>
+      <group v-if="!showBalance">
+        <load-more v-if="list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
+        <scroller v-if="list.length > 0"
+                :lock-x=true
+                :scrollbar-y=true
+                :pulldown-config="pulldownConfig" 
+                :pullup-config="pullupConfig"
+                ref="scrollerEvent" 
+                :use-pulldown=true 
+                :use-pullup="enablePullup" 
+                @on-pulldown-loading="refreshDataList" 
+                @on-pullup-loading="refreshMoreData">
+          <div>
+            <card v-for="(item, index) in list" :key="index">
+                <div slot="content" class="card-padding">
+                  <span>
+                    <div style="width: 55%;float: left;font-size: 1.5rem;height: 2rem;overflow: hidden">{{item.description}}</div>
+                    <div style="color:#FF0000; width: 45%; display: inline-block; text-align: right;">
+                      <i style="font-size:1.2rem;color: #999999">交易：</i>{{item.amount}}
+                    </div>
+                  </span>
+                  <!-- <p style="font-size:10px;line-height:1 ;color:#999;">{{item.description}}</p> -->
+                  <span>
+                    <div style="width: 55%; font-size: 1.3rem; padding-top: 6px;color: #999; float: left;">{{item.ts | dateFormat}}</div>
+                    <div style="color:#0181ca; width: 45%; display: inline-block; text-align: right;">
+                      <i style="font-size:1.2rem;color: #999999">余额：</i>{{item.balance}}
+                    </div>
+                  </span>
+                </div>
+            </card>
+          <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
+          </div>
+        </scroller>
+      </group>
     </group>
   </div>
 </template>
@@ -23,14 +57,18 @@
 <script>
 import {
   XInput,
-  Cell,
   Group,
+  Cell,
   XButton,
   Box,
   Divider,
+  Card,
+  Scroller,
+  LoadMore,
   numberComma
 } from "vux";
-import { mapGetters, mapMutations } from "vuex";
+import { pulldownConfig, pullupConfig } from "../config";
+import { mapState, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "CardBalance",
@@ -40,25 +78,48 @@ export default {
     Cell,
     XButton,
     Box,
-    Divider
+    Divider,
+    Card,
+    Scroller,
+    LoadMore
   },
   data() {
     return {
       cardNo: "",
-      balance: 0
+      balance: 0,
+      pageNum: 1,
+      pageSize: 10,
+      pulldownConfig,
+      pullupConfig,
+      // topLoading: false,
+      // bottomLoading: false,
+      list: [],
+      enablePullup: false,
+      showBalance: true
     };
   },
   computed: {
-    ...mapGetters(["appContextPath"])
+    ...mapGetters(["appContextPath", "isLocal"]),
+    ...mapState(["isLoading"])
   },
   filters: {
     moneyFormat: function(value) {
       const count = parseFloat(value).toFixed(2);
       return "¥ " + numberComma(count);
+    },
+    dateFormat: function(value) {
+      return dateFormat(new Date(value), "YYYY-MM-DD");
     }
   },
   methods: {
     searchBalance() {
+      if (!this.cardNo) {
+        this.$vux.alert.show({
+          content: "请输入明珠卡号"
+        });
+        return;
+      }
+      this.showBalance = true;
       if (this.$refs.cardNo.hasErrors) {
         this.$vux.alert.show({
           title: "卡号有误",
@@ -82,6 +143,63 @@ export default {
           // if (scope.balance) scope.balance = "¥ " + scope.balance;
           // else scope.balance = "无数据";
           this.updateLoadingStatus({ isLoading: false });
+        });
+    },
+    refreshDataList() {
+      if (!this.cardNo) {
+        this.$vux.alert.show({
+          content: "请输入明珠卡号"
+        });
+        return;
+      }
+      this.showBalance = false;
+      // this.topLoading = true;
+      this.updateLoadingStatus({ isLoading: true });
+      const scope = this;
+      this.$http
+        .get(
+          `${this.appContextPath}appweb/cardQuery/listChange?cardNo=${
+            this.cardNo
+          }&pageSize=15&pageNum=1`
+        )
+        .then(success => {
+          scope.list =
+            (success &&
+              success.data &&
+              success.data.result &&
+              success.data.result.list) ||
+            [];
+          if (scope.list.length === 15) {
+            scope.enablePullup = true;
+          }
+          if (scope.$refs.scrollerEvent) {
+            scope.$refs.scrollerEvent.donePulldown();
+            scope.$refs.scrollerEvent.reset({ top: 0 });
+          }
+          this.updateLoadingStatus({ isLoading: false });
+        });
+    },
+    refreshMoreData() {
+      // this.bottomLoading = true;
+      const scope = this;
+      this.$http
+        .get(
+          `${this.appContextPath}appweb/cardQuery/listChange?cardNo=${
+            this.cardNo
+          }&pageSize=2&pageNum=${++this.pageNum}`
+        )
+        .then(success => {
+          scope.list = scope.list.concat(
+            (success &&
+              success.data &&
+              success.data.result &&
+              success.data.result.list) ||
+              []
+          );
+          if (scope.$refs.scrollerEvent) {
+            scope.$refs.scrollerEvent.donePullup();
+            scope.$refs.scrollerEvent.reset();
+          }
         });
     },
     goToDetail() {

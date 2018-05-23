@@ -82,7 +82,7 @@
             </div>
         </cell>
         <div>
-              <x-button @click.native="isDone=false" class="continue-exchange-btn">继续换购</x-button>
+              <x-button @click.native="goCommodityList" class="continue-exchange-btn">继续换购</x-button>
               <x-button @click.native="goHome" class="back-to-home-btn" style="margin-top: 5%;">返回首页</x-button>
             <!-- <x-button @click.native="queryReceiveHistory" style="background: ; color: #fff; width: 60%; float: left; margin-top: 1.5rem;">查看历史收货信息</x-button> -->
             </div>
@@ -240,6 +240,9 @@ export default {
         });
     },
     goHome() {
+      // this.$router.push({ path: `/commodity_list` });
+    },
+    goCommodityList(){
       this.$router.push({ path: `/commodity_list` });
     },
     setDefaultImg(event) {

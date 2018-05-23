@@ -101,12 +101,9 @@ export default {
           //   scope.$refs.scrollerEvent.reset({ top: 0 });
           // }
           if (scope.list.length === 0) {
-            scope.$vux.confirm.show({
+            scope.$vux.alert.show({
               title: "您还没有添加地址信息",
-              content: "是否到个人中心通过地址管理功能添加地址信息？",
-              onConfirm() {
-                
-              }
+              content: "请到个人中心通过地址管理功能添加地址信息。"
             });
           }
           scope.updateLoadingStatus({ isLoading: false });

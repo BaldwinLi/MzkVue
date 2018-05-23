@@ -30,9 +30,9 @@
       <cell class="type-block" @click.native="openGroupRadio(0)">
         <div slot="title">网点分类&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
       </cell>
-      <cell class="type-block" @click.native="openGroupRadio(1)">
+      <!-- <cell class="type-block" @click.native="openGroupRadio(1)">
         <div slot="title">所在地区&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
-      </cell>
+      </cell> -->
       <cell class="type-block" @click.native="openGroupRadio(2)">
         <div slot="title">智能排序&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
       </cell>
@@ -76,12 +76,12 @@
         <p style="font-size: 1.3rem;" slot-scope="props" slot="each-item">{{merchantOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
     </group>
-    <group v-show="showRegionGroup" style="left: 33.33%" class="search-type-radio" gutter="5px">
+    <!-- <group v-show="showRegionGroup" style="left: 33.33%" class="search-type-radio" gutter="5px">
       <radio style="border:1px solid #d3d3d3;" :options="regionOptions.map(v=>v.value)" @on-change="queryRegion" v-model="selectRegionItem">
         <p style="font-size: 1.3rem;" slot-scope="props" slot="each-item">{{regionOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
-    </group>
-    <group v-show="showSortGroup" style="left: 66.66%" class="search-type-radio" gutter="5px">
+    </group> -->
+    <group v-show="showSortGroup" style="left: 50%" class="search-type-radio" gutter="5px">
       <radio style="border:1px solid #d3d3d3;" :options="sortOptions.map(v=>v.value)" @on-change="querySort" v-model="selectSortItem">
         <p style="font-size: 1.3rem;" slot-scope="props" slot="each-item">{{sortOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
@@ -104,7 +104,7 @@ import {
 } from "vux";
 import { mapGetters, mapMutations, mapState } from "vuex";
 import {
-  allianceBusiTypeList,
+  branchTypeList,
   autoSortList,
   recommodKeywordList
 } from "../../initKeyList";
@@ -153,10 +153,13 @@ export default {
       // bottomLoading: false,
       list: [],
       recommodKeywordList: recommodKeywordList,
-      allianceBusiTypeList: [],
+      branchTypeList: [],
       merchantOptions: [],
       regionOptions: [],
-      sortOptions: autoSortList,
+      sortOptions: [{
+        name: '距离近',
+        value: 1
+      }],
       enablePullup: false
     };
   },
@@ -369,8 +372,8 @@ export default {
   mounted() {
     this.invokenavigator(this.refreshDataList);
     this.updateTitle("附近网点");
-    allianceBusiTypeList.then(result => {
-      this.merchantOptions = this.regionOptions = this.allianceBusiTypeList = result.map(
+    branchTypeList.then(result => {
+      this.merchantOptions = this.regionOptions = this.branchTypeList = result.map(
         v => {
           return {
             name: v.className,
@@ -389,7 +392,7 @@ export default {
   padding: 1.5rem;
 }
 .type-block {
-  width: 33.33%;
+  width: 50%;
   float: left;
   font-size: 1.4rem;
   padding: 10px 0;
@@ -420,14 +423,14 @@ p.content {
 }
 .search-type-radio {
   position: absolute;
-  width: 33.33%;
+  width: 50%;
   top: 70px;
   border-top: 0;
 }
 .search-type-radio:before {
   content: "";
-  border-right: 60px solid transparent;
-  border-bottom: 20px solid #999;
-  border-left: 60px solid transparent;
+  border-right: 90px solid transparent;
+  border-bottom: 70px solid #999;
+  border-left: 90px solid transparent;
 }
 </style>

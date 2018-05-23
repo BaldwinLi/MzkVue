@@ -154,7 +154,24 @@ export default {
       commodityTypeList: [],
       autoSortList: autoSortList.filter(e => e.value !== 2),
       tradeOptions: [],
-      sortOptions: autoSortList.filter(e => e.value !== 2),
+      sortOptions: [
+        {
+          name: "按积分正序",
+          value: "point_cost"
+        },
+        {
+          name: "按积分倒序",
+          value: "point_cost desc"
+        },
+        {
+          name: "按价格正序",
+          value: "price"
+        },
+        {
+          name: "按价格倒序",
+          value: "price desc"
+        }
+      ],
       enablePullup: false
     };
   },
@@ -198,7 +215,7 @@ export default {
             this.appContextPath
           }appweb/pointExchange/listItem?pageSize=15&pageNum=1&keyWord=${
             this.searchValue
-          }&type=${this.selectTradeItem || ""}`
+          }&type=${this.selectTradeItem || ""}&order=${this.selectSortItem || ""}`
         )
         .then(
           success => {
@@ -230,7 +247,7 @@ export default {
           `${
             this.appContextPath
           }appweb/pointExchange/listItem?pageSize=15&pageNum=${++this
-            .pageNum}&keyWord=${this.searchValue}&type=${this.selectTradeItem}`
+            .pageNum}&keyWord=${this.searchValue}&type=${this.selectTradeItem}&order=${this.selectSortItem || ""}`
         )
         .then(success => {
           scope.list = scope.list.concat(
