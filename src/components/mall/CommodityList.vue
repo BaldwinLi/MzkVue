@@ -204,6 +204,7 @@ export default {
       );
     },
     refreshDataList() {
+      document.activeElement.blur();  
       this.showTradeGroup = false;
       this.showSortGroup = false;
       this.updateLoadingStatus({ isLoading: true });
@@ -347,7 +348,6 @@ export default {
 .type-block:after {
   content: "|";
   float: right;
-  /* margin-top: -3.2rem; */
   color: #999999;
 }
 .key-words-panel {

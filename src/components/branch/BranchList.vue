@@ -33,9 +33,9 @@
       <!-- <cell class="type-block" @click.native="openGroupRadio(1)">
         <div slot="title">所在地区&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
       </cell> -->
-      <cell class="type-block" @click.native="openGroupRadio(2)">
+      <!-- <cell class="type-block" @click.native="openGroupRadio(2)">
         <div slot="title">智能排序&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
-      </cell>
+      </cell> -->
     </grid>
     <load-more v-if="!isLoading && list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
     <group v-if="isShowList && list.length > 0">
@@ -183,6 +183,7 @@ export default {
       this.$router.push({ path: `/branch_map/${item.id}` });
     },
     refreshDataList(value) {
+      document.activeElement.blur();  
       this.showMerchantGroup = false;
       this.showRegionGroup = false;
       this.showSortGroup = false;
@@ -399,12 +400,11 @@ export default {
   text-align: center;
   background-color: #ffffff;
 }
-.type-block:after {
+/* .type-block:after {
   content: "|";
   float: right;
-  /* margin-top: -3.2rem; */
   color: #999999;
-}
+} */
 .key-words-panel {
   display: inline-block;
   width: 100%;
