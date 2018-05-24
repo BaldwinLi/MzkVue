@@ -146,9 +146,19 @@ p.content {
 a.open-switch {
   position: absolute;
   right: 1.2rem;
-  bottom: 1rem;
+  bottom: 0;
   font-size: 1.1rem;
   color: #00bfff;
   background: #fff;
+}
+.weui-cell {
+    padding: 0 15px;
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
 }
 </style>

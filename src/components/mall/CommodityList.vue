@@ -204,7 +204,7 @@ export default {
       );
     },
     refreshDataList() {
-      document.activeElement.blur();  
+      document.activeElement.blur();
       this.showTradeGroup = false;
       this.showSortGroup = false;
       this.updateLoadingStatus({ isLoading: true });
@@ -368,7 +368,7 @@ export default {
 .search-type-radio:before {
   content: "";
   border-right: 90px solid transparent;
-  border-bottom: 70px solid #999;
+  border-bottom: 50px solid #999;
   border-left: 90px solid transparent;
 }
 </style>

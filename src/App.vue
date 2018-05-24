@@ -31,6 +31,11 @@ export default {
       title: state => state.title
     }),
     ...mapGetters(["appContextPath"])
+  },
+  mounted() {
+    document.activeElement.addEventListener('blur', () => {
+      $(document).height($(window).height()+'px');
+    })
   }
 };
 </script>
