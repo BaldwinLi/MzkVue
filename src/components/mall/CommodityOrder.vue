@@ -138,7 +138,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["appContextPath", "rootPath"])
+    ...mapGetters(["appContextPath", "rootPath", "agentType"])
   },
   watch: {
     count(count) {
@@ -240,7 +240,7 @@ export default {
         });
     },
     goHome() {
-      // this.$router.push({ path: `/commodity_list` });
+      if(this.agentType === 'Android') window.android.closeActivity();
     },
     goCommodityList(){
       this.$router.push({ path: `/commodity_list` });

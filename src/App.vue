@@ -34,7 +34,10 @@ export default {
   },
   mounted() {
     document.activeElement.addEventListener('blur', () => {
-      $(document).height($(window).height()+'px');
+      setTimeout(() => {
+        document.documentElement.style.height = window.innerHeight + 'px';
+      });
+      // $(document).height($(window).height()+'px');
     })
   }
 };
