@@ -157,7 +157,7 @@ export default {
       merchantOptions: [],
       regionOptions: [],
       sortOptions: [{
-        name: '距离近',
+        name: '距离最近',
         value: 1
       }],
       enablePullup: false
