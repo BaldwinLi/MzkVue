@@ -423,14 +423,14 @@ p.content {
 }
 .search-type-radio {
   position: absolute;
-  width: 50%;
+  width: 45%;
   top: 70px;
   border-top: 0;
 }
 .search-type-radio:before {
   content: "";
-  border-right: 90px solid transparent;
+  border-right: 80px solid transparent;
   border-bottom: 50px solid #999;
-  border-left: 90px solid transparent;
+  border-left: 80px solid transparent;
 }
 </style>
