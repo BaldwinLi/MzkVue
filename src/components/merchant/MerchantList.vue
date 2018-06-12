@@ -19,14 +19,14 @@
       @result-click="resultClick"
       @on-change="getResult"
       @on-submit="onSubmit" -->
-    <grid style="width: 102%;" v-if="!isShowList">
+    <grid style="width: 99%;" v-if="!isShowList">
       <card v-for="(item, index) in recommodKeywordList" :key="index" :header="{ title: item.name}" class="key-words-panel">
         <div slot="content">
           <badge class="key-word" v-for="(item, index) in item.keywords" :key="index" :text="item" @click.native="selectKeyWord(item)"></badge>
         </div>
       </card>
     </grid>
-    <grid style="width: 102%;" v-if="isShowList">
+    <grid style="width: 99%;" v-if="isShowList">
       <cell class="type-block" @click.native="openGroupRadio(0)">
         <div slot="title">商户分类&nbsp;<i class="fa fa-chevron-down" aria-hidden="true"></i></div>
       </cell>

@@ -26,8 +26,8 @@ export default {
     ...mapMutations(["updateLoadingStatus"]),
     resetDocumentSize(height) {
       setTimeout(() => {
-        $(document).height(height);
-      })
+        $(document).height(height || window.screen.height);
+      });
     }
   },
   computed: {
@@ -44,13 +44,15 @@ export default {
     //   });
     //   // $(document).height($(window).height()+'px');
     // })
+    const scope = this;
     if (this.agentType === "Android") {
-      var winHeight = window.clientheight; //获取当前页面高度
+      // var winHeight = window.clientheight; //获取当前页面高度
       $(window).resize(() => {
-        var thisHeight = $(this).height();
-        if (winHeight - thisHeight <= 140) {
-          this.resetDocumentSize(winHeight);
-        }
+        // var thisHeight = $(this).height();
+        // if (winHeight - thisHeight <= 140) {
+        // this.resetDocumentSize(winHeight);
+        scope.resetDocumentSize();
+        // }
       });
     }
     //  else if (this.agentType === "IOS") {
