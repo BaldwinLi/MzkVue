@@ -8,7 +8,7 @@
             <i class="fa fa-history" style="color: #00BFFF" aria-hidden="true"></i>查看积分兑换历史记录
           </div>
         </cell>
-        <card style="margin-bottom: 6rem;">
+        <card style="margin-bottom: 15%;">
             <img slot="header" :src="detail.picUrl" style="width:100%;display:block;" @error="setDefaultImg">
             <div slot="content" class="card-padding">
                 <!-- <div style="font-size:1.5rem;">
@@ -106,7 +106,7 @@ import {
   //   TransferDomDirective as TransferDom
 } from "vux";
 import { assign } from "lodash";
-import { mapGetters, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "CommodityDetail",
@@ -138,7 +138,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["appContextPath", "rootPath", "agentType"])
+    ...mapGetters(["appContextPath", "rootPath", "agentType"]),
+    ...mapState(["addressInfo"])
   },
   watch: {
     count(count) {
@@ -240,9 +241,9 @@ export default {
         });
     },
     goHome() {
-      if(this.agentType === 'Android') window.android.closeActivity();
+      if (this.agentType === "Android") window.android.closeActivity();
     },
-    goCommodityList(){
+    goCommodityList() {
       this.$router.push({ path: `/commodity_list` });
     },
     setDefaultImg(event) {
@@ -270,11 +271,13 @@ export default {
           scope.total =
             parseInt(scope.detail.pointCost || 0) * parseInt(scope.count || 0);
           if (Object.keys(scope.$route.query).length > 0) {
-            scope.detail = assign(scope.detail, {
+            const addressInfo = {
               receiver: scope.$route.query.receiver || "",
               tel: scope.$route.query.tel || "",
               address: (this.address = scope.$route.query.address || "")
-            });
+            };
+            scope.detail = assign(scope.detail, addressInfo);
+            scope.updateAddress(addressInfo);
           } else {
             scope.$http
               .get(`${scope.appContextPath}appweb/pointExchange/listHisAdress`)
@@ -286,12 +289,16 @@ export default {
                     result.data.result &&
                     result.data.result.list.find(v => v.ifDefault === 1);
                   if (detail) {
-                    scope.detail = assign(scope.detail, {
+                    const addressInfo = {
                       receiver: detail.recName,
                       tel: detail.recPhone,
                       address: (this.address =
                         detail.cityName + detail.commName + detail.recAddr)
-                    });
+                    };
+                    scope.detail = assign(scope.detail, addressInfo);
+                    scope.updateAddress(addressInfo);
+                  } else {
+                    scope.detail = assign(scope.detail, scope.addressInfo || {});
                   }
                   // else {
                   //   scope.detail = assign(scope.detail, {
@@ -310,7 +317,7 @@ export default {
         });
       this.getPointBalance();
     },
-    ...mapMutations(["updateTitle"])
+    ...mapMutations(["updateTitle", "updateAddress"])
   },
   mounted() {
     this.refreshData();

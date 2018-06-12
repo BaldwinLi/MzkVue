@@ -21,12 +21,12 @@
             </div>
           </cell>
           <cell primary="content" @click.native="callPhone(detail.tel)">
-            <div class="tel-phone-block" style="text-align: left;height: 2rem; width: 85%; margin: 1rem;overflow: hidden;" slot="title">
-              <p class="apostrophe" style="width: 28rem;font-size:1.5rem; color: #999999">
+            <i class="fa fa-phone icon-preffix" style="font-size: 2rem;" aria-hidden="true" slot="title"></i>
+            <div class="tel-phone-block" style="text-align: left;height: 2rem; width: 85%; margin: 1rem;overflow: hidden;" slot>
+              <p class="apostrophe" style="margin-left: 2rem; font-size:1.5rem; color: #999999">
                 商户电话： {{detail.tel}}
               </p>
             </div>
-            <i class="fa fa-phone icon-preffix" style="font-size: 2rem;" aria-hidden="true" slot></i>
           </cell>
           <cell primary="content">
             <load-more :show-loading="false" :tip="'商家详情'" background-color="#fbf9fe"></load-more>
@@ -138,7 +138,7 @@ p.content {
   overflow: hidden;
 }
 .tel-phone-block {
-  border-right: 1px solid #999999;
+  border-left: 1px solid #999999;
 }
 .address-block {
   border-left: 1px solid #999999;
@@ -152,13 +152,13 @@ a.open-switch {
   background: #fff;
 }
 .weui-cell {
-    padding: 0 15px;
-    position: relative;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+  padding: 0 15px;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
 }
 </style>

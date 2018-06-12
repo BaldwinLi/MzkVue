@@ -15,7 +15,8 @@ export default new Vuex.Store({ // 名字自己定义
     currentPosition: {
       longitude: 0,
       latitude: 0
-    }
+    },
+    addressInfo: null
   },
   mutations: {
     updateLoadingStatus(state, payload) {
@@ -29,6 +30,9 @@ export default new Vuex.Store({ // 名字自己定义
     updateCurrentPosition(state, payload) {
       state.currentPosition.longitude = payload.longitude;
       state.currentPosition.latitude = payload.latitude;
+    },
+    updateAddress(state, payload) {
+      state.address = payload;
     }
   },
   getters: {
