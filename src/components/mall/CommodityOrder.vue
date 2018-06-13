@@ -8,7 +8,7 @@
             <i class="fa fa-history" style="color: #00BFFF" aria-hidden="true"></i>查看积分兑换历史记录
           </div>
         </cell>
-        <card style="margin-bottom: 15%;">
+        <card>
             <img slot="header" :src="detail.picUrl" style="width:100%;display:block;" @error="setDefaultImg">
             <div slot="content" class="card-padding">
                 <!-- <div style="font-size:1.5rem;">
@@ -49,6 +49,7 @@
                 <x-number style="font-size:1.6rem" :title="'兑换数量'" :min="1" :value="1" v-model="count"></x-number>
             </div>
         </card>
+        <div style="height:10rem;"></div>
         <div slot="footer" style="position: fixed; bottom: 0; width: 100%;">
           <cell class="card-footer">
             <span slot="title">所需积分：<i style="color:#FF0000;font-size: 1.8rem;">{{ total }}</i>积分</span>
@@ -298,7 +299,10 @@ export default {
                     scope.detail = assign(scope.detail, addressInfo);
                     scope.updateAddress(addressInfo);
                   } else {
-                    scope.detail = assign(scope.detail, scope.addressInfo || {});
+                    scope.detail = assign(
+                      scope.detail,
+                      scope.addressInfo || {}
+                    );
                   }
                   // else {
                   //   scope.detail = assign(scope.detail, {

@@ -61,7 +61,7 @@ if (_token) {
   
   Vue.http.defaults.headers.common['web-token'] = _token;
   // initKeyList(store);
-  runVueInstance
+  runVueInstance();
 } else {
   const auth_token = window.sessionStorage.getItem('token');
   if (auth_token && auth_token !== 'undefined') {
@@ -99,6 +99,8 @@ if (_token) {
           runVueInstance();
         }
       );
+    } else {
+      runVueInstance();
     }
   }
 }
