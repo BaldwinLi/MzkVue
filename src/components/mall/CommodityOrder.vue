@@ -47,9 +47,9 @@
                   <div style="font-size:1.2rem; color: #999999; width: 20rem; overflow: hidden;">{{address}}</div>
                 </cell>
                 <x-number style="font-size:1.6rem" :title="'兑换数量'" :min="1" :value="1" v-model="count"></x-number>
+                <div style="height:8rem;"></div>
             </div>
         </card>
-        <div style="height:10rem;"></div>
         <div slot="footer" style="position: fixed; bottom: 0; width: 100%;">
           <cell class="card-footer">
             <span slot="title">所需积分：<i style="color:#FF0000;font-size: 1.8rem;">{{ total }}</i>积分</span>
