@@ -56,7 +56,7 @@
                  :src="item.logoUrl" class="card-padding"
                  @error="setDefaultImg">
             <div style="text-align: left;height: 10rem; margin: 1rem;" slot>
-              <p class="header-text" style="width: 85%;font-size:1.5rem;">
+              <p class="header-text" style="width: max-content">
                 {{item.name}}
               </p>
               <p class="apostrophe content">
