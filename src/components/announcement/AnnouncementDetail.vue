@@ -2,10 +2,10 @@
   <div class="blank-page">
     <card>
       <div slot="header" class="weui-panel__hd" style="padding: 0.55rem 0.6rem 0.4rem;">
-        <p class="header-text" style="text-align: center;">{{detail.title}}</p>
+        <p class="header-text" style="text-align: center;font-weight: normal">{{detail.title}}</p>
         <p v-if="detail.createTs" style= "font-size: 1.2rem; text-align: center; color: #999999;">{{detail.createTs | dateFormat}}</p>
       </div>
-      <div slot="content" style="padding: 0.6rem 0.55rem 0.4rem; font-size: 1.5rem; color: #999999;" v-html="detail.content"></div>
+      <div slot="content" style="padding: 0.6rem 0.55rem 0.4rem; font-size: 1.1rem; color: #999999;" v-html="detail.content"></div>
       <div slot="footer" style="padding: 0.6rem 0.55rem 0.4rem; font-size: 1.6rem;">
         <div class="footer-inscribe" style="color: #999999;">
           <p class="footer-text" style="margin-top: 3rem;">大连明珠卡公司</p>

@@ -111,6 +111,8 @@ Vue.http.interceptors.response.use(data => data,
       AlertModule.show({
         content: '登录超时，请重新登录！',
       });
+    } else {
+      return error;
     }
   })
 

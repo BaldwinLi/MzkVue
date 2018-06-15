@@ -56,16 +56,16 @@
                 </div>
                 <div slot="content" class="card-padding">
                   <span>
-                    <div style="width: 55%;float: left;font-size: 1.5rem;height: 2rem;overflow: hidden">{{item.name}}</div>
-                    <div style="color:#FF0000; width: 45%; display: inline-block; text-align: right;">
+                    <div style="width: 45%;float: left;font-size: 1.5rem;height: 2rem; overflow: hidden">{{item.name}}</div>
+                    <div style="color:#FF0000; width: 55%; display: inline-block; text-align: right; overflow: hidden">
                       {{item.pointCost}}
                       <i style="font-size:1.05rem;color: #999999">积分</i>
                     </div>
                   </span>
                   <!-- <p style="font-size:10px;line-height:1 ;color:#999;">{{item.description}}</p> -->
                   <span style="font-size:1rem;color:#999999;">
-                    <div style="width: 65%;float: left;">参考价格：¥ {{item.price}}</div>
-                    <div style="width: 35%; float: left; text-align: right;">
+                    <div style="width: 100%;float: left;">参考价格：¥ {{item.price}}</div>
+                    <div style="width: 100%; float: left;">
                      库存：{{item.stockCount}}
                     </div>
                   </span>
@@ -216,7 +216,8 @@ export default {
             this.appContextPath
           }appweb/pointExchange/listItem?pageSize=15&pageNum=1&keyWord=${
             this.searchValue
-          }&type=${this.selectTradeItem || ""}&order=${this.selectSortItem || ""}`
+          }&type=${this.selectTradeItem || ""}&order=${this.selectSortItem ||
+            ""}`
         )
         .then(
           success => {
@@ -248,7 +249,9 @@ export default {
           `${
             this.appContextPath
           }appweb/pointExchange/listItem?pageSize=15&pageNum=${++this
-            .pageNum}&keyWord=${this.searchValue}&type=${this.selectTradeItem}&order=${this.selectSortItem || ""}`
+            .pageNum}&keyWord=${this.searchValue}&type=${
+            this.selectTradeItem
+          }&order=${this.selectSortItem || ""}`
         )
         .then(success => {
           scope.list = scope.list.concat(
