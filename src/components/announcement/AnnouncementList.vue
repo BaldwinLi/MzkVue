@@ -16,7 +16,7 @@
           <cell v-for="item in list" :key="item.id" primary="content" @click.native="goAnnouncementDetail($event, item)" is-link>
             <p slot="title" v-if="item.title" class="card-padding"><i class="fa fa-bullhorn" style="font-size: 1.6rem;" aria-hidden="true"></i></p>
             <div style="text-align: left;" slot>
-              <p class="header-text" style="width: max-content; font-weight: normal;">
+              <p class="header-text" style="width: 100%; font-weight: normal;overflow: hidden; height: 2rem;">
                 {{ item.title }}
                 <i style="font-size: 1.1rem; color: #999999; right: 0; top: -1.5rem; position: absolute; font-weight: normal;" aria-hidden="true">{{item.createTs | dateFormat}}</i>
               </p>
