@@ -1,21 +1,14 @@
 import store from './vuex/store';
-import {
-  geolocationErrorCallback
-} from "./components/config";
-import {
-  AlertModule
-} from 'vux'
 
 
 export default () => {
-  const mapContainer = document.getElementById('map-container');
   if (!window['AMap']) {
     const amapKey = store.getters.isLocal ? 'd4db416574e2ca922626865111063378' : 'f69ddd4d557dfb18205003a019e59035'
     const scriptEl = document.createElement('script');
     scriptEl.setAttribute('type', 'text/javascript');
     scriptEl.setAttribute('src', `http://webapi.amap.com/maps?v=1.4.6&key=${amapKey}`);
     document.getElementsByTagName('head')[0].appendChild(scriptEl);
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
       scriptEl.onload = () => {
         window['IMap'] = new AMap.Map('map-container');
         window['IMap'].plugin('AMap.Geolocation', function () {
@@ -38,7 +31,7 @@ export default () => {
       }
     });
   } else {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
       window['IMap'] = new AMap.Map('map-container');
       window['IMap'].plugin('AMap.Geolocation', function () {
         window['geolocation'] = new AMap.Geolocation({
