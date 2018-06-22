@@ -53,7 +53,7 @@
              <cell v-for="item in list" :key="item.id" primary="content" @click.native="goMerchantMap($event, item)" is-link>
               <img slot="title"
                   style="height: 8rem; width: 8rem; border: 1px solid #999999;"
-                  :src="item.logoUrl" class="card-padding"
+                  :src="item.logoUrl||'unknownUrl'" class="card-padding"
                   @error="setDefaultImg">
               <div style="text-align: left;height: 10rem; margin: 1rem;" slot>
                 <p class="header-text" style="width: max-content;">

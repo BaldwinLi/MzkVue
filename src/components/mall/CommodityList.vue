@@ -52,7 +52,7 @@
             <flexbox-item :span="1/2" v-for="item in list" :key="item.id">
               <card @click.native="goCommodityOrder(item.id)">
                 <div slot="header">
-                  <img :src="item.picUrl" style="width: 90%;height: 11rem;display:block;margin: 5%;border: 1px solid #999999;" @error="setDefaultImg">
+                  <img :src="item.picUrl||'unknownUrl'" style="width: 90%;height: 11rem;display:block;margin: 5%;border: 1px solid #999999;" @error="setDefaultImg">
                 </div>
                 <div slot="content" class="card-padding">
                   <span>

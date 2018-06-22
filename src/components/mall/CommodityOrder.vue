@@ -9,7 +9,7 @@
           </div>
         </cell>
         <card>
-            <img slot="header" :src="detail.picUrl" style="width:100%;display:block;" @error="setDefaultImg">
+            <img slot="header" :src="detail.picUrl||'unknownUrl'" style="width:100%;display:block;" @error="setDefaultImg">
             <div slot="content" class="card-padding">
                 <!-- <div style="font-size:1.5rem;">
                   <div v-if="detail.needAddress">
@@ -69,7 +69,7 @@
         <cell primary="content">
             <img slot="title"
                  style="height: 6rem;width: 8rem;display:block;border: 1px solid #999999;"
-                 :src="detail.picUrl" class="card-padding" @error="setDefaultImg">
+                 :src="detail.picUrl||'unknownUrl'" class="card-padding" @error="setDefaultImg">
             <div style="margin-left:1rem;" slot>
               <span class="line-margin">
                 <div style="font-size:1.5rem; text-align: left; width: 55%; float: left;color: #000; overflow: hidden;height: 5rem;">{{detail.name}}</div>

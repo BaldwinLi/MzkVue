@@ -6,7 +6,7 @@
           <cell primary="content">
             <img slot="title"
                  style="height: 9rem; width: 9rem; border: 1px solid #999999;"
-                 :src="detail.logoUrl" class="card-padding"
+                 :src="detail.logoUrl||'unknownUrl'" class="card-padding"
                  @error="setDefaultImg">
             <div style="text-align: left;height: 10rem; margin: 1rem;" slot>
               <p class="header-text" style="width: max-content;">
