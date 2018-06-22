@@ -71,7 +71,7 @@
         </div>
       </scroller>
     </group>
-    <group v-show="showMerchantGroup" style="left: 0" class="search-type-radio" gutter="5px">
+    <group v-show="showMerchantGroup" style="left: 0" @click.native="closeGroup('showMerchantGroup')" class="search-type-radio" gutter="5px">
       <radio style="border:1px solid #d3d3d3;" :options="merchantOptions.map(v=>v.value)" @on-change="queryMerchant" v-model="selectMerchantItem">
         <p style="font-size: 1.3rem;" slot-scope="props" slot="each-item">{{merchantOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
@@ -81,7 +81,7 @@
         <p style="font-size: 1.3rem;" slot-scope="props" slot="each-item">{{regionOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
     </group> -->
-    <group v-show="showSortGroup" style="left: 50%" class="search-type-radio" gutter="5px">
+    <group v-show="showSortGroup"  @click.native="closeGroup('showSortGroup')" style="left: 50%" class="search-type-radio" gutter="5px">
       <radio style="border:1px solid #d3d3d3;" :options="sortOptions.map(v=>v.value)" @on-change="querySort" v-model="selectSortItem">
         <p style="font-size: 1.3rem;" slot-scope="props" slot="each-item">{{sortOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
@@ -156,10 +156,12 @@ export default {
       branchTypeList: [],
       merchantOptions: [],
       regionOptions: [],
-      sortOptions: [{
-        name: '距离最近',
-        value: 1
-      }],
+      sortOptions: [
+        {
+          name: "距离最近",
+          value: 1
+        }
+      ],
       enablePullup: false
     };
   },
@@ -244,7 +246,7 @@ export default {
       }`;
       this.$http
         .get(
-          `${this.appContextPath}appweb/branch/detail?pageSize=${
+          `${this.appContextPath}appweb/branch/list?pageSize=${
             this.pageSize
           }&pageNum=${++this.pageNum}&keyWord=${this.searchValue}&type=${
             this.selectMerchantItem
@@ -368,6 +370,9 @@ export default {
           this.showRegionGroup = false;
           break;
       }
+    },
+    closeGroup(group) {
+      this[group] = false;
     }
   },
   mounted() {
@@ -429,8 +434,8 @@ p.content {
 }
 .search-type-radio:before {
   content: "";
-  border-right: 80px solid transparent;
+  border-right: 70px solid transparent;
   border-bottom: 50px solid #999;
-  border-left: 80px solid transparent;
+  border-left: 70px solid transparent;
 }
 </style>

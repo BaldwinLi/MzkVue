@@ -77,12 +77,12 @@
         </div>
       </scroller>
     </group>
-    <group v-show="showTradeGroup" style="left: 0" class="search-type-radio" gutter="5px">
+    <group v-show="showTradeGroup" style="left: 0" @click.native="closeGroup('showTradeGroup')" class="search-type-radio" gutter="5px">
       <radio style="border:1px solid #d3d3d3;" :options="tradeOptions.map(v=>v.value)" @on-change="queryTrade" v-model="selectTradeItem">
         <p style="font-size: 1.3rem;" slot-scope="props" slot="each-item">{{tradeOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
     </group>
-    <group v-show="showSortGroup" style="left: 50%" class="search-type-radio" gutter="5px">
+    <group v-show="showSortGroup" style="left: 50%" @click.native="closeGroup('showSortGroup')" class="search-type-radio" gutter="5px">
       <radio style="border:1px solid #d3d3d3;" :options="sortOptions.map(v=>v.value)" @on-change="querySort" v-model="selectSortItem">
         <p style="font-size: 1.3rem;" slot-scope="props" slot="each-item">{{sortOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
@@ -306,6 +306,9 @@ export default {
     querySort(value) {
       this.selectSortItem = value;
       this.refreshDataList();
+    },
+    closeGroup(group) {
+      this[group] = false;
     }
   },
   mounted() {
