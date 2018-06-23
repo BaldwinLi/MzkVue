@@ -13,11 +13,16 @@
           <x-button @click.native="refreshDataList" class="search-details">明细查询</x-button>
         </box>
       </div>
-      <cell v-if="showBalance" title="账户余额（元）">
-        <div style="color: #FF0000; font-size: 2rem;">{{balance | moneyFormat}}</div>
-      </cell>
+      <group  v-if="showBalance">
+        <divider style="color: #999; font-size: 1.3rem;">
+          明珠卡余额查询因系统清分结算会有延迟，数据仅供参考
+        </divider>
+        <cell title="账户余额（元）">
+          <div style="color: #FF0000; font-size: 2rem;">{{balance | moneyFormat}}</div>
+        </cell>
+      </group>
       <group v-if="!showBalance">
-        <load-more v-if="list.length === 0" :show-loading="false" :tip="'暂无消费记录'" background-color="#fbf9fe"></load-more>
+        <load-more v-if="list.length === 0 && !!balance" :show-loading="false" :tip="'暂无消费记录'" background-color="#fbf9fe"></load-more>
         <scroller v-if="list.length > 0"
                 :lock-x=true
                 :scrollbar-y=true
@@ -97,7 +102,7 @@ export default {
       // bottomLoading: false,
       list: [],
       enablePullup: false,
-      showBalance: true
+      showBalance: false
     };
   },
   computed: {
