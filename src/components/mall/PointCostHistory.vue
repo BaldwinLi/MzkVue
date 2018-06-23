@@ -17,7 +17,7 @@
           <cell v-for="item in list" :key="item.id" primary="content">
             <img slot="title"
                  style="height: 4rem;width: 6rem;display:block;border: 1px solid #999999;"
-                 :src="item.picUrl" class="card-padding" @error="setDefaultImg">
+                 :src="item.picUrl||'unknownUrl'" class="card-padding" @error="setDefaultImg">
             <div style="margin-left:1rem;" slot>
               <span class="line-margin">
                 <div style="text-align: left; width: 55%; float: left;color: #000;height: 2.5rem;overflow: hidden;">{{item.name}}</div>

@@ -53,7 +53,7 @@
              <cell v-for="item in list" :key="item.id" primary="content" @click.native="goMerchantMap($event, item)" is-link>
               <img slot="title"
                   style="height: 8rem; width: 8rem; border: 1px solid #999999;"
-                  :src="item.logoUrl" class="card-padding"
+                  :src="item.logoUrl||'unknownUrl'" class="card-padding"
                   @error="setDefaultImg">
               <div style="text-align: left;height: 10rem; margin: 1rem;" slot>
                 <p class="header-text" style="width: max-content;">
@@ -72,7 +72,7 @@
           <!-- <load-more v-if="bottomLoading" :show-loading="bottomLoading" tip="加载更多" background-color="#fbf9fe"></load-more> -->
       </scroller>
     </group>
-    <group v-show="showMerchantGroup" style="left: 0" class="search-type-radio" gutter="5px">
+    <group v-show="showMerchantGroup" style="left: 0" @click.native="closeGroup('showMerchantGroup')" class="search-type-radio" gutter="5px">
       <radio style="border:1px solid #d3d3d3;" :options="merchantOptions.map(v=>v.value)" @on-change="queryMerchant" v-model="selectMerchantItem">
         <p style="font-size: 1.3rem;" slot-scope="props" slot="each-item">{{merchantOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
@@ -82,7 +82,7 @@
         <p style="font-size: 1.3rem;" slot-scope="props" slot="each-item">{{regionOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
     </group> -->
-    <group v-show="showSortGroup" style="left: 50%" class="search-type-radio" gutter="5px">
+    <group v-show="showSortGroup" style="left: 50%" @click.native="closeGroup('showSortGroup')" class="search-type-radio" gutter="5px">
       <radio style="border:1px solid #d3d3d3;" :options="sortOptions.map(v=>v.value)" @on-change="querySort" v-model="selectSortItem">
         <p style="font-size: 1.3rem;" slot-scope="props" slot="each-item">{{sortOptions.map(v=>v.name)[props.index]}}</p>
       </radio>
@@ -364,6 +364,9 @@ export default {
       this.selectSortItem = value;
       this.refreshDataList();
     },
+    closeGroup(group) {
+      this[group] = false;
+    },
     ...mapMutations(["updateTitle", "updateCurrentPosition"])
   },
   mounted() {
@@ -428,8 +431,8 @@ p.content {
 }
 .search-type-radio:before {
   content: "";
-  border-right: 80px solid transparent;
+  border-right: 70px solid transparent;
   border-bottom: 50px solid #999;
-  border-left: 80px solid transparent;
+  border-left: 70px solid transparent;
 }
 </style>

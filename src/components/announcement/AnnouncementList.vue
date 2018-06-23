@@ -16,9 +16,9 @@
           <cell v-for="item in list" :key="item.id" primary="content" @click.native="goAnnouncementDetail($event, item)" is-link>
             <p slot="title" v-if="item.title" class="card-padding"><i class="fa fa-bullhorn" style="font-size: 1.6rem;" aria-hidden="true"></i></p>
             <div style="text-align: left;" slot>
-              <p class="header-text" style="width: 100%; font-weight: normal;overflow: hidden; height: 2rem;">
+              <p class="header-text title-clip">
                 {{ item.title }}
-                <i style="font-size: 1.1rem; color: #999999; right: 0; top: -1.5rem; position: absolute; font-weight: normal;" aria-hidden="true">{{item.createTs | dateFormat}}</i>
+                <i style="font-size: 1.1rem; -webkit-text-fill-color: #999999; right: 0; top: -1.5rem; position: absolute; font-weight: normal;" aria-hidden="true">{{item.createTs | dateFormat}}</i>
               </p>
               <!-- <p class="apostrophe" style="font-size: 1.2rem; height: 1.5rem; overflow: hidden; width: 95%;" v-html="item.content"></p> -->
             </div>
@@ -70,8 +70,9 @@ export default {
       const date = parseInt(dateFormat(new Date(value), "YYYYMMDD"));
       const today = parseInt(dateFormat(Date.now(), "YYYYMMDD"));
       if (date === today) return "今天";
-      //  + dateFormat(new Date(value), "hh:mm");
-      else return dateFormat(new Date(value), "YYYY-MM-DD");
+      else
+        //  + dateFormat(new Date(value), "hh:mm");
+        return dateFormat(new Date(value), "YYYY-MM-DD");
     }
   },
   computed: {
@@ -103,7 +104,6 @@ export default {
             this.isLoading = false;
           },
           error => {
-            
             this.isLoading = false;
           }
         );
@@ -153,6 +153,22 @@ export default {
 .apostrophe:before {
   content: "...";
   position: absolute;
-  right: 1.7rem;;
+  right: 1.7rem;
+}
+.title-clip {
+  display: inline-grid;
+  background-image: -webkit-gradient(
+    linear,
+    70% bottom,
+    100% bottom,
+    from(#000),
+    to(#fff)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  width: 100%;
+  font-weight: normal;
+  overflow: hidden;
+  height: 2rem;
 }
 </style>
