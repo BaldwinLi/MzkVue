@@ -1,7 +1,7 @@
 <template>
   <div class="blank-page">
     <group>
-      <x-input title="卡号" ref="cardNo" placeholder="请输入明珠卡号" type="number" :min="12" :max="12"
+      <x-input title="卡号" ref="cardNo" placeholder="请输入明珠卡卡号" type="number" :min="12" :max="12"
                @on-change="onInputNo"
                text-align="right" v-model="cardNo"></x-input>
       <div style="height: 16rem; background-color: rgb(251, 249, 254)">
@@ -17,12 +17,13 @@
         <div style="color: #FF0000; font-size: 2rem;">{{balance | moneyFormat}}</div>
       </cell>
       <group v-if="!showBalance">
-        <load-more v-if="list.length === 0" :show-loading="false" :tip="'暂无数据'" background-color="#fbf9fe"></load-more>
+        <load-more v-if="list.length === 0" :show-loading="false" :tip="'暂无消费记录'" background-color="#fbf9fe"></load-more>
         <scroller v-if="list.length > 0"
                 :lock-x=true
                 :scrollbar-y=true
                 :pulldown-config="pulldownConfig" 
                 :pullup-config="pullupConfig"
+                height="-250"
                 ref="scrollerEvent" 
                 :use-pulldown=true 
                 :use-pullup="enablePullup" 
@@ -30,7 +31,7 @@
                 @on-pullup-loading="refreshMoreData">
           <div>
             <card v-for="(item, index) in list" :key="index">
-                <div slot="content" class="card-padding">
+                <div slot="content" class="card-padding" style="margin: 1rem;">
                   <span>
                     <div style="width: 55%;float: left;font-size: 1.5rem;height: 2rem;overflow: hidden">{{item.description}}</div>
                     <div style="color:#FF0000; width: 45%; display: inline-block; text-align: right;">
@@ -65,7 +66,8 @@ import {
   Card,
   Scroller,
   LoadMore,
-  numberComma
+  numberComma,
+  dateFormat
 } from "vux";
 import { pulldownConfig, pullupConfig } from "../config";
 import { mapState, mapGetters, mapMutations } from "vuex";
@@ -108,7 +110,7 @@ export default {
       return "¥ " + numberComma(count);
     },
     dateFormat: function(value) {
-      return dateFormat(new Date(value), "YYYY-MM-DD");
+      return dateFormat(new Date(parseInt(value)), "YYYY-MM-DD");
     }
   },
   methods: {
@@ -134,14 +136,27 @@ export default {
           `${this.appContextPath}appweb/cardQuery/balance?cardNo=${this.cardNo}`
         )
         .then(success => {
-          scope.balance =
-            (success &&
-              success.data &&
-              success.data.result &&
-              success.data.result.balance) ||
-            0;
-          // if (scope.balance) scope.balance = "¥ " + scope.balance;
-          // else scope.balance = "无数据";
+          if (success && success.data && success.data.status === "OK") {
+            scope.balance =
+              (success &&
+                success.data &&
+                success.data.result &&
+                success.data.result.balance) ||
+              0;
+          } else if (
+            success &&
+            success.data &&
+            success.data.status === "FAIL"
+          ) {
+            scope.$vux.alert.show({
+              content:
+                (success &&
+                  success.data &&
+                  success.data.result &&
+                  success.data.result.description) ||
+                ""
+            });
+          }
           this.updateLoadingStatus({ isLoading: false });
         });
     },
@@ -160,21 +175,36 @@ export default {
         .get(
           `${this.appContextPath}appweb/cardQuery/listChange?cardNo=${
             this.cardNo
-          }&pageSize=15&pageNum=1`
+          }&pageSize=10&pageNum=1`
         )
         .then(success => {
-          scope.list =
-            (success &&
-              success.data &&
-              success.data.result &&
-              success.data.result.list) ||
-            [];
-          if (scope.list.length === 15) {
-            scope.enablePullup = true;
-          }
-          if (scope.$refs.scrollerEvent) {
-            scope.$refs.scrollerEvent.donePulldown();
-            scope.$refs.scrollerEvent.reset({ top: 0 });
+          if (success && success.data && success.data.status === "OK") {
+            scope.list =
+              (success &&
+                success.data &&
+                success.data.result &&
+                success.data.result.list) ||
+              [];
+            if (scope.list.length === 10) {
+              scope.enablePullup = true;
+            }
+            if (scope.$refs.scrollerEvent) {
+              scope.$refs.scrollerEvent.donePulldown();
+              scope.$refs.scrollerEvent.reset({ top: 0 });
+            }
+          } else if (
+            success &&
+            success.data &&
+            success.data.status === "FAIL"
+          ) {
+            scope.$vux.alert.show({
+              content:
+                (success &&
+                  success.data &&
+                  success.data.result &&
+                  success.data.result.description) ||
+                ""
+            });
           }
           this.updateLoadingStatus({ isLoading: false });
         });
@@ -186,19 +216,34 @@ export default {
         .get(
           `${this.appContextPath}appweb/cardQuery/listChange?cardNo=${
             this.cardNo
-          }&pageSize=2&pageNum=${++this.pageNum}`
+          }&pageSize=10&pageNum=${++this.pageNum}`
         )
         .then(success => {
-          scope.list = scope.list.concat(
-            (success &&
-              success.data &&
-              success.data.result &&
-              success.data.result.list) ||
-              []
-          );
-          if (scope.$refs.scrollerEvent) {
-            scope.$refs.scrollerEvent.donePullup();
-            scope.$refs.scrollerEvent.reset();
+          if (success && success.data && success.data.status === "OK") {
+            scope.list = scope.list.concat(
+              (success &&
+                success.data &&
+                success.data.result &&
+                success.data.result.list) ||
+                []
+            );
+            if (scope.$refs.scrollerEvent) {
+              scope.$refs.scrollerEvent.donePullup();
+              scope.$refs.scrollerEvent.reset();
+            }
+          } else if (
+            success &&
+            success.data &&
+            success.data.status === "FAIL"
+          ) {
+            scope.$vux.alert.show({
+              content:
+                (success &&
+                  success.data &&
+                  success.data.result &&
+                  success.data.result.description) ||
+                ""
+            });
           }
         });
     },
