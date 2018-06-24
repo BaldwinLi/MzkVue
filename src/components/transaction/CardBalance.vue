@@ -1,7 +1,7 @@
 <template>
   <div class="blank-page">
     <group>
-      <div style="height:22rem;">
+      <div>
         <x-input title="卡号" ref="cardNo" placeholder="请输入明珠卡卡号" type="number" :min="12" :max="12"
                @on-change="onInputNo"
                text-align="right" v-model="cardNo"></x-input>
@@ -45,14 +45,14 @@
                   <span>
                     <div style="width: 55%;float: left;font-size: 1.5rem;height: 2rem;overflow: hidden">{{item.description}}</div>
                     <div style="color:#FF0000; width: 45%; display: inline-block; text-align: right;">
-                      <i style="font-size:1.2rem;color: #999999">交易：</i>{{item.amount}}
+                      <i style="font-size:1.2rem;color: #999999">交易：</i>¥ {{item.amount}}
                     </div>
                   </span>
                   <!-- <p style="font-size:10px;line-height:1 ;color:#999;">{{item.description}}</p> -->
                   <span>
                     <div style="width: 55%; font-size: 1.3rem; padding-top: 6px;color: #999; float: left;">{{item.ts | dateFormat}}</div>
                     <div style="color:#0181ca; width: 45%; display: inline-block; text-align: right;">
-                      <i style="font-size:1.2rem;color: #999999">余额：</i>{{item.balance}}
+                      <i style="font-size:1.2rem;color: #999999">余额：</i>¥ {{item.balance}}
                     </div>
                   </span>
                 </div>
@@ -120,7 +120,7 @@ export default {
       return "¥ " + numberComma(count);
     },
     dateFormat: function(value) {
-      return dateFormat(new Date(parseInt(value)), "YYYY-MM-DD");
+      return dateFormat(new Date(parseInt(value)), "YYYY-MM-DD hh:mm:ss");
     }
   },
   methods: {
