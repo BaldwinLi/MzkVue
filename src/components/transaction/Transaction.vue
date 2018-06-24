@@ -2,7 +2,7 @@
   <div class="blank-page">
     <group>
       <cell-box @click.native="queryBalance" is-link>
-        <i class="mzk mzk-bag" style="color: #0181ca;"></i>&nbsp;明珠卡余额查询
+        <i class="mzk mzk-bag" style="color: #0181ca;"></i>&nbsp;明珠卡消费记录查询
       </cell-box>
       <!-- <cell-box @click.native="queryTransactionHistory" is-link>
         <i class="mzk mzk-searchforfiles" style="color: #0181ca;"></i>&nbsp;交易明细查询
@@ -40,7 +40,7 @@ export default {
     ...mapMutations(["updateTitle"])
   },
   mounted() {
-    this.updateTitle("明珠卡查询");
+    this.updateTitle("明珠卡消费记录查询");
   }
 }
 </script>

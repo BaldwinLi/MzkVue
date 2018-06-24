@@ -9,14 +9,17 @@
           <divider style="color: #999; font-size: 1.4rem;">
             <i style="color:#FF0000;">注：</i>请输入12位数字卡号后点击查询
           </divider>
-          <x-button @click.native="searchBalance" class="search-balance">余额查询</x-button>
-          <x-button @click.native="refreshDataList" class="search-details">明细查询</x-button>
+          <!-- <x-button @click.native="searchBalance" class="search-balance">余额查询</x-button> -->
+          <x-button @click.native="refreshDataList" class="search-details">消费记录查询</x-button>
+          <divider style="color: #999; font-size: 1.3rem;">
+            因结算周期延迟，数据仅供参考，以实际入账为准。
+          </divider>
         </box>
       </div>
       <group  v-if="showBalance">
-        <divider style="color: #999; font-size: 1.3rem;">
+        <!-- <divider style="color: #999; font-size: 1.3rem;">
           明珠卡余额查询因系统清分结算会有延迟，数据仅供参考
-        </divider>
+        </divider> -->
         <cell title="账户余额（元）">
           <div style="color: #FF0000; font-size: 2rem;">{{balance | moneyFormat}}</div>
         </cell>
@@ -28,7 +31,7 @@
                 :scrollbar-y=true
                 :pulldown-config="pulldownConfig" 
                 :pullup-config="pullupConfig"
-                height="-250"
+                height="-213"
                 ref="scrollerEvent" 
                 :use-pulldown=true 
                 :use-pullup="enablePullup" 
@@ -278,7 +281,7 @@ export default {
     ...mapMutations(["updateTitle", "updateLoadingStatus"])
   },
   mounted() {
-    this.updateTitle("余额查询");
+    this.updateTitle("明珠卡消费记录查询");
   }
 };
 </script>
