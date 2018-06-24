@@ -1,7 +1,7 @@
 <template>
   <div class="blank-page">
     <group>
-      <div style="height:150px">
+      <div style="height:22rem;">
         <x-input title="卡号" ref="cardNo" placeholder="请输入明珠卡卡号" type="number" :min="12" :max="12"
                @on-change="onInputNo"
                text-align="right" v-model="cardNo"></x-input>
