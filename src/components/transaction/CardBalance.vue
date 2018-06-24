@@ -1,20 +1,22 @@
 <template>
   <div class="blank-page">
     <group>
-      <x-input title="卡号" ref="cardNo" placeholder="请输入明珠卡卡号" type="number" :min="12" :max="12"
+      <div style="height:150px">
+        <x-input title="卡号" ref="cardNo" placeholder="请输入明珠卡卡号" type="number" :min="12" :max="12"
                @on-change="onInputNo"
                text-align="right" v-model="cardNo"></x-input>
-      <div style="height: 16rem; background-color: rgb(251, 249, 254)">
-        <box gap="2rem 2rem">
-          <divider style="color: #999; font-size: 1.4rem;">
-            <i style="color:#FF0000;">注：</i>请输入12位数字卡号后点击查询
-          </divider>
-          <!-- <x-button @click.native="searchBalance" class="search-balance">余额查询</x-button> -->
-          <x-button @click.native="refreshDataList" class="search-details">消费记录查询</x-button>
-          <divider style="color: #999; font-size: 1.3rem;">
-            因结算周期延迟，数据仅供参考，以实际入账为准。
-          </divider>
-        </box>
+        <div style="background-color: rgb(251, 249, 254)">
+          <box gap="2rem">
+            <divider style="color: #999; font-size: 1.4rem;">
+              <i style="color:#FF0000;">注：</i>请输入12位数字卡号后点击查询
+            </divider>
+            <!-- <x-button @click.native="searchBalance" class="search-balance">余额查询</x-button> -->
+            <x-button @click.native="refreshDataList" class="search-details">消费记录查询</x-button>
+            <divider style="color: #999; font-size: 1.3rem;">
+             因结算周期延迟，数据仅供参考，以实际入账为准。
+            </divider>
+          </box>
+          </div>
       </div>
       <group  v-if="showBalance">
         <!-- <divider style="color: #999; font-size: 1.3rem;">
@@ -31,7 +33,7 @@
                 :scrollbar-y=true
                 :pulldown-config="pulldownConfig" 
                 :pullup-config="pullupConfig"
-                height="-213"
+                height="-210"
                 ref="scrollerEvent" 
                 :use-pulldown=true 
                 :use-pullup="enablePullup" 
