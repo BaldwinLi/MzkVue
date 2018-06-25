@@ -156,19 +156,42 @@ export default {
   right: 1.7rem;
 }
 .title-clip {
-  display: inline-grid;
-  background-image: -webkit-gradient(
+  content: attr(data-text);
+  /* background: -webkit-gradient(
     linear,
     70% bottom,
     100% bottom,
     from(#000),
     to(#fff)
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  ); */
+  /* background-image: -webkit-gradient(
+    linear,
+    70% bottom,
+    100% bottom,
+    from(#000),
+    to(#fff)
+  ); */
+  /* -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; */
   width: 100%;
   font-weight: normal;
   overflow: hidden;
   height: 2rem;
+}
+.title-clip:after {
+  content: "";
+  height: 2rem;
+  width: 15rem;
+  position: absolute;
+  z-index: 9999;
+  top: 0;
+  right: 10px;
+  background-image: -webkit-gradient(
+    linear,
+    0% bottom,
+    100% bottom,
+    from(transparent),
+    to(#fff)
+  );
 }
 </style>

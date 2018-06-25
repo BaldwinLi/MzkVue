@@ -21,7 +21,7 @@
       @on-submit="onSubmit" -->
     <grid style="width: 99%;" v-if="!isShowList">
       <card v-for="(item, index) in recommodKeywordList" :key="index" :header="{ title: item.name}" class="key-words-panel">
-        <div slot="content">
+        <div slot="content" style="margin: 1rem;">
           <badge class="key-word" v-for="(item, index) in item.keywords" :key="index" :text="item" @click.native="selectKeyWord(item)"></badge>
         </div>
       </card>
@@ -144,15 +144,14 @@ export default {
       showMerchantGroup: false,
       showRegionGroup: false,
       showSortGroup: false,
-      // groupRadioStyle: {
-      //   left: 0
-      // },
-      // results: [],
       isShowList: true,
-      // topLoading: false,
-      // bottomLoading: false,
       list: [],
-      recommodKeywordList: recommodKeywordList,
+      recommodKeywordList: [
+        {
+          name: "最近搜索",
+          keywords: []
+        }
+      ],
       branchTypeList: [],
       merchantOptions: [],
       regionOptions: [],
@@ -170,16 +169,6 @@ export default {
     ...mapGetters(["appContextPath", "isLocal", "rootPath"])
   },
   methods: {
-    // onCellsListScroll(event) {
-    //   const scope = this;
-    //   if (event.top < this.$refs["scrollerEvent"].$el.clientTop - 100) {
-    //     this.refreshDataList();
-    //   }
-    // },
-    // onScrollBottom() {
-    //   const scope = this;
-    //   this.refreshMoreData();
-    // },
     ...mapMutations(["updateTitle", "updateCurrentPosition"]),
     goBranchMap(event, item) {
       this.$router.push({ path: `/branch_map/${item.id}` });
@@ -200,6 +189,7 @@ export default {
           this.currentPosition.latitude
       });
       const scope = this;
+      this.remmenberBranchKey();
       const coordsCondition = `&lati=${this.currentPosition.latitude}&longi=${
         this.currentPosition.longitude
       }`;
@@ -301,29 +291,8 @@ export default {
           }); //返回定位出错信息
         }
       });
-      // const scope = this;
-      // if (navigator.geolocation) {
-      //   navigator.geolocation.getCurrentPosition(
-      //     func.bind(this),
-      //     value => {
-      //       if (this.latitude && this.longitude) {
-      //         func({
-      //           coords: {
-      //             longitude: this.longitude,
-      //             latitude: this.latitude
-      //           }
-      //         });
-      //       } else {
-      //         geolocationErrorCallback(value, scope.$vux.alert);
-      //       }
-      //       this.isLoading = false;
-      //     },
-      //     geolocationOptions
-      //   );
-      // }
     },
     hideList() {
-      // this.showRadioGroup = false;
       this.isShowList = true;
     },
     onFocus() {
@@ -371,6 +340,21 @@ export default {
           break;
       }
     },
+    remmenberBranchKey() {
+      if (
+        !!this.searchValue &&
+        this.recommodKeywordList[0].keywords.every(e => e !== this.searchValue)
+      ) {
+        this.recommodKeywordList[0].keywords.unshift(this.searchValue);
+        if (this.recommodKeywordList[0].keywords.length > 5) {
+          this.recommodKeywordList[0].keywords.pop();
+        }
+        window.localStorage.setItem(
+          "BranchKey",
+          JSON.stringify(this.recommodKeywordList[0].keywords)
+        );
+      }
+    },
     closeGroup(group) {
       this[group] = false;
     }
@@ -378,6 +362,8 @@ export default {
   mounted() {
     this.invokenavigator(this.refreshDataList);
     this.updateTitle("附近网点");
+    this.recommodKeywordList[0].keywords =
+      JSON.parse(window.localStorage.getItem("BranchKey")) || [];
     branchTypeList.then(result => {
       this.merchantOptions = this.regionOptions = this.branchTypeList = result.map(
         v => {

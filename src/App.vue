@@ -54,6 +54,7 @@ export default {
         scope.resetDocumentSize();
         // }
       });
+      $('body').height($('body')[0].clientHeight);
     }
     //  else if (this.agentType === "IOS") {
     //   $(document).on("focusout", function() {

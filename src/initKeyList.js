@@ -52,10 +52,10 @@ export const autoSortList = [{
 ];
 export const recommodKeywordList = [{
     name: '搜索推荐',
-    keywords: ['好利来', '大商影城', '华晨影业', '快客', '阳光大药房', '艾伦蛋糕']
+    keywords: ['好利来', '大商影城', '华晨影业', '快客', '阳光大药房', '艾纶蛋糕']
   },
   {
     name: '最近搜索',
-    keywords: ['好利来', '艾伦蛋糕']
+    keywords: ['好利来', '艾纶蛋糕']
   }
 ];

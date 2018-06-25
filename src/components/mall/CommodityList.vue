@@ -16,7 +16,7 @@
     </search>
     <grid style="width: 99%;" v-if="!isShowList">
       <card v-for="(item, index) in recommodKeywordList" :key="index" :header="{ title: item.name}" class="key-words-panel">
-        <div slot="content">
+        <div slot="content" style="margin: 1rem">
           <badge class="key-word" v-for="(item, index) in item.keywords" :key="index" :text="item" @click.native="selectKeyWord(item)"></badge>
         </div>
       </card>
@@ -150,7 +150,12 @@ export default {
       // topLoading: false,
       // bottomLoading: false,
       list: [],
-      recommodKeywordList: recommodKeywordList,
+      recommodKeywordList:  [
+        {
+          name: "最近搜索",
+          keywords: []
+        }
+      ],
       commodityTypeList: [],
       autoSortList: autoSortList.filter(e => e.value !== 2),
       tradeOptions: [],
@@ -210,6 +215,7 @@ export default {
       this.updateLoadingStatus({ isLoading: true });
       this.isShowList = true;
       const scope = this;
+      this.remmenberCommodityKey();
       this.$http
         .get(
           `${
@@ -307,6 +313,23 @@ export default {
       this.selectSortItem = value;
       this.refreshDataList();
     },
+    remmenberCommodityKey() {
+      if (
+        !!this.searchValue &&
+        this.recommodKeywordList[0].keywords.every(
+          e => e !== this.searchValue
+        )
+      ) {
+        this.recommodKeywordList[0].keywords.unshift(this.searchValue);
+        if (this.recommodKeywordList[0].keywords.length > 5) {
+          this.recommodKeywordList[0].keywords.pop();
+        }
+        window.localStorage.setItem(
+          "CommodityKey",
+          JSON.stringify(this.recommodKeywordList[0].keywords)
+        );
+      }
+    },
     closeGroup(group) {
       this[group] = false;
     }
@@ -314,6 +337,8 @@ export default {
   mounted() {
     this.refreshDataList();
     this.updateTitle("积分兑换商城");
+    this.recommodKeywordList[0].keywords =
+      JSON.parse(window.localStorage.getItem("CommodityKey")) || [];
     commodityTypeList.then(result => {
       this.tradeOptions = this.commodityTypeList = result.map(v => {
         return {

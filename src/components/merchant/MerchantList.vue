@@ -21,7 +21,7 @@
       @on-submit="onSubmit" -->
     <grid style="width: 99%;" v-if="!isShowList">
       <card v-for="(item, index) in recommodKeywordList" :key="index" :header="{ title: item.name}" class="key-words-panel">
-        <div slot="content">
+        <div slot="content" style="margin: 1rem;">
           <badge class="key-word" v-for="(item, index) in item.keywords" :key="index" :text="item" @click.native="selectKeyWord(item)"></badge>
         </div>
       </card>
@@ -145,15 +145,14 @@ export default {
       showMerchantGroup: false,
       showRegionGroup: false,
       showSortGroup: false,
-      // groupRadioStyle: {
-      //   left: 0
-      // },
-      // results: [],
       isShowList: true,
-      // topLoading: false,
-      // bottomLoading: false,
       list: [],
-      recommodKeywordList: recommodKeywordList,
+      recommodKeywordList: [
+        {
+          name: "最近搜索",
+          keywords: []
+        }
+      ],
       allianceBusiTypeList: [],
       merchantOptions: [],
       regionOptions: [],
@@ -171,16 +170,6 @@ export default {
     ...mapGetters(["appContextPath", "isLocal", "rootPath"])
   },
   methods: {
-    // onCellsListScroll(event) {
-    //   const scope = this;
-    //   if (event.top < this.$refs["scrollerEvent"].$el.clientTop - 100) {
-    //     this.refreshDataList();
-    //   }
-    // },
-    // onScrollBottom() {
-    //   const scope = this;
-    //   this.refreshMoreData();
-    // },
     goMerchantMap(event, item) {
       this.$router.push({ path: `/merchant_map/${item.id}` });
     },
@@ -200,6 +189,7 @@ export default {
           this.currentPosition.latitude
       });
       const scope = this;
+      this.remmenberMerchantKey();
       const coordsCondition = `&lati=${this.currentPosition.latitude}&longi=${
         this.currentPosition.longitude
       }`;
@@ -313,21 +303,6 @@ export default {
       this.searchValue = $event;
       this.refreshDataList();
     },
-    // onChange() {},
-    // onCancel() {},
-    // onSubmit() {},
-    // getResult(val) {
-    //   let rs = [];
-    //   allianceBusiTypeList.forEach(e => {
-    //     if (e.className.indexOf(val) > -1) {
-    //       rs.push({
-    //         title: e.className,
-    //         other: e.classId
-    //       });
-    //     }
-    //   });
-    //   return rs;
-    // },
     // resultClick() {},
     setDefaultImg(event) {
       event.target.src = `${this.rootPath}static/default_img.jpg`;
@@ -367,11 +342,30 @@ export default {
     closeGroup(group) {
       this[group] = false;
     },
+    remmenberMerchantKey() {
+      if (
+        !!this.searchValue &&
+        this.recommodKeywordList[0].keywords.every(
+          e => e !== this.searchValue
+        )
+      ) {
+        this.recommodKeywordList[0].keywords.unshift(this.searchValue);
+        if (this.recommodKeywordList[0].keywords.length > 5) {
+          this.recommodKeywordList[0].keywords.pop();
+        }
+        window.localStorage.setItem(
+          "MerchantKey",
+          JSON.stringify(this.recommodKeywordList[0].keywords)
+        );
+      }
+    },
     ...mapMutations(["updateTitle", "updateCurrentPosition"])
   },
   mounted() {
     this.invokenavigator(this.refreshDataList);
     this.updateTitle("附近联盟商家");
+    this.recommodKeywordList[0].keywords =
+      JSON.parse(window.localStorage.getItem("MerchantKey")) || [];
     allianceBusiTypeList.then(result => {
       this.merchantOptions = this.regionOptions = this.allianceBusiTypeList = result.map(
         v => {

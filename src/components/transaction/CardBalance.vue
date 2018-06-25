@@ -12,9 +12,9 @@
             </divider>
             <!-- <x-button @click.native="searchBalance" class="search-balance">余额查询</x-button> -->
             <x-button @click.native="refreshDataList" class="search-details">消费记录查询</x-button>
-            <divider style="color: #999; font-size: 1.3rem;">
-             因结算周期延迟，数据仅供参考，以实际入账为准。
-            </divider>
+            <div style="margin: 1rem 0;color: #999; font-size: 1.2rem;">
+			提供近30天的消费记录查询，仅能查询通过本APP充值的卡片。消费记录因结算周期原因可能存在延迟，数据仅供参考，以实际入账为准。
+            </div>
           </box>
           </div>
       </div>
