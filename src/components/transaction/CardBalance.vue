@@ -52,7 +52,7 @@
                   <span>
                     <div style="width: 55%; font-size: 1.3rem; padding-top: 6px;color: #999; float: left;">{{item.ts | dateFormat}}</div>
                     <div style="color:#0181ca; width: 45%; display: inline-block; text-align: right;">
-                      <i style="font-size:1.2rem;color: #999999">余额：</i>{{item.balance}} 元
+                      <i style="font-size:1.2rem;color: #999999">卡余额：</i>{{item.balance}} 元
                     </div>
                   </span>
                 </div>
