@@ -178,6 +178,13 @@ export default {
         return;
       }
       this.showBalance = false;
+       if (this.$refs.cardNo.hasErrors) {
+        this.$vux.alert.show({
+          title: "卡号有误",
+          content: this.$refs.cardNo.errors.min || this.$refs.cardNo.errors.max
+        });
+        return;
+      }
       // this.topLoading = true;
       this.updateLoadingStatus({ isLoading: true });
       const scope = this;
