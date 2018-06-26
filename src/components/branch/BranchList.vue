@@ -57,13 +57,13 @@
                  @error="setDefaultImg">
             <div style="text-align: left;height: 10rem; margin: 1rem;" slot>
               <p class="header-text" style="width: 100%; height: 2rem; overflow: hidden;">
-                {{(merchantOptions.find(e=> e.value == item.type).name || '') + ': ' + item.name}}
+                {{merchantOptions.find(e=>(item.type == e.value)) && ((merchantOptions.find(e=>(item.type == e.value)).name || '') + ": " + item.name) | trunceStr}}
               </p>
               <p class="apostrophe content">
-                <i class="fa fa-phone icon-preffix" aria-hidden="true"></i>{{ item.tel }}
+                <i class="fa fa-phone icon-preffix" aria-hidden="true"></i>{{ item.tel || "暂无电话" | trunceStr }}
               </p>
               <p class="apostrophe content">
-                <i class="fa fa-map-marker icon-preffix" aria-hidden="true"></i>{{ item.address }}
+                <i class="fa fa-map-marker icon-preffix" aria-hidden="true"></i>{{ item.address | trunceStr }}
                 <i style="font-size: 1.1rem; color: #999999; right: 0; bottom: 0; position: absolute; font-weight: normal;">{{item.distance/1000}}km</i>
               </p>
             </div>
@@ -167,6 +167,15 @@ export default {
   computed: {
     ...mapState(["currentPosition"]),
     ...mapGetters(["appContextPath", "isLocal", "rootPath"])
+  },
+  filters: {
+    trunceStr(value) {
+      if(!!value && value.length >= 14) {
+        return value.substring(0, 13) + '...'
+      } else {
+        return value;
+      }
+    }
   },
   methods: {
     ...mapMutations(["updateTitle", "updateCurrentPosition"]),

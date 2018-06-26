@@ -8,12 +8,13 @@
                  style="height: 9rem; width: 9rem; border: 1px solid #999999;"
                  :src="detail.logoUrl||'unknownUrl'" class="card-padding"
                  @error="setDefaultImg">
-            <div style="text-align: left;height: 7rem; margin: 1rem;" slot>
-              <p class="header-text" style="width: max-content;">
-                {{detail.name}}
+            <div style="text-align: left;height: 9rem; margin: 1rem;" slot>
+              <p class="header-text" style="width: max-content;">{{branchTypeList.find(e=>(detail.type == e.value)) && ((branchTypeList.find(e=>(detail.type == e.value)).name || '')) | trunceStr}}</p>
+              <p class="header-text" style="width: max-content;font-weight: normal;">
+                {{detail.name | trunceStr}}
               </p>
               <p class="apostrophe content">
-                {{ detail.address }}
+                {{ detail.address | trunceStr }}
               </p>
               <p class="apostrophe content">
                 距您{{detail.distance}}km
@@ -23,7 +24,7 @@
               <i class="fa fa-phone icon-preffix" style="font-size: 2rem;margin:0" aria-hidden="true" slot="title"></i>
               <div class="tel-phone-block" style="text-align: left;height: 2rem; margin: 1rem;width: max-content; overflow: visible;" slot>
                 <p class="apostrophe" style="margin-left: 2rem; font-size:1.5rem; color: #999999">
-                  {{detail.tel}}
+                  {{detail.tel || "暂无电话" | trunceStr}}
                 </p>
               </div>
             </cell>
@@ -36,14 +37,14 @@
             <a v-if="!showOpenDescrb" class="open-switch" @click="toggleDescription(false)">收起</a>
           </cell> -->
           <cell primary="content">
-            <i class="fa fa-map-marker icon-preffix" style="font-size: 3rem; margin-right: 3rem; margin-left: 3rem;" aria-hidden="true" slot="title"></i>
+            <i class="fa fa-map-marker icon-preffix" style="font-size: 3rem; margin-right: 1rem; margin-left: 1rem;" aria-hidden="true" slot="title"></i>
             <div class="address-block" style="text-align: left;height: 2rem; width: 85%; margin: 1rem;overflow: hidden;" slot>
               <p class="apostrophe" style="margin-left: 2rem; font-size: 1.5rem; color: #999999;">
-                {{detail.address}}
+                {{detail.description | trunceStr}}
               </p>
-              <p style="font-size: 1.2rem; margin-top: 0.5rem; margin-left: 2rem;">
+              <!-- <p style="font-size: 1.2rem; margin-top: 0.5rem; margin-left: 2rem;">
                 距您{{detail.distance/1000}}km
-              </p>
+              </p> -->
             </div>
           </cell>
         </div>
@@ -57,6 +58,7 @@ import { Loading, Card, Cell, LoadMore } from "vux";
 import { mapGetters, mapMutations } from "vuex";
 import initAMap from "@/initAMap";
 import { markerMap } from "@/initAMap";
+import { branchTypeList } from "../../initKeyList";
 
 export default {
   name: "BranchMap",
@@ -75,11 +77,21 @@ export default {
         overflow: "hidden",
         "text-align": "left"
       },
-      showOpenDescrb: true
+      showOpenDescrb: true,
+      branchTypeList: []
     };
   },
   computed: {
     ...mapGetters(["appContextPath", "rootPath"])
+  },
+  filters: {
+    trunceStr(value) {
+      if(!!value && value.length >= 15) {
+        return value.substring(0, 14) + '...'
+      } else {
+        return value;
+      }
+    }
   },
   methods: {
     ...mapMutations(["updateTitle"]),
@@ -97,31 +109,46 @@ export default {
     },
     callPhone(event) {
       window.location.href = "tel:" + event;
+    },
+    refreshDataDetail() {
+      const scope = this;
+      this.$http
+        .get(
+          `${this.appContextPath}appweb/branch/detail?id=${
+            this.$route.params.id
+          }`
+        )
+        .then(success => {
+          scope.detail =
+            (success &&
+              success.data &&
+              success.data.result &&
+              success.data.result.detail) ||
+            {};
+          this.renderAMap(
+            scope.detail.distance,
+            scope.detail.latitude,
+            scope.detail.longitude
+          );
+          this.isLoading = false;
+        });
     }
   },
   mounted() {
     const scope = this;
     // this.renderAMap(11, 116.404, 39.915);
     this.isLoading = true;
-    this.$http
-      .get(
-        `${this.appContextPath}appweb/branch/detail?id=${this.$route.params.id}`
-      )
-      .then(success => {
-        scope.detail =
-          (success &&
-            success.data &&
-            success.data.result &&
-            success.data.result.detail) ||
-          {};
-        this.renderAMap(
-          scope.detail.distance,
-          scope.detail.latitude,
-          scope.detail.longitude
-        );
-        this.isLoading = false;
-      });
+
     this.updateTitle("网点详情");
+    branchTypeList.then(result => {
+      this.refreshDataDetail();
+      this.branchTypeList = result.map(v => {
+        return {
+          name: v.className,
+          value: v.classId
+        };
+      });
+    });
   }
 };
 </script>
