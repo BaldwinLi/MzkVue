@@ -51,10 +51,16 @@
                 @on-pullup-loading="invokenavigator(refreshMoreData)">
           <div>
              <cell v-for="item in list" :key="item.id" primary="content" @click.native="goMerchantMap($event, item)" is-link>
-              <img slot="title"
+              <!-- <img slot="title"
                   style="height: 8rem; width: 8rem; border: 1px solid #999999;"
                   :src="item.logoUrl||'unknownUrl'" class="card-padding"
-                  @error="setDefaultImg">
+                  @error="setDefaultImg"> -->
+              <div style="height: 9rem; width: 9rem; text-align: center; line-height: 11rem; border: 1px solid #999;" slot="title">
+                <img 
+                 style="max-height: -webkit-fill-available; max-width: -webkit-fill-available;"
+                 :src="item.logoUrl||'unknownUrl'"
+                 @error="setDefaultImg">
+              </div>
               <div style="text-align: left;height: 10rem; margin: 1rem;" slot>
                 <p class="header-text" style="width: 100%; height: 2rem; overflow: hidden;">
                   {{merchantOptions.find(e=>(item.type == e.value)) && ((merchantOptions.find(e=>(item.type == e.value)).name || '') + ": " + item.name) | trunceStr}}

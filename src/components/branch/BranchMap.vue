@@ -4,13 +4,19 @@
       <card style="margin-bottom: 6rem;">
         <div slot="header">
           <cell primary="content">
-            <img slot="title"
+            <!-- <img slot="title"
                  style="height: 9rem; width: 9rem; border: 1px solid #999999;"
                  :src="detail.logoUrl||'unknownUrl'" class="card-padding"
+                 @error="setDefaultImg"> -->
+              <div style="height: 9rem; width: 9rem; text-align: center; line-height: 11rem; border: 1px solid #999;" slot="title">
+                <img 
+                 style="max-height: -webkit-fill-available; max-width: -webkit-fill-available;"
+                 :src="detail.logoUrl||'unknownUrl'" class="card-padding"
                  @error="setDefaultImg">
-            <div style="text-align: left;height: 9rem; margin: 1rem;" slot>
+              </div>
+            <div style="text-align: left;height: 6rem; margin: 1rem;" slot>
               <!-- <p class="header-text" style="width: max-content;">{{branchTypeList.find(e=>(detail.type == e.value)) && ((branchTypeList.find(e=>(detail.type == e.value)).name || '')) | trunceStr}}</p> -->
-              <p class="header-text" style="width: max-content;">
+              <p class="header-text" style="width: max-content; font-size: 1.4rem;">
                 {{detail.name | trunceStr}}
               </p>
               <p class="apostrophe content">
@@ -23,8 +29,8 @@
             <cell primary="content" @click.native="callPhone(detail.tel)">
               <i class="fa fa-phone icon-preffix" style="font-size: 2rem;margin:0" aria-hidden="true" slot="title"></i>
               <div class="tel-phone-block" style="text-align: left;height: 2rem; margin: 1rem;width: max-content; overflow: visible;" slot>
-                <p class="apostrophe" style="margin-left: 2rem; font-size:1.5rem; color: #999999">
-                  {{detail.tel || "暂无电话" | trunceStr}}
+                <p class="apostrophe" style="margin-left: 2rem; font-size:1.2rem; color: #999999">
+                  {{detail.tel || "暂无电话"}}
                 </p>
               </div>
             </cell>
@@ -38,9 +44,9 @@
           </cell> -->
           <cell primary="content">
             <i class="fa fa-map-marker icon-preffix" style="font-size: 3rem; margin-right: 1rem; margin-left: 1rem;" aria-hidden="true" slot="title"></i>
-            <div class="address-block" style="text-align: left;height: 2rem; width: 85%; margin: 1rem;overflow: hidden;" slot>
-              <p class="apostrophe" style="margin-left: 2rem; font-size: 1.5rem; color: #999999;">
-                {{detail.description | trunceStr}}
+            <div class="address-block" style="text-align: left; width: 85%;" slot>
+              <p class="apostrophe" style="margin-left: 2rem; font-size: 1.2rem; color: rgb(153, 153, 153);">
+                {{detail.description}}
               </p>
               <!-- <p style="font-size: 1.2rem; margin-top: 0.5rem; margin-left: 2rem;">
                 距您{{detail.distance/1000}}km
@@ -98,6 +104,7 @@ export default {
     renderAMap(distance, latitude, longitude) {
       initAMap().then(result => {
         this.detail.distance = markerMap(this.detail.name, longitude, latitude);
+        $('#map-container').height($('body').height() - $('.detail-header').height());
       });
     },
     toggleDescription(event) {

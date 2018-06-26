@@ -1,5 +1,33 @@
 import store from './vuex/store';
 
+const initAmap = (func) => {
+  window['IMap'] = new AMap.Map('map-container');
+  window['IMap'].plugin('AMap.Geolocation', function () {
+    window['geolocation'] = new AMap.Geolocation({
+      enableHighAccuracy: true, //是否使用高精度定位，默认:true
+      timeout: 15000, //超过10秒后停止定位，默认：无穷大
+      maximumAge: 0, //定位结果缓存0毫秒，默认：0
+      convert: true, //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+      showButton: true, //显示定位按钮，默认：true
+      buttonPosition: 'LB', //定位按钮停靠位置，默认：'LB'，左下角
+      buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+      showMarker: false, //定位成功后在定位到的位置显示点标记，默认：true
+      showCircle: true, //定位成功后用圆圈表示定位精度范围，默认：true
+      panToLocation: true, //定位成功后将定位到的位置作为地图中心点，默认：true
+      zoomToAccuracy: true //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+    });
+    window['IMap'].addControl(geolocation);
+    func();
+  });
+  // AMap.event.addListener(geolocation, "complete", value => {
+  //   new AMap.Marker({
+  //     position: [value.position.lng, value.position.lat],
+  //     content: `<i class="mzk mzk-qidian map-mark" aria-hidden="true"></i>`,
+  //     title: '当前位置',
+  //     map: IMap
+  //   });
+  // });
+};
 
 export default () => {
   if (!window['AMap']) {
@@ -10,44 +38,14 @@ export default () => {
     document.getElementsByTagName('head')[0].appendChild(scriptEl);
     return new Promise(function (resolve) {
       scriptEl.onload = () => {
-        window['IMap'] = new AMap.Map('map-container');
-        window['IMap'].plugin('AMap.Geolocation', function () {
-          window['geolocation'] = new AMap.Geolocation({
-            enableHighAccuracy: true, //是否使用高精度定位，默认:true
-            timeout: 15000, //超过10秒后停止定位，默认：无穷大
-            maximumAge: 0, //定位结果缓存0毫秒，默认：0
-            convert: true, //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
-            showButton: true, //显示定位按钮，默认：true
-            buttonPosition: 'LB', //定位按钮停靠位置，默认：'LB'，左下角
-            buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-            showMarker: true, //定位成功后在定位到的位置显示点标记，默认：true
-            showCircle: true, //定位成功后用圆圈表示定位精度范围，默认：true
-            panToLocation: true, //定位成功后将定位到的位置作为地图中心点，默认：true
-            zoomToAccuracy: true //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
-          });
-          window['IMap'].addControl(geolocation);
+        initAmap(() => {
           resolve(true);
         });
       }
     });
   } else {
     return new Promise(function (resolve) {
-      window['IMap'] = new AMap.Map('map-container');
-      window['IMap'].plugin('AMap.Geolocation', function () {
-        window['geolocation'] = new AMap.Geolocation({
-          enableHighAccuracy: true, //是否使用高精度定位，默认:true
-          timeout: 5000, //超过10秒后停止定位，默认：无穷大
-          maximumAge: 0, //定位结果缓存0毫秒，默认：0
-          convert: true, //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
-          showButton: true, //显示定位按钮，默认：true
-          buttonPosition: 'LB', //定位按钮停靠位置，默认：'LB'，左下角
-          buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-          showMarker: true, //定位成功后在定位到的位置显示点标记，默认：true
-          showCircle: true, //定位成功后用圆圈表示定位精度范围，默认：true
-          panToLocation: true, //定位成功后将定位到的位置作为地图中心点，默认：true
-          zoomToAccuracy: true //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
-        });
-        window['IMap'].addControl(geolocation);
+      initAmap(() => {
         resolve(true);
       });
     });
@@ -64,12 +62,6 @@ const getZoom = (distance) => {
 
 export const markerMap = (title, longitude, latitude) => {
   // geolocation.getCurrentPosition();
-  // AMap.event.addListener(geolocation, "complete", value => {
-  //   new AMap.Marker({
-  //     position: [value.position.lng, value.position.lat],
-  //     title: '当前位置',
-  //     map: IMap
-  //   });
   // const distance = Math.sqrt(
   //   Math.pow(
   //     longitude - store.state.currentPosition.longitude,
@@ -101,12 +93,13 @@ export const markerMap = (title, longitude, latitude) => {
   new AMap.Marker({
     position: [store.state.currentPosition.longitude, store.state.currentPosition.latitude],
     title: '当前位置',
+    content: `<i class="mzk mzk-qidian map-mark" aria-hidden="true"></i>`,
     map: IMap
   });
   new AMap.Marker({
     position: [longitude, latitude],
     title,
-    content: `<i class="fa fa-map-marker map-mark" aria-hidden="true"></i>`,
+    content: `<i class="mzk mzk-zhongdian map-mark" aria-hidden="true"></i>`,
     // offset: new AMap.Pixel(-12, -12),
     map: IMap
   });

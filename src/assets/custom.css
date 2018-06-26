@@ -2,18 +2,22 @@ html {
   height: 100%;
   width: 100%;
 }
-html > body {
+
+html>body {
   height: inherit;
   width: inherit;
 }
-html > body > div#app {
+
+html>body>div#app {
   height: inherit;
   width: inherit;
 }
-html > body > div#app > div.blank-page {
+
+html>body>div#app>div.blank-page {
   height: inherit;
   width: inherit;
 }
+
 .header-text {
   font-size: 1.5rem;
   font-weight: bold;
@@ -48,6 +52,6 @@ html > body > div#app > div.blank-page {
 }
 
 .map-mark {
-  font-size: 3.5rem;
-  color: #FF4500;
+  font-size: 4.5rem;
+  color: #0000FF;
 }
