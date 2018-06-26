@@ -135,7 +135,7 @@ export default {
       if (this.$refs.cardNo.hasErrors) {
         this.$vux.alert.show({
           title: "卡号有误",
-          content: this.$refs.cardNo.errors.min || this.$refs.cardNo.errors.max
+          content: "请输入12位明珠卡卡号。"
         });
         return;
       }
@@ -178,10 +178,10 @@ export default {
         return;
       }
       this.showBalance = false;
-       if (this.$refs.cardNo.hasErrors) {
+      if (this.$refs.cardNo.hasErrors) {
         this.$vux.alert.show({
           title: "卡号有误",
-          content: this.$refs.cardNo.errors.min || this.$refs.cardNo.errors.max
+          content: "请输入12位明珠卡卡号。"
         });
         return;
       }

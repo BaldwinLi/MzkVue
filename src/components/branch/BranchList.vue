@@ -56,8 +56,8 @@
                  :src="item.logoUrl||'unknownUrl'" class="card-padding"
                  @error="setDefaultImg">
             <div style="text-align: left;height: 10rem; margin: 1rem;" slot>
-              <p class="header-text" style="width: max-content">
-                {{item.name}}
+              <p class="header-text" style="width: 100%; height: 2rem; overflow: hidden;">
+                {{(merchantOptions.find(e=> e.value == item.type).name || '') + ': ' + item.name}}
               </p>
               <p class="apostrophe content">
                 <i class="fa fa-phone icon-preffix" aria-hidden="true"></i>{{ item.tel }}
@@ -408,7 +408,7 @@ export default {
 p.content {
   font-size: 1.2rem;
   height: 2.5rem;
-  width: 95%;
+  width: -webkit-fill-available;
   margin-top: 0.5rem;
   overflow: hidden;
 }

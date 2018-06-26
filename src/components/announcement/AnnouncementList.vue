@@ -17,7 +17,7 @@
             <p slot="title" v-if="item.title" class="card-padding"><i class="fa fa-bullhorn" style="font-size: 1.6rem;" aria-hidden="true"></i></p>
             <div style="text-align: left;" slot>
               <p class="header-text title-clip">
-                {{ item.title }}
+                {{ item.title | trunceStr }}
                 <i style="font-size: 1.1rem; -webkit-text-fill-color: #999999; right: 0; top: -1.5rem; position: absolute; font-weight: normal;" aria-hidden="true">{{item.createTs | dateFormat}}</i>
               </p>
               <!-- <p class="apostrophe" style="font-size: 1.2rem; height: 1.5rem; overflow: hidden; width: 95%;" v-html="item.content"></p> -->
@@ -73,6 +73,13 @@ export default {
       else
         //  + dateFormat(new Date(value), "hh:mm");
         return dateFormat(new Date(value), "YYYY-MM-DD");
+    },
+    trunceStr(value) {
+      if(!!value && value.length >= 15) {
+        return value.substring(0, 14) + '...'
+      } else {
+        return value;
+      }
     }
   },
   computed: {
@@ -178,10 +185,10 @@ export default {
   overflow: hidden;
   height: 2rem;
 }
-.title-clip:after {
-  content: "";
+/* .title-clip:after {
+  content: "...";
   height: 2rem;
-  width: 15rem;
+  width: 0.6rem;
   position: absolute;
   z-index: 9999;
   top: 0;
@@ -193,5 +200,5 @@ export default {
     from(transparent),
     to(#fff)
   );
-}
+} */
 </style>

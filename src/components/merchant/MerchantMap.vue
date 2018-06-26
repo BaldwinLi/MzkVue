@@ -8,7 +8,7 @@
                  style="height: 9rem; width: 9rem; border: 1px solid #999999;"
                  :src="detail.logoUrl||'unknownUrl'" class="card-padding"
                  @error="setDefaultImg">
-            <div style="text-align: left;height: 10rem; margin: 1rem;" slot>
+            <div style="text-align: left;height: 7rem; margin: 1rem;" slot>
               <p class="header-text" style="width: max-content;">
                 {{detail.name}}
               </p>
@@ -19,21 +19,22 @@
                 距您{{detail.distance}}km
               </p>
             </div>
-          </cell>
-          <cell primary="content" @click.native="callPhone(detail.tel)">
-            <i class="fa fa-phone icon-preffix" style="font-size: 2rem;" aria-hidden="true" slot="title"></i>
-            <div class="tel-phone-block" style="text-align: left;height: 2rem; margin: 1rem;overflow: hidden;" slot>
+            <cell primary="content" @click.native="callPhone(detail.tel)">
+            <i class="fa fa-phone icon-preffix" style="font-size: 2rem; margin:0" aria-hidden="true" slot="title"></i>
+            <div class="tel-phone-block" style="text-align: left;height: 2rem; margin: 1rem;width: max-content; overflow: visible;" slot>
               <p class="apostrophe" style="margin-left: 2rem; font-size:1.5rem; color: #999999">
-                商户电话： {{detail.tel}}
+                {{detail.tel}}
               </p>
             </div>
           </cell>
-          <cell primary="content">
+          </cell>
+          
+          <!-- <cell primary="content">
             <load-more :show-loading="false" :tip="'商家详情'" background-color="#fbf9fe"></load-more>
             <div :style="descrbStyle" v-html="detail.description"></div>
             <a v-if="showOpenDescrb" class="open-switch" @click="toggleDescription(true)">...展开</a>
             <a v-if="!showOpenDescrb" class="open-switch" @click="toggleDescription(false)">收起</a>
-          </cell>
+          </cell> -->
           <cell primary="content">
             <i class="fa fa-map-marker icon-preffix" style="font-size: 3rem; margin-right: 3rem; margin-left: 3rem;" aria-hidden="true" slot="title"></i>
             <div class="address-block" style="text-align: left;height: 2rem; width: 85%; margin: 1rem;overflow: hidden;" slot>
@@ -167,5 +168,14 @@ a.open-switch {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
+}
+#map-container {
+  overflow: hidden;
+  position: relative;
+  z-index: 0;
+  background-color: rgb(243, 241, 236);
+  color: rgb(0, 0, 0);
+  text-align: left;
+  height: 45rem;
 }
 </style>
