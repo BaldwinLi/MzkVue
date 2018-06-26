@@ -9,8 +9,8 @@
                  :src="detail.logoUrl||'unknownUrl'" class="card-padding"
                  @error="setDefaultImg">
             <div style="text-align: left;height: 9rem; margin: 1rem;" slot>
-              <p class="header-text" style="width: max-content;">{{allianceBusiTypeList.find(e=>(detail.type == e.value)) && ((allianceBusiTypeList.find(e=>(detail.type == e.value)).name || '')) | trunceStr}}</p>
-              <p class="header-text" style="width: max-content;font-weight:normal;">
+              <!-- <p class="header-text" style="width: max-content;">{{allianceBusiTypeList.find(e=>(detail.type == e.value)) && ((allianceBusiTypeList.find(e=>(detail.type == e.value)).name || '')) | trunceStr}}</p> -->
+              <p class="header-text" style="width: max-content;">
                 {{detail.name | trunceStr}}
               </p>
               <p class="apostrophe content">
@@ -89,8 +89,8 @@ export default {
   },
   filters: {
     trunceStr(value) {
-      if(!!value && value.length >= 15) {
-        return value.substring(0, 14) + '...'
+      if(!!value && value.length >= 13) {
+        return value.substring(0, 12) + '...'
       } else {
         return value;
       }

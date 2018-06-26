@@ -170,8 +170,8 @@ export default {
   },
   filters: {
     trunceStr(value) {
-      if(!!value && value.length >= 14) {
-        return value.substring(0, 13) + '...'
+      if(!!value && value.length >= 10) {
+        return value.substring(0, 9) + '...'
       } else {
         return value;
       }
