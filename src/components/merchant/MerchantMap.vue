@@ -14,13 +14,13 @@
                  :src="detail.logoUrl||'unknownUrl'" class="card-padding"
                  @error="setDefaultImg">
             </div>
-            <div style="text-align: left;height: 6rem; margin: 1rem;" slot>
+            <div style="text-align: left;height: auto; margin: 1rem;" slot>
               <!-- <p class="header-text" style="width: max-content;">{{allianceBusiTypeList.find(e=>(detail.type == e.value)) && ((allianceBusiTypeList.find(e=>(detail.type == e.value)).name || '')) | trunceStr}}</p> -->
-              <p class="header-text" style="width: max-content; font-size: 1.4rem;">
-                {{detail.name | trunceStr}}
+              <p class="header-text" style="font-size: 1.3rem;">
+                {{detail.name}}
               </p>
               <p class="apostrophe content">
-                {{ detail.address | trunceStr }}
+                {{ detail.address }}
               </p>
               <p class="apostrophe content">
                 距您{{detail.distance}}km
@@ -172,10 +172,10 @@ export default {
 }
 p.content {
   font-size: 1.2rem;
-  height: 2rem;
+  /* height: 2rem; */
   width: 95%;
   margin-top: 0.5rem;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 .tel-phone-block {
   border-left: 1px solid #999999;

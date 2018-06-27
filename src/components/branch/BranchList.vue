@@ -58,17 +58,17 @@
                  @error="setDefaultImg">
             </div>
             
-            <div style="text-align: left;height: 10rem; margin: 1rem;" slot>
-              <p class="header-text" style="width: 100%; height: 2rem; overflow: hidden;">
+            <div style="text-align: left;height: auto; margin: 1rem;" slot>
+              <p class="header-text" style="width: 100%; height: auto; overflow: hidden;font-size: 1.3rem;">
                 <!-- {{merchantOptions.find(e=>(item.type == e.value)) && ((merchantOptions.find(e=>(item.type == e.value)).name || '') + ": " + item.name) | trunceStr}} -->
-                {{item.name | trunceStr}}
+                {{item.name}}
               </p>
               <p class="apostrophe content">
-                <i class="fa fa-phone icon-preffix" aria-hidden="true"></i>{{ item.tel || "暂无电话" | trunceStr }}
+                <i class="fa fa-phone icon-preffix" aria-hidden="true"></i>{{ item.tel || "暂无电话" }}
               </p>
               <p class="apostrophe content">
-                <i class="fa fa-map-marker icon-preffix" aria-hidden="true"></i>{{ item.address | trunceStr }}
-                <i style="font-size: 1.1rem; color: #999999; right: 0; bottom: 0; position: absolute; font-weight: normal;">{{item.distance/1000}}km</i>
+                <i class="fa fa-map-marker icon-preffix" aria-hidden="true"></i>{{ item.address }}
+                <i style="font-size: 1.1rem; color: #999999; right: 0; bottom: -1rem; position: absolute; font-weight: normal;">{{item.distance/1000}}km</i>
               </p>
             </div>
           </cell> 
@@ -440,10 +440,10 @@ export default {
 }
 p.content {
   font-size: 1.2rem;
-  height: 2.5rem;
+  /* height: 2.5rem; */
   width: -webkit-fill-available;
   margin-top: 0.5rem;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 .search-type-radio {
   position: absolute;
