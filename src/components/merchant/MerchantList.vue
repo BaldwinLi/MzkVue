@@ -288,9 +288,21 @@ export default {
       initAMap().then(result => {
         if (result) {
           geolocation.getCurrentPosition();
-          AMap.event.addListener(geolocation, "complete", func.bind(this)); //返回定位信息
-          AMap.event.addListener(geolocation, "error", value => {
-            if (
+          AMap.event.addListener(geolocation, "complete", (value) => {
+            if (value.message.indexOf('fail') > -1) {
+              this.onGeoError(func, value);
+            } else {
+              func(value);
+            }
+          }); //返回定位信息
+          AMap.event.addListener(geolocation, "error",  value => {
+            this.onGeoError(func, value);
+          }); //返回定位出错信息
+        }
+      });
+    },
+    onGeoError(func, value) {
+      if (
               this.currentPosition.latitude &&
               this.currentPosition.longitude
             ) {
@@ -301,12 +313,9 @@ export default {
                 }
               });
             } else {
-              geolocationErrorCallback(value, scope.$vux.alert);
+              geolocationErrorCallback(value, this.$vux.alert, func.bind(this));
             }
             this.isLoading = false;
-          }); //返回定位出错信息
-        }
-      });
     },
     hideList() {
       // this.showRadioGroup = false;

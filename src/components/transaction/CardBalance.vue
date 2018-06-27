@@ -120,7 +120,7 @@ export default {
       return "¥ " + numberComma(count);
     },
     dateFormat: function(value) {
-      return dateFormat(new Date(parseInt(value)), "YYYY-MM-DD hh:mm:ss");
+      return dateFormat(new Date(parseInt(value)), "YYYY-MM-DD HH:mm:ss");
     }
   },
   methods: {

@@ -19,36 +19,34 @@ export const geolocationOptions = {
   timeout: 3000
 }
 
-export const geolocationErrorCallback = (value, alert) => {
-  const title = "定位失败";
-  alert.show({
+export const geolocationErrorCallback = (value, alert, func) => {
+  let title = "定位失败";
+  let content = "";
+  const messages = value.message.split(',');
+  const states = messages[0].split('.');
+  const results = messages[1].split('.')
+  for (const e of states) {
+    switch (e) {
+      case 'Get address fail':
+        alert.show({
           title,
-          content: "请重新加载页面"
+          content: "精确地址获取失败，请检查网络环境。"
         });
-  // switch (value.code) {
-  //   case 1:
-  //     alert.show({
-  //       title,
-  //       content: "您的网络协议不允许使用定位服务"
-  //     });
-  //     break;
-  //   case 2:
-  //     alert.show({
-  //       title,
-  //       content: "暂时获取不到位置信息, 重新"
-  //     });
-  //     break;
-  //   case 3:
-  //     alert.show({
-  //       title,
-  //       content: "获取信息超时"
-  //     });
-  //     break;
-  //   case 4:
-  //     alert.show({
-  //       title,
-  //       content: "未知错误"
-  //     });
-  //     break;
-  // }
+        func(value);
+        return;
+    }
+    if (e.indexOf('fail') > -1) {
+      // 捕获了些异常 判断设备GPS 和IP那个出现异常 会相应弹窗 
+      title += (" " + e);
+    }
+  }
+  results.forEach(e => {
+    content += (e + ' ');
+  });
+  alert.show({
+    title,
+    content
+  });
+  return;
+
 }
