@@ -120,6 +120,8 @@ import {
 } from "../config";
 import initAMap from "@/initAMap";
 
+let cacheList = false;
+
 export default {
   name: "BranchList",
   components: {
@@ -169,20 +171,24 @@ export default {
     };
   },
   computed: {
-    ...mapState(["currentPosition"]),
+    ...mapState(["currentPosition", "scrollerList"]),
     ...mapGetters(["appContextPath", "isLocal", "rootPath"])
   },
   filters: {
     trunceStr(value) {
-      if(!!value && value.length >= 10) {
-        return value.substring(0, 9) + '...'
+      if (!!value && value.length >= 10) {
+        return value.substring(0, 9) + "...";
       } else {
         return value;
       }
     }
   },
   methods: {
-    ...mapMutations(["updateTitle", "updateCurrentPosition"]),
+    ...mapMutations([
+      "updateTitle",
+      "updateCurrentPosition",
+      "updateScrollerList"
+    ]),
     goBranchMap(event, item) {
       this.$router.push({ path: `/branch_map/${item.id}` });
     },
@@ -192,7 +198,7 @@ export default {
       this.showRegionGroup = false;
       this.showSortGroup = false;
       this.isShowList = true;
-      this.isLoading = true;
+      if (!cacheList) this.isLoading = true;
       this.updateCurrentPosition({
         longitude:
           (value && value.position && value.position.lng) ||
@@ -222,6 +228,7 @@ export default {
                 success.data.result &&
                 success.data.result.list) ||
               [];
+            scope.updateScrollerList(scope.list);
             if (scope.list.length === 15) scope.enablePullup = true;
             if (scope.$refs.scrollerEvent) {
               scope.$refs.scrollerEvent.donePulldown();
@@ -264,6 +271,7 @@ export default {
                 success.data.result.list) ||
                 []
             );
+            scope.updateScrollerList(scope.list);
             if (scope.$refs.scrollerEvent) {
               scope.$refs.scrollerEvent.donePullup();
               scope.$refs.scrollerEvent.reset();
@@ -276,7 +284,7 @@ export default {
         );
     },
     invokenavigator(func) {
-      this.isLoading = true;
+      if (!cacheList) this.isLoading = true;
       const scope = this;
       // if (this.isLocal) {
       //   func();
@@ -387,6 +395,18 @@ export default {
         }
       );
     });
+  },
+  beforeRouteEnter(to, from, next) {
+    from.fullPath.indexOf("branch_map") > -1 && (cacheList = true);
+    next(vm => {
+      if (from.fullPath.indexOf("branch_map") > -1) {
+        vm.list = vm.scrollerList;
+      }
+    });
+  },
+  beforeRouteLeave (to, from, next) {
+    cacheList = false;
+    next();
   }
 };
 </script>

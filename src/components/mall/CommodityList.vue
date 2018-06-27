@@ -113,6 +113,8 @@ import {
 import { mapState, mapGetters, mapMutations } from "vuex";
 import { pulldownConfig, pullupConfig } from "../config";
 
+let cacheList = false;
+
 export default {
   name: "CommodityList",
   components: {
@@ -150,7 +152,7 @@ export default {
       // topLoading: false,
       // bottomLoading: false,
       list: [],
-      recommodKeywordList:  [
+      recommodKeywordList: [
         {
           name: "最近搜索",
           keywords: []
@@ -182,10 +184,14 @@ export default {
   },
   computed: {
     ...mapGetters(["appContextPath", "rootPath"]),
-    ...mapState(["isLoading"])
+    ...mapState(["isLoading", "scrollerList"])
   },
   methods: {
-    ...mapMutations(["updateTitle", "updateLoadingStatus"]),
+    ...mapMutations([
+      "updateTitle",
+      "updateLoadingStatus",
+      "updateScrollerList"
+    ]),
     signIn(event) {
       const scope = this;
       this.updateLoadingStatus({ isLoading: true });
@@ -212,7 +218,7 @@ export default {
       document.activeElement.blur();
       this.showTradeGroup = false;
       this.showSortGroup = false;
-      this.updateLoadingStatus({ isLoading: true });
+      if (!cacheList) this.updateLoadingStatus({ isLoading: true });
       this.isShowList = true;
       const scope = this;
       this.remmenberCommodityKey();
@@ -233,6 +239,7 @@ export default {
                 success.data.result &&
                 success.data.result.list) ||
               [];
+            scope.updateScrollerList(scope.list);
             if (scope.list.length === 15) {
               scope.enablePullup = true;
             }
@@ -267,6 +274,7 @@ export default {
               success.data.result.list) ||
               []
           );
+          scope.updateScrollerList(scope.list);
           if (scope.$refs.scrollerEvent) {
             scope.$refs.scrollerEvent.donePullup();
             scope.$refs.scrollerEvent.reset({ bottom: 0 });
@@ -316,9 +324,7 @@ export default {
     remmenberCommodityKey() {
       if (
         !!this.searchValue &&
-        this.recommodKeywordList[0].keywords.every(
-          e => e !== this.searchValue
-        )
+        this.recommodKeywordList[0].keywords.every(e => e !== this.searchValue)
       ) {
         this.recommodKeywordList[0].keywords.unshift(this.searchValue);
         if (this.recommodKeywordList[0].keywords.length > 5) {
@@ -347,6 +353,18 @@ export default {
         };
       });
     });
+  },
+  beforeRouteEnter(to, from, next) {
+    from.fullPath.indexOf("commodity_order") > -1 && (cacheList = true);
+    next(vm => {
+      if (from.fullPath.indexOf("commodity_order") > -1) {
+        vm.list = vm.scrollerList;
+      }
+    });
+  },
+  beforeRouteLeave (to, from, next) {
+    cacheList = false;
+    next();
   }
 };
 </script>

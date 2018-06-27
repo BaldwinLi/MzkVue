@@ -92,8 +92,8 @@ export default {
   },
   filters: {
     trunceStr(value) {
-      if(!!value && value.length >= 13) {
-        return value.substring(0, 12) + '...'
+      if (!!value && value.length >= 13) {
+        return value.substring(0, 12) + "...";
       } else {
         return value;
       }
@@ -104,7 +104,9 @@ export default {
     renderAMap(distance, latitude, longitude) {
       initAMap().then(result => {
         this.detail.distance = markerMap(this.detail.name, longitude, latitude);
-        $('#map-container').height($('body').height() - $('.detail-header').height());
+        $("#map-container").height(
+          $("body").height() - $(".detail-header").height()
+        );
       });
     },
     toggleDescription(event) {

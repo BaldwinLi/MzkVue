@@ -109,7 +109,7 @@ import {
   Search,
   Radio
 } from "vux";
-import { mapState, mapGetters, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations, mapActions } from "vuex";
 import {
   allianceBusiTypeList,
   autoSortList,
@@ -123,8 +123,10 @@ import {
 } from "../config";
 import initAMap from "@/initAMap";
 
+let cacheList = false;
+
 export default {
-  name: "BranchList",
+  name: "MerchantList",
   components: {
     Badge,
     Cell,
@@ -172,13 +174,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(["currentPosition"]),
+    ...mapState(["currentPosition", "scrollerList"]),
     ...mapGetters(["appContextPath", "isLocal", "rootPath"])
   },
   filters: {
     trunceStr(value) {
-      if(!!value && value.length >= 10) {
-        return value.substring(0, 9) + '...'
+      if (!!value && value.length >= 10) {
+        return value.substring(0, 9) + "...";
       } else {
         return value;
       }
@@ -194,7 +196,7 @@ export default {
       this.showRegionGroup = false;
       this.showSortGroup = false;
       this.isShowList = true;
-      this.isLoading = true;
+      if (!cacheList) this.isLoading = true;
       this.updateCurrentPosition({
         longitude:
           (value && value.position && value.position.lng) ||
@@ -225,6 +227,7 @@ export default {
                 success.data.result &&
                 success.data.result.list) ||
               [];
+            scope.updateScrollerList(scope.list);
             scope.enablePullup = scope.list.length === 15 ? true : false;
             if (scope.$refs.scrollerEvent) {
               scope.$refs.scrollerEvent.donePulldown();
@@ -267,6 +270,7 @@ export default {
                 success.data.result.list) ||
                 []
             );
+            scope.updateScrollerList(scope.list);
             if (scope.$refs.scrollerEvent) {
               scope.$refs.scrollerEvent.donePullup();
               scope.$refs.scrollerEvent.reset();
@@ -279,7 +283,7 @@ export default {
         );
     },
     invokenavigator(func) {
-      this.isLoading = true;
+      if (!cacheList) this.isLoading = true;
       const scope = this;
       initAMap().then(result => {
         if (result) {
@@ -372,10 +376,16 @@ export default {
         );
       }
     },
-    ...mapMutations(["updateTitle", "updateCurrentPosition"])
+    ...mapMutations([
+      "updateTitle",
+      "updateCurrentPosition",
+      "updateScrollerList"
+    ])
   },
   mounted() {
-    this.invokenavigator(this.refreshDataList);
+    if (this.list.length === 0) {
+      this.invokenavigator(this.refreshDataList);
+    }
     this.updateTitle("附近联盟商家");
     this.recommodKeywordList[0].keywords =
       JSON.parse(window.localStorage.getItem("MerchantKey")) || [];
@@ -389,6 +399,18 @@ export default {
         }
       );
     });
+  },
+  beforeRouteEnter(to, from, next) {
+    from.fullPath.indexOf("merchant_map") > -1 && (cacheList = true);
+    next(vm => {
+      if (from.fullPath.indexOf("merchant_map") > -1) {
+        vm.list = vm.scrollerList;
+      }
+    });
+  },
+  beforeRouteLeave (to, from, next) {
+    cacheList = false;
+    next();
   }
 };
 </script>

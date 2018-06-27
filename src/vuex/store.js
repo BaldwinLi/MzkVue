@@ -16,7 +16,8 @@ export default new Vuex.Store({ // 名字自己定义
       longitude: 0,
       latitude: 0
     },
-    addressInfo: null
+    addressInfo: null,
+    scrollerList: []
   },
   mutations: {
     updateLoadingStatus(state, payload) {
@@ -33,7 +34,10 @@ export default new Vuex.Store({ // 名字自己定义
     },
     updateAddress(state, payload) {
       state.address = payload;
-    }
+    },
+     updateScrollerList(state, payload){
+       state.scrollerList = payload;
+     }
   },
   getters: {
     rootPath: () => (window.location.origin + window.location.pathname),
