@@ -34,7 +34,7 @@ export default () => {
     const amapKey = store.getters.isLocal ? 'd4db416574e2ca922626865111063378' : 'f69ddd4d557dfb18205003a019e59035'
     const scriptEl = document.createElement('script');
     scriptEl.setAttribute('type', 'text/javascript');
-    scriptEl.setAttribute('src', `http://webapi.amap.com/maps?v=1.4.6&key=${amapKey}`);
+    scriptEl.setAttribute('src', `${window.location.protocol}//webapi.amap.com/maps?v=1.4.6&key=${amapKey}`);
     document.getElementsByTagName('head')[0].appendChild(scriptEl);
     return new Promise(function (resolve) {
       scriptEl.onload = () => {
