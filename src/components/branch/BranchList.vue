@@ -116,6 +116,7 @@ import {
   pulldownConfig,
   pullupConfig,
   geolocationOptions,
+  geolocationSuccessCallback,
   geolocationErrorCallback
 } from "../config";
 import initAMap from "@/initAMap";
@@ -297,7 +298,7 @@ export default {
             if (value.message.indexOf('fail') > -1) {
               this.onGeoError(func, value);
             } else {
-              func(value);
+              geolocationSuccessCallback(value, this.$vux.alert, func.bind(this));
             }
           }); //返回定位信息
           AMap.event.addListener(geolocation, "error", value => {
