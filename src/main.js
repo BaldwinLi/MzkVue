@@ -58,7 +58,7 @@ if (_token) {
   _token = _token[0];
   _token = _token && _token.replace('token=', '') || '';
   window.sessionStorage.setItem('token', _token);
-  
+
   Vue.http.defaults.headers.common['web-token'] = _token;
   // initKeyList(store);
   runVueInstance();
@@ -104,6 +104,11 @@ if (_token) {
     }
   }
 }
+
+// Vue.http.interceptors.request.use(config => {
+//   config.url = config.url.replace(new RegExp('^http[s]{0,1}:\/\/' + window.location.hostname), window.location.origin);
+//   return config;
+// }, error => error);
 
 Vue.http.interceptors.response.use(data => data,
   error => {
