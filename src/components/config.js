@@ -20,18 +20,18 @@ export const geolocationOptions = {
 }
 export const geolocationSuccessCallback = (value, alert, func) => {
   func(value);
-  if (value.message.indexOf('Get address success') > -1) {
-    alert.show({
-      title: '当前位置',
-      content: value.formattedAddress
-    });
-    return;
-  }
+  // if (value.message.indexOf('Get address success') > -1) {
+  //   alert.show({
+  //     title: '当前位置',
+  //     content: value.formattedAddress
+  //   });
+  //   return;
+  // }
 };
 
 export const geolocationErrorCallback = (value, alert, func) => {
-  let title = "定位失败";
-  let content = "";
+  let title = "定位异常";
+  // let content = "";
   const messages = value.message.split(',');
   const states = messages[0].split('.');
   // const results = messages[1].split('.')
@@ -46,11 +46,11 @@ export const geolocationErrorCallback = (value, alert, func) => {
         return;
     }
   }
-  if (value.message.indexOf('fail') > -1) {
+  if (value.info !== 'SUCCESS') {
     // 捕获了些异常 判断设备GPS 和IP那个出现异常 会相应弹窗 
     alert.show({
-      title: '定位异常',
-      content: value.message
+      title: '定位失败',
+      content: '请检查网络环境后重新加载页面。'
     });
     return;
   }
