@@ -12,8 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/dev_api': {
-        target: 'http://trial.dlmzk.com/MzkAppService',
-        // target: 'http://10.17.225.132:8080/Form_002_Define',
+        target: 'http://locathost:8083/MzkAppService',
         changeOrigin: true,
         pathRewrite: {
           '^/dev_api': ''
